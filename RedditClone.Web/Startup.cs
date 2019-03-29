@@ -35,7 +35,15 @@ namespace RedditClone.Web
             services.AddDbContext<RedditCloneDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("RedditCloneConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<IdentityUser>(options =>
+            {
+                options.Password = new PasswordOptions()
+                {
+                    RequireUppercase = false,
+                    RequireNonAlphanumeric = false,
+                    RequireLowercase = false
+                };
+            })
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<RedditCloneDbContext>();
 

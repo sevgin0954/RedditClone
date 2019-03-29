@@ -5,39 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - RedditClone</title>
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+          crossorigin="anonymous">
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" 
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
               crossorigin="anonymous">
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/custom.css" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RedditClone</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <partial name="_LoginPartial" />
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+        <nav class="navbar navbar-expand-sm navbar-light bg-light">
+            <div class="nav-item">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fab fa-reddit fa-lg nav-brand-icon"></i>
+                    RedditClone
+                </a>
+            </div>
+            <div class="nav-item d-none d-sm-inline">
+                <div>
+                    <a class="nav-link-inactive" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="fas fa-igloo fa-lg"></i>
+                        <span class="d-none d-lg-inline">Home</span>
+                    </a>
                 </div>
             </div>
+            <div class="nav-item">
+                <div>
+                    <a class="nav-link-inactive" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="fas fa-fire fa-lg"></i>
+                        <span class="d-none d-md-inline">Popular</span>
+                    </a>
+                </div>
+            </div>
+            <div class="nav-item mx-auto">
+                <form class="form-inline">
+                    <div class="searchbar-container form-control">
+                        <i class="fas fa-search searchbar-element"></i>
+                        <input class="searchbar-element" placeholder="Search..." />
+                    </div>
+                </form>
+            </div>
+            <partial name="_LoginPartial" />
         </nav>
     </header>
     <div class="container">
@@ -80,3 +97,20 @@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+
+@*Searchbar outline scripts*@
+<script>
+    $(function () {
+        let searchbarContainer = $(".searchbar-container");
+
+        searchbarContainer.on("click", function (e) {
+            let currentTarget = e.currentTarget;
+            $(currentTarget).addClass("blue-outline");
+        });
+
+        searchbarContainer.on("focusout", function (e) {
+            let currentTarget = e.currentTarget;
+            $(currentTarget).removeClass("blue-outline");
+        });
+    })
+</script>

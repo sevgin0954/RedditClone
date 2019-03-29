@@ -1,0 +1,74 @@
+﻿.searchbar-container {
+    box-shadow: none;
+}
+.searchbar-container:hover {
+    box-shadow: 0 0 3px 2px #007bff !important;
+    box-shadow: none;
+}
+.searchbar-container:focus {
+    box-shadow: none;
+}
+
+.searchbar-element {
+    border: none;
+}
+.searchbar-element:focus {
+    outline: none;
+}
+
+.blue-outline {
+    box-shadow: 0 0 3px 2px #007bff !important;
+}
+
+.nav-item {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+.nav-item a {
+    text-decoration: none;
+}
+
+.nav-link-inactive {
+    color: gray;
+}
+
+.nav-link-active {
+    color: #007bff;
+}
+
+.nav-brand-icon {
+    color: #ff4500;
+}
+
+.btn-nav {
+    font-weight: 500;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.btn-grey {
+    box-shadow: none !important;
+    color: gray;
+}
+
+.btn-outline-blue {
+    box-shadow: 0 0 3px 2px #007bff !important;
+    color: #007bff;
+}
+.btn-outline-blue:hover, .btn-outline-blue:focus {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-blue {
+    box-shadow: 0 0 3px 2px #007bff !important;
+    background-color: #007bff;
+    color: white;
+}
+.btn-blue:hover, .btn-blue:focus {
+    box-shadow: 0 0 3px 2px #007bff !important;
+    background-color: white;
+    color: #007bff;
+}
