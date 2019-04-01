@@ -1,6 +1,7 @@
 @using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@using RedditClone.Models
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
@@ -15,7 +16,7 @@
     </div>
     <div class="nav-item">
         <div>
-            <a href="#" class="nav-link-inactive">
+            <a class="nav-link-inactive" asp-area="Identity" asp-controller="Post" asp-action="Create">
                 <i class="fas fa-plus-square fa-lg"></i>
                 <span class="d-none d-xl-inline">Create Post</span>
             </a>

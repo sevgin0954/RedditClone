@@ -1,4 +1,8 @@
-﻿.searchbar-container {
+﻿.main-container {
+    background-color: #DAE0E6;
+}
+
+.searchbar-container {
     box-shadow: none;
 }
 .searchbar-container:hover {
@@ -14,6 +18,27 @@
 }
 .searchbar-element:focus {
     outline: none;
+}
+
+.post-container {
+    background-color: white;
+    margin: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 1px black;
+}
+.post-container:hover {
+    box-shadow: 0 0 5px 2px #007bff;
+}
+
+.form-outline-green {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 1px black;
+}
+.form-outline-green:hover, .form-outline-green:focus {
+    box-shadow: 0 0 5px 2px #B4CC14;
+    border-color: #B4CC14;
 }
 
 .blue-outline {
@@ -41,21 +66,23 @@
 }
 
 .btn-nav {
-    font-weight: 500;
     padding-top: 3px;
     padding-bottom: 3px;
     padding-left: 20px;
     padding-right: 20px;
+    font-weight: 600;
 }
 
 .btn-grey {
     box-shadow: none !important;
     color: gray;
+    font-weight: 600;
 }
 
 .btn-outline-blue {
     box-shadow: 0 0 3px 2px #007bff !important;
     color: #007bff;
+    font-weight: 600;
 }
 .btn-outline-blue:hover, .btn-outline-blue:focus {
     background-color: #007bff;
@@ -66,9 +93,32 @@
     box-shadow: 0 0 3px 2px #007bff !important;
     background-color: #007bff;
     color: white;
+    font-weight: 600;
 }
 .btn-blue:hover, .btn-blue:focus {
     box-shadow: 0 0 3px 2px #007bff !important;
+    background-color: white;
+    color: #007bff;
+}
+
+.btn-outline-green {
+    box-shadow: 0 0 3px 2px #B4CC14 !important;
+    color: #B4CC14;
+    font-weight: 600;
+}
+.btn-outline-green:hover, .btn-outline-green:focus {
+    background-color: #B4CC14;
+    color: white;
+}
+
+.btn-green {
+    box-shadow: 0 0 3px 2px #B4CC14 !important;
+    background-color: #B4CC14;
+    color: white;
+    font-weight: 600;
+}
+.btn-green:hover, .btn-green:focus {
+    box-shadow: 0 0 3px 2px #B4CC14 !important;
     background-color: white;
     color: #007bff;
 }

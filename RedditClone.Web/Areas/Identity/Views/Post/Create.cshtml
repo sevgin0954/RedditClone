@@ -1,0 +1,15 @@
+﻿@model CreationPostBindingModel
+@{
+    ViewData["Title"] = "Create new post";
+}
+
+<h3>@ViewData["Title"]</h3>
+<hr />
+
+<form class="form-group" method="post">
+    <label asp-for="Title"></label>
+    <input class="form-control form-outline-green" asp-for="Title" />
+    <label asp-for="Description"></label>
+    <textarea class="form-control form-outline-green" asp-for="Description" rows="10"></textarea>
+</form>
+

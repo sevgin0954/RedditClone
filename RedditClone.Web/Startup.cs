@@ -8,6 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RedditClone.Data;
+using RedditClone.Data.Interfaces;
+using AutoMapper;
+using RedditClone.Models;
+using RedditClone.Services.UserServices.Interfaces;
+using RedditClone.Services.UserServices;
+using RedditClone.Data.Repositories.Interfaces;
+using RedditClone.Data.Repositories;
 
 namespace RedditClone.Web
 {
@@ -32,10 +39,14 @@ namespace RedditClone.Web
 
             services.AddResponseCompression();
 
+            RegisterServiceLayer(services);
+
+            services.AddAutoMapper();
+
             services.AddDbContext<RedditCloneDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("RedditCloneConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options =>
+            services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.Password = new PasswordOptions()
                 {
@@ -45,7 +56,8 @@ namespace RedditClone.Web
                 };
             })
                 .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<RedditCloneDbContext>();
+                .AddEntityFrameworkStores<RedditCloneDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -82,6 +94,17 @@ namespace RedditClone.Web
                     name: "Identity",
                     template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private void RegisterServiceLayer(IServiceCollection services)
+        {
+            services.AddScoped<IRedditCloneUnitOfWork, RedditCloneUnitOfWork>();
+
+            services.AddScoped<IPostRepository, PostRepository>();
+
+            services.AddScoped<IUserAccountService, UserAccountService>();
+
+            services.AddScoped<IUserPostService, UserPostService>();
         }
     }
 }

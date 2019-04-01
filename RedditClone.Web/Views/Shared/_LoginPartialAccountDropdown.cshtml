@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
+@using RedditClone.Models
+@inject SignInManager<User> SignInManager
 
 <div class="nav-item dropdown">
     @if (SignInManager.IsSignedIn(User))
@@ -11,7 +12,7 @@
             <i class="fas fa-user-circle fa-2x d-inline d-lg-none"></i>
         </button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item" asp-area="Identity" asp-controller="User" asp-action="Index">
                 <i class="fas fa-user"></i>
                 My Profile
             </a>

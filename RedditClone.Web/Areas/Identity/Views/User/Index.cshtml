@@ -1,0 +1,30 @@
+﻿@model IEnumerable<UserIndexViewModel>
+@{
+    ViewData["Title"] = "Posts";
+}
+
+@if (Model.Count() == 0)
+{
+    <div class="post-container d-flex flex-column">
+        <div class="mx-auto flex-row">
+            <h2>
+                No posts yet
+            </h2>
+        </div>
+
+        <div class="flex-row mx-auto">
+            <a class="btn btn-outline-green" asp-area="Identity" asp-controller="Post" asp-action="Create">
+                Create first post
+            </a>
+        </div>
+    </div>
+}
+else
+{
+    @foreach (var postModel in Model)
+    {
+        <div class="post-container">
+            @postModel.PostTitle
+        </div>
+    }
+}
