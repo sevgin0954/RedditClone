@@ -40,8 +40,7 @@ namespace RedditClone.Web.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            public string Username { get; set; }
         }
 
         public IActionResult OnGetAsync()
@@ -88,13 +87,6 @@ namespace RedditClone.Web.Areas.Identity.Pages.Account
                 // If the user does not have an account, then ask the user to create an account.
                 ReturnUrl = returnUrl;
                 LoginProvider = info.LoginProvider;
-                if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
-                {
-                    Input = new InputModel
-                    {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
-                    };
-                }
                 return Page();
             }
         }
@@ -112,7 +104,9 @@ namespace RedditClone.Web.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.Email, Email = Input.Email };
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+
+                var user = new User { UserName = Input.Username, Email = email };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

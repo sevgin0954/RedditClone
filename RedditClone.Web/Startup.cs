@@ -54,10 +54,21 @@ namespace RedditClone.Web
                     RequireNonAlphanumeric = false,
                     RequireLowercase = false
                 };
+                options.User = new UserOptions()
+                {
+                    RequireUniqueEmail = true
+                };
             })
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<RedditCloneDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddAuthentication()
+                .AddFacebook(options =>
+                {
+                    options.AppId = this.Configuration.GetSection("ExternalAuthentication:Facebook:AppId").Value;
+                    options.AppSecret = this.Configuration.GetSection("ExternalAuthentication:Facebook:AppSecret").Value;
+                });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -81,6 +92,7 @@ namespace RedditClone.Web
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseResponseCompression();
+            app.UseHttpsRedirection();
 
             app.UseAuthentication();
 
