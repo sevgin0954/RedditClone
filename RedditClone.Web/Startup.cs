@@ -43,6 +43,8 @@ namespace RedditClone.Web
 
             services.AddAutoMapper();
 
+            services.AddAntiforgery();
+
             services.AddDbContext<RedditCloneDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("RedditCloneConnection")));
@@ -70,7 +72,11 @@ namespace RedditClone.Web
                     options.AppSecret = this.Configuration.GetSection("ExternalAuthentication:Facebook:AppSecret").Value;
                 });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,12 +93,11 @@ namespace RedditClone.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseResponseCompression();
-            app.UseHttpsRedirection();
 
             app.UseAuthentication();
 
