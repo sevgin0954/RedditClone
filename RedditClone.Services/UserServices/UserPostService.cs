@@ -7,6 +7,8 @@ using RedditClone.Models.WebModels.PostModels.BindingModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RedditClone.Services.UserServices.Interfaces;
 using System.Collections.Generic;
+using RedditClone.Common.Constants;
+using System;
 
 namespace RedditClone.Services.UserServices
 {
@@ -24,45 +26,108 @@ namespace RedditClone.Services.UserServices
         public async Task<CreationPostBindingModel> PrepareModelForCreatingAsync(ClaimsPrincipal user, string subredditId)
         {
             var dbUser = await this.userManager.GetUserAsync(user);
+            var dbSubreddit = await this.redditCloneUnitOfWork.Subreddits.GetByIdAsync(subredditId);
 
-            var model = await this.MapCreatinPostModelAsync(dbUser.Id, subredditId);
+            var dbSubredditId = dbSubreddit?.Id;
+            var model = await this.MapCreationPostBindingModelAsync(dbUser.Id, dbSubredditId);
 
             return model;
         }
 
-        private async Task<CreationPostBindingModel> MapCreatinPostModelAsync(string userId, string subredditId)
+        private async Task<CreationPostBindingModel> MapCreationPostBindingModelAsync(string userId, string subredditId)
         {
             var model = new CreationPostBindingModel
             {
                 AuthorId = userId,
-                SubredditId = subredditId
+                SelectedSubredditId = subredditId
             };
 
-            var createdByUserSubreddits = redditCloneUnitOfWork.Subreddits.Find(s => s.AuthorId == userId);
+            var createdSubreddits = redditCloneUnitOfWork.Subreddits.Find(s => s.AuthorId == userId);
             var subscribedSubreddits = await redditCloneUnitOfWork.Subreddits.GetBySubcribedUserIdAsync(userId);
 
-            model.CreatedSubreddits = this.MapSelectListItemsBySubreddits(createdByUserSubreddits);
-            model.SubscribedSubreddits = this.MapSelectListItemsBySubreddits(subscribedSubreddits);
+            var createdGroupName = ModelsConstants.SelectListGroupNameCreatedSubreddits;
+            var subscribedGroupName = ModelsConstants.SelectListGroupNameSubscribedSubreddits;
+
+            var createdSubredditsSelectListItems 
+                = this.MapSelectListItemsBySubreddits(createdSubreddits, createdGroupName, subredditId);
+            if (createdSubredditsSelectListItems.Count == 0)
+            {
+                var text = ModelsConstants.SelectListItemNameEmpty;
+                var initialCreatedItem = this.CreateEmptySelectListItem(createdGroupName, text);
+                createdSubredditsSelectListItems.Add(initialCreatedItem);
+            }
+
+            var subscribedSubredditsSelectListItem 
+                = this.MapSelectListItemsBySubreddits(subscribedSubreddits, subscribedGroupName, subredditId);
+            if (subscribedSubredditsSelectListItem.Count == 0)
+            {
+                var text = ModelsConstants.SelectListItemNameEmpty;
+                var initialCreatedItem = this.CreateEmptySelectListItem(subscribedGroupName, text);
+                subscribedSubredditsSelectListItem.Add(initialCreatedItem);
+            }
+            
+            model.Subreddits.AddRange(createdSubredditsSelectListItems);
+            model.Subreddits.AddRange(subscribedSubredditsSelectListItem);
 
             return model;
         }
 
-        private ICollection<SelectListItem> MapSelectListItemsBySubreddits(IEnumerable<Subreddit> subreddits)
+        private ICollection<SelectListItem> MapSelectListItemsBySubreddits(
+            IEnumerable<Subreddit> subreddits, 
+            string groupName,
+            string selectedSubredditId)
         {
             var models = new List<SelectListItem>();
+            var group = new SelectListGroup
+            {
+                Name = groupName
+            };
 
             foreach (var subreddit in subreddits)
             {
-                var selectListItem = new SelectListItem()
-                {
-                    Text = subreddit.Name,
-                    Value = subreddit.Id
-                };
-
+                var selectListItem = this.MapSelectListItemBySubreddit(subreddit, group, selectedSubredditId);
                 models.Add(selectListItem);
             }
 
             return models;
+        }
+
+        private SelectListItem MapSelectListItemBySubreddit(
+            Subreddit subreddit, 
+            SelectListGroup group, 
+            string selectedSubredditId)
+        {
+            bool isSelected = false;
+            if (subreddit.Id == selectedSubredditId)
+            {
+                isSelected = true;
+            }
+
+            var selectListItem = new SelectListItem()
+            {
+                Text = subreddit.Name,
+                Value = subreddit.Id,
+                Selected = isSelected,
+                Group = group
+            };
+
+            return selectListItem;
+        }
+
+        private SelectListItem CreateEmptySelectListItem(string groupName, string text)
+        {
+            var group = new SelectListGroup
+            {
+                Name = groupName
+            };
+            var selectListItem = new SelectListItem()
+            {
+                Disabled = true,
+                Group = group,
+                Text = text
+            };
+
+            return selectListItem;
         }
     }
 }

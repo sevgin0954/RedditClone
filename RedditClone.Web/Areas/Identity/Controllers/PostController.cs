@@ -18,7 +18,7 @@ namespace RedditClone.Web.Areas.Identity.Controllers
         {
             var model = await this.userPostService.PrepareModelForCreatingAsync(this.User, subredditId);
 
-            return View();
+            return View(model);
         }
     }
 }

@@ -6,10 +6,23 @@
 <h3>@ViewData["Title"]</h3>
 <hr />
 
-<form class="form-group" method="post">
+<form class="form-group d-flex flex-column" method="post">
+    <input asp-for="AuthorId" hidden />
+    <select class="form-control form-outline-green" asp-for="SelectedSubredditId" asp-items="Model.Subreddits">
+        <option disabled selected>Choose a community</option>
+    </select>
     <label asp-for="Title"></label>
     <input class="form-control form-outline-green" asp-for="Title" />
     <label asp-for="Description"></label>
     <textarea class="form-control form-outline-green" asp-for="Description" rows="10"></textarea>
+
+    <div class="d-flex flex-row mx-auto">
+        <button class="btn btn-outline-green btn-menu" type="submit">
+            Post
+        </button>
+        <a class="btn btn-outline-red btn-menu" asp-controller="Home" asp-action="Index">
+            Cancel
+        </a>
+    </div>
 </form>
 

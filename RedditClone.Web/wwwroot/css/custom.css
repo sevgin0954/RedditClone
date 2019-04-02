@@ -73,6 +73,12 @@
     font-weight: 600;
 }
 
+.btn-menu {
+    margin: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
 .btn-grey {
     box-shadow: none !important;
     color: gray;
@@ -121,4 +127,26 @@
     box-shadow: 0 0 3px 2px #B4CC14 !important;
     background-color: white;
     color: #007bff;
+}
+
+.btn-red {
+    box-shadow: 0 0 3px 2px #FF0000 !important;
+    background-color: #FF0000;
+    color: white;
+    font-weight: 600;
+}
+.btn-red:hover, .btn-red:focus {
+    box-shadow: 0 0 3px 2px #FF0000 !important;
+    background-color: white;
+    color: #007bff;
+}
+
+.btn-outline-red {
+    box-shadow: 0 0 3px 2px #FF0000 !important;
+    color: #FF0000;
+    font-weight: 600;
+}
+.btn-outline-red:hover, .btn-outline-red:focus {
+    background-color: #FF0000;
+    color: white;
 }

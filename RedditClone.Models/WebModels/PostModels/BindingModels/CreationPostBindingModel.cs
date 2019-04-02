@@ -8,9 +8,6 @@ namespace RedditClone.Models.WebModels.PostModels.BindingModels
     public class CreationPostBindingModel
     {
         [Required]
-        public string Id { get; set; }
-
-        [Required]
         public string AuthorId { get; set; }
 
         [Required]
@@ -24,11 +21,7 @@ namespace RedditClone.Models.WebModels.PostModels.BindingModels
         public string Description { get; set; }
 
         [Required]
-        public string SubredditId { get; set; }
-
-        [Required]
         public string SelectedSubredditId { get; set; }
-        public ICollection<SelectListItem> CreatedSubreddits { get; set; } = new LinkedList<SelectListItem>();
-        public ICollection<SelectListItem> SubscribedSubreddits { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> Subreddits { get; set; } = new List<SelectListItem>();
     }
 }
