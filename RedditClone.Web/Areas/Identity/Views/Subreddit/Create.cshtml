@@ -1,18 +1,12 @@
-﻿@model PostCreationBindingModel
+﻿@model SubredditCreationBindingModel
 @{
-    ViewData["Title"] = "Create new post";
+    ViewData["Title"] = "Create";
 }
-
-<h3>@ViewData["Title"]</h3>
-<hr />
 
 <form class="form-group d-flex flex-column" method="post">
     <input asp-for="AuthorId" hidden />
-    <select class="form-control form-outline-green" asp-for="SelectedSubredditId" asp-items="Model.Subreddits">
-        <option disabled selected>Choose a community</option>
-    </select>
-    <label asp-for="Title"></label>
-    <input class="form-control form-outline-green" asp-for="Title" />
+    <label asp-for="Name"></label>
+    <input class="form-control form-outline-green" asp-for="Name" />
     <label asp-for="Description"></label>
     <textarea class="form-control form-outline-green" asp-for="Description" rows="10"></textarea>
 
@@ -25,4 +19,3 @@
         </a>
     </div>
 </form>
-

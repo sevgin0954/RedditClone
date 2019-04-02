@@ -429,7 +429,7 @@ namespace RedditClone.Tests.UserAccountServiceTests.UserPostServiceTests
             unitOfWork.Complete();
 
             var mockedUserManager = this.GetMockedUserManager();
-            CommonTestMethods.SetupMockedUserManagerGetUserAsync(mockedUserManager, user);
+            CommonTestMethods.SetupMockedUserManagerGetUserId(mockedUserManager, user.Id);
 
             var service = this.GetService(unitOfWork, mockedUserManager.Object);
             var mockedClaimsPrincipal = new Mock<ClaimsPrincipal>();

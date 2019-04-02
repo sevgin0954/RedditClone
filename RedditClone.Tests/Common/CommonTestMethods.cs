@@ -26,5 +26,11 @@ namespace RedditClone.Tests.Common
             mock.Setup(um => um.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
                 .Returns(Task.FromResult(user));
         }
+
+        public static void SetupMockedUserManagerGetUserId(Mock<UserManager<User>> mock, string userId)
+        {
+            mock.Setup(um => um.GetUserId(It.IsAny<ClaimsPrincipal>()))
+                .Returns(userId);
+        }
     }
 }

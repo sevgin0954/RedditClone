@@ -220,7 +220,7 @@ namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
             user.SubscribedSubreddits.Add(dbUserSubreddit);
         }
 
-        private SelectListItem GetFirstNonEmptySubredditFromModel(CreationPostBindingModel model)
+        private SelectListItem GetFirstNonEmptySubredditFromModel(PostCreationBindingModel model)
         {
             var modelSubreddits = model.Subreddits;
             var firstSubreddit = modelSubreddits
@@ -230,7 +230,7 @@ namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
             return firstSubreddit;
         }
 
-        private async Task<CreationPostBindingModel> CallPrepareModelForCreatingAsyncWithNullSubredditId(
+        private async Task<PostCreationBindingModel> CallPrepareModelForCreatingAsyncWithNullSubredditId(
             User user)
         {
             var unitOfWork = this.GetRedditCloneUnitOfWork();
@@ -242,7 +242,7 @@ namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
             return model;
         }
 
-        private async Task<CreationPostBindingModel> CallPrepareModelForCreatingAsyncWithSubredditId(
+        private async Task<PostCreationBindingModel> CallPrepareModelForCreatingAsyncWithSubredditId(
             User user, 
             Subreddit subreddit)
         {
@@ -256,13 +256,13 @@ namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
             return model;
         }
 
-        private async Task<CreationPostBindingModel> CallPrepareModelForCreatingAsync(
+        private async Task<PostCreationBindingModel> CallPrepareModelForCreatingAsync(
             IRedditCloneUnitOfWork unitOfWork,
             User user,
             string subredditId)
         {
             var mockedUserManager = this.GetMockedUserManager();
-            CommonTestMethods.SetupMockedUserManagerGetUserAsync(mockedUserManager, user);
+            CommonTestMethods.SetupMockedUserManagerGetUserId(mockedUserManager, user.Id);
 
             var service = this.GetService(unitOfWork, mockedUserManager.Object);
             var mockedClaimsPrincipal = new Mock<ClaimsPrincipal>();

@@ -122,6 +122,8 @@ namespace RedditClone.Web
             services.AddScoped<IUserAccountService, UserAccountService>();
 
             services.AddScoped<IUserPostService, UserPostService>();
+
+            services.AddScoped<IUserSubredditService, UserSubredditService>();
         }
     }
 }

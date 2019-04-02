@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using RedditClone.Services.UserServices.Interfaces;
 using System.Collections.Generic;
 using RedditClone.Common.Constants;
-using System;
 
 namespace RedditClone.Services.UserServices
 {
@@ -23,20 +22,20 @@ namespace RedditClone.Services.UserServices
             this.userManager = userManager;
         }
 
-        public async Task<CreationPostBindingModel> PrepareModelForCreatingAsync(ClaimsPrincipal user, string subredditId)
+        public async Task<PostCreationBindingModel> PrepareModelForCreatingAsync(ClaimsPrincipal user, string subredditId)
         {
-            var dbUser = await this.userManager.GetUserAsync(user);
+            var dbUserId = this.userManager.GetUserId(user);
             var dbSubreddit = await this.redditCloneUnitOfWork.Subreddits.GetByIdAsync(subredditId);
 
             var dbSubredditId = dbSubreddit?.Id;
-            var model = await this.MapCreationPostBindingModelAsync(dbUser.Id, dbSubredditId);
+            var model = await this.MapCreationPostBindingModelAsync(dbUserId, dbSubredditId);
 
             return model;
         }
 
-        private async Task<CreationPostBindingModel> MapCreationPostBindingModelAsync(string userId, string subredditId)
+        private async Task<PostCreationBindingModel> MapCreationPostBindingModelAsync(string userId, string subredditId)
         {
-            var model = new CreationPostBindingModel
+            var model = new PostCreationBindingModel
             {
                 AuthorId = userId,
                 SelectedSubredditId = subredditId

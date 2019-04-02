@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RedditClone.Models.WebModels.PostModels.BindingModels
 {
-    public class CreationPostBindingModel
+    public class PostCreationBindingModel
     {
         [Required]
         public string AuthorId { get; set; }

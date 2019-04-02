@@ -6,6 +6,6 @@ namespace RedditClone.Services.UserServices.Interfaces
 {
     public interface IUserPostService
     {
-        Task<CreationPostBindingModel> PrepareModelForCreatingAsync(ClaimsPrincipal user, string subredditId);
+        Task<PostCreationBindingModel> PrepareModelForCreatingAsync(ClaimsPrincipal user, string subredditId);
     }
 }

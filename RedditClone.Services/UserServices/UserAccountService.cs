@@ -26,9 +26,9 @@ namespace RedditClone.Services.UserServices
 
         public async Task<IEnumerable<UserIndexViewModel>> PrepareIndexModelAsync(ClaimsPrincipal user)
         {
-            var dbUser = await this.userManager.GetUserAsync(user);
-            var dbAllPostsFromUser = await this.redditCloneUnitOfWork.Posts.GetAllWithSubredditByUserIdAsync(dbUser.Id);
-            var dbAllCommentsFromUser = await this.redditCloneUnitOfWork.Comments.GetAllWithPostByUserIdAsync(dbUser.Id);
+            var dbUserId = this.userManager.GetUserId(user);
+            var dbAllPostsFromUser = await this.redditCloneUnitOfWork.Posts.GetAllWithSubredditByUserIdAsync(dbUserId);
+            var dbAllCommentsFromUser = await this.redditCloneUnitOfWork.Comments.GetAllWithPostByUserIdAsync(dbUserId);
 
             var models = new List<UserIndexViewModel>();
             models.AddRange(this.mapper.Map<IEnumerable<UserIndexViewModel>>(dbAllPostsFromUser));

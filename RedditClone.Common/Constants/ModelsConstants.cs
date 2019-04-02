@@ -6,9 +6,15 @@
         public const int DescriptionPostMaxLength = 9000;
         public const int DescriptionPreviewLength = 100;
 
+        public const int DescriptionSubredditMinLength = 20;
+        public const int DescriptionSubredditMaxLength = 300;
+
         public const int TitlePostPreviewLength = 50;
         public const int TitlePostMinLength = 7;
         public const int TitlePostMaxLength = 150;
+
+        public const int TitleSubredditMinLength = 3;
+        public const int TitleSubredditMaxLength = 30;
 
         public const string ActionNameComment = "commented on";
         public const string ActionNamePost = "posted";
