@@ -21,6 +21,7 @@ namespace RedditClone.Models.WebModels.PostModels.BindingModels
         public string Description { get; set; }
 
         [Required]
+        [Display(Name = "Community")]
         public string SelectedSubredditId { get; set; }
         public List<SelectListItem> Subreddits { get; set; } = new List<SelectListItem>();
     }

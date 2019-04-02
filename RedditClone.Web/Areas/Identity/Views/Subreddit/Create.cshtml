@@ -1,9 +1,13 @@
 ﻿@model SubredditCreationBindingModel
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create new subreddit";
 }
 
+<h3>@ViewData["Title"]</h3>
+<hr />
+
 <form class="form-group d-flex flex-column" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
     <input asp-for="AuthorId" hidden />
     <label asp-for="Name"></label>
     <input class="form-control form-outline-green" asp-for="Name" />
@@ -19,3 +23,7 @@
         </a>
     </div>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

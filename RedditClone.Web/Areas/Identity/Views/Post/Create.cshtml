@@ -7,6 +7,7 @@
 <hr />
 
 <form class="form-group d-flex flex-column" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
     <input asp-for="AuthorId" hidden />
     <select class="form-control form-outline-green" asp-for="SelectedSubredditId" asp-items="Model.Subreddits">
         <option disabled selected>Choose a community</option>
@@ -26,3 +27,6 @@
     </div>
 </form>
 
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
