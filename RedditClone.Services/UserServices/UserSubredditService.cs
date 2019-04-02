@@ -4,6 +4,7 @@ using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Models.WebModels.SubredditModels.BindingModels;
 using RedditClone.Services.UserServices.Interfaces;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -34,14 +35,15 @@ namespace RedditClone.Services.UserServices
 
         public async Task<bool> CreateSubredditAsync(SubredditCreationBindingModel model, ClaimsPrincipal user)
         {
-            var isSubredditNameExist = await this.redditCloneUnitOfWork.Subreddits
-                .GetByIdAsync(model.Name) != null;
+            var subredditsWithName = this.redditCloneUnitOfWork.Subreddits.Find(s => s.Name == model.Name);
+            var isSubredditNameExist = subredditsWithName.Count() > 0;
 
             var result = false;
 
             if (isSubredditNameExist == false)
             {
                 var dbSubreddit = this.mapper.Map<Subreddit>(model);
+                dbSubreddit.AuthorId = this.userManager.GetUserId(user); ;
                 this.redditCloneUnitOfWork.Subreddits.Add(dbSubreddit);
                 int rowsAffected = await this.redditCloneUnitOfWork.CompleteAsync();
 

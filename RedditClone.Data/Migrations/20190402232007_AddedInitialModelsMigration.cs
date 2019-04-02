@@ -158,7 +158,7 @@ namespace RedditClone.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(maxLength: 15, nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
                     Description = table.Column<string>(maxLength: 300, nullable: false),
                     AuthorId = table.Column<string>(nullable: true)
                 },
@@ -181,7 +181,7 @@ namespace RedditClone.Data.Migrations
                     AuthorId = table.Column<string>(nullable: true),
                     Title = table.Column<string>(maxLength: 150, nullable: false),
                     Description = table.Column<string>(maxLength: 9000, nullable: false),
-                    PostDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 4, 2, 22, 10, 29, 758, DateTimeKind.Utc).AddTicks(3397)),
+                    PostDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 4, 2, 23, 20, 7, 282, DateTimeKind.Utc).AddTicks(7645)),
                     VotesCount = table.Column<int>(nullable: false),
                     SubredditId = table.Column<string>(nullable: true)
                 },
@@ -232,7 +232,7 @@ namespace RedditClone.Data.Migrations
                 {
                     Id = table.Column<string>(nullable: false),
                     Description = table.Column<string>(maxLength: 9000, nullable: false),
-                    PostDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 4, 2, 22, 10, 29, 774, DateTimeKind.Utc).AddTicks(7)),
+                    PostDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 4, 2, 23, 20, 7, 297, DateTimeKind.Utc).AddTicks(7557)),
                     VotesCount = table.Column<int>(nullable: false),
                     AuthorId = table.Column<string>(nullable: true),
                     PostId = table.Column<string>(nullable: true),
@@ -329,6 +329,12 @@ namespace RedditClone.Data.Migrations
                 name: "IX_Subreddits_AuthorId",
                 table: "Subreddits",
                 column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subreddits_Name",
+                table: "Subreddits",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserSubreddits_UserId",

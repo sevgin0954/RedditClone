@@ -14,7 +14,7 @@
         public const int TitlePostMaxLength = 150;
 
         public const int TitleSubredditMinLength = 3;
-        public const int TitleSubredditMaxLength = 30;
+        public const int TitleSubredditMaxLength = 100;
 
         public const string ActionNameComment = "commented on";
         public const string ActionNamePost = "posted";

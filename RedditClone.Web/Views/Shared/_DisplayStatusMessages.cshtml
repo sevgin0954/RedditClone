@@ -1,0 +1,20 @@
+﻿@using RedditClone.Common.Constants
+
+@{
+    bool isStatusMessageExist = TempData.Keys.Any(k => k.StartsWith(WebConstants.StatusMessagePrefix));
+}
+
+@if (isStatusMessageExist)
+{
+    var statusMessagesKeys = TempData.Keys.Where(v => v.ToString().StartsWith(WebConstants.StatusMessagePrefix));
+
+    foreach (var key in statusMessagesKeys)
+    {
+        <div class="alert alert-@(TempData[WebConstants.StatusMessageTypeKey]) alert-dismissible fade show" role="alert">
+            @TempData[key]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+}

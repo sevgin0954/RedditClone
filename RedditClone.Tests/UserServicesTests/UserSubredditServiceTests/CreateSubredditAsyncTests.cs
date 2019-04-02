@@ -1,6 +1,9 @@
 ﻿using Moq;
 using RedditClone.Data.Interfaces;
+using RedditClone.Models;
 using RedditClone.Models.WebModels.SubredditModels.BindingModels;
+using RedditClone.Tests.Common;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
@@ -20,6 +23,28 @@ namespace RedditClone.Tests.UserServicesTests.UserSubredditServiceTests
             Assert.True(result);
         }
 
+        [Fact]
+        public async Task WithModelWithAlreadyExistingName_ShouldReturnFalse()
+        {
+            const string subredditName = "SubredditName";
+
+            var unitOfWork = this.GetRedditCloneUnitOfWork();
+            var dbSubreddit = new Subreddit()
+            {
+                Name = subredditName
+            };
+            unitOfWork.Subreddits.Add(dbSubreddit);
+            unitOfWork.Complete();
+            var model = new SubredditCreationBindingModel()
+            {
+                Name = subredditName
+            };
+
+            var result = await this.CallCreateSubredditAsync(unitOfWork, model);
+
+            Assert.False(result);
+        }
+
         [Theory]
         [InlineData("Subreddit name")]
         public async Task WithModelWithName_ShouldCreateNewSubredditWithCorrectName(string subredditName)
@@ -29,11 +54,11 @@ namespace RedditClone.Tests.UserServicesTests.UserSubredditServiceTests
             {
                 Name = subredditName
             };
+
             await this.CallCreateSubredditAsync(unitOfWork, model);
+            var dbSubreddit = unitOfWork.Subreddits.Find(s => s.Name == subredditName).First();
 
-            var dbSubreddit = unitOfWork.Subreddits.Find(s => s.Name == subredditName);
-
-            Assert.NotEmpty(dbSubreddit);
+            Assert.Equal(subredditName, dbSubreddit.Name);
         }
 
         [Theory]
@@ -45,18 +70,50 @@ namespace RedditClone.Tests.UserServicesTests.UserSubredditServiceTests
             {
                 Description = description
             };
+
             await this.CallCreateSubredditAsync(unitOfWork, model);
+            var dbSubreddit = unitOfWork.Subreddits.Find(s => s.Description == description).First();
 
-            var dbSubreddit = unitOfWork.Subreddits.Find(s => s.Description == description);
-
-            Assert.NotEmpty(dbSubreddit);
+            Assert.Equal(description, dbSubreddit.Description);
         }
 
-        public async Task<bool> CallCreateSubredditAsync(
+        [Fact]
+        public async Task WithModelWithUserWithId_ShouldCreateNewSubredditWithCorrectAuthorId()
+        {
+            var unitOfWork = this.GetRedditCloneUnitOfWork();
+            var dbUser = new User();
+            unitOfWork.Users.Add(dbUser);
+            unitOfWork.Complete();
+            var model = new SubredditCreationBindingModel();
+
+            var dbUserId = dbUser.Id;
+            await this.CallCreateSubredditAsyncWithUser(unitOfWork, model, dbUserId);
+            var dbSubreddit = unitOfWork.Subreddits.Find(s => s.AuthorId == dbUserId).First();
+            var modelAuthorId = dbSubreddit.AuthorId;
+
+            Assert.Equal(dbUserId, modelAuthorId);
+        }
+
+        private async Task<bool> CallCreateSubredditAsync(
             IRedditCloneUnitOfWork unitOfWork, 
             SubredditCreationBindingModel model)
         {
             var mockedUserManager = this.GetMockedUserManager();
+            var mockedClaimsPrincipal = new Mock<ClaimsPrincipal>();
+
+            var service = this.GetService(unitOfWork, mockedUserManager.Object);
+            var result = await service.CreateSubredditAsync(model, mockedClaimsPrincipal.Object);
+
+            return result;
+        }
+
+        private async Task<bool> CallCreateSubredditAsyncWithUser(
+            IRedditCloneUnitOfWork unitOfWork,
+            SubredditCreationBindingModel model,
+            string userId)
+        {
+            var mockedUserManager = this.GetMockedUserManager();
+            CommonTestMethods.SetupMockedUserManagerGetUserId(mockedUserManager, userId);
             var mockedClaimsPrincipal = new Mock<ClaimsPrincipal>();
 
             var service = this.GetService(unitOfWork, mockedUserManager.Object);

@@ -93,8 +93,11 @@ namespace RedditClone.Data
                 subreddit.HasKey(s => s.Id);
 
                 subreddit.Property(s => s.Name)
-                    .IsRequired()
-                    .HasMaxLength(ModelsConstants.TitleSubredditMaxLength);
+                    .HasMaxLength(ModelsConstants.TitleSubredditMaxLength)
+                    .IsRequired();
+
+                subreddit.HasIndex(s => s.Name)
+                    .IsUnique();
 
                 subreddit.Property(s => s.Description)
                     .IsRequired()
@@ -111,10 +114,6 @@ namespace RedditClone.Data
                 subreddit.HasMany(s => s.SubscribedUsers)
                     .WithOne(su => su.Subreddit)
                     .HasForeignKey(su => su.SubredditId);
-
-                subreddit.Property(s => s.Name)
-                    .HasMaxLength(15)
-                    .IsRequired();
             });
 
             builder.Entity<UserSubreddit>(userSubreddit =>

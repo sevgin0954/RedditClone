@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RedditClone.Common.Constants;
 using RedditClone.Models.WebModels.SubredditModels.BindingModels;
 using RedditClone.Services.UserServices.Interfaces;
 using System.Threading.Tasks;
@@ -27,16 +28,19 @@ namespace RedditClone.Web.Areas.Identity.Controllers
         {
             if (ModelState.IsValid == false)
             {
-
+                this.AddStatusMessage(ModelState);
+                return this.Redirect("/");
             }
 
             var result = await this.userSubredditService.CreateSubredditAsync(model, this.User);
 
             if (result == false)
             {
-
+                this.AddStatusMessage(WebConstants.ErrorMessageSubredditNameTaken, WebConstants.MessageTypeDanger);
+                return this.RedirectToAction("Create");
             }
 
+            this.AddStatusMessage(WebConstants.MessageSubredditCreated, WebConstants.MessageTypeSuccess);
             return this.Redirect("/");
         }
     }
