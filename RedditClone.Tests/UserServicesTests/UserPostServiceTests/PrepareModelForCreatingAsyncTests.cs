@@ -25,18 +25,6 @@ namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
         }
 
         [Fact]
-        public async Task WithUserWithId_ShouldReturnModelWithCorrectAuthorIdAsync()
-        {
-            var dbUser = new User();
-
-            var model = await this.CallPrepareModelForCreatingAsyncWithNullSubredditId(dbUser);
-            var modelAuthorId = model.AuthorId;
-            var dbUserId = dbUser.Id;
-
-            Assert.Equal(dbUserId, modelAuthorId);
-        }
-
-        [Fact]
         public async Task WithUserWithCreatedSubredditWithSubredditId_ShouldReturnModelWithCorrectSelectedSubredditId()
         {
             var dbUser = new User();

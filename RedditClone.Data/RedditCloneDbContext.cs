@@ -38,7 +38,7 @@ namespace RedditClone.Data
 
                 post.Property(p => p.Title)
                     .IsRequired()
-                    .HasMaxLength(150);
+                    .HasMaxLength(ModelsConstants.TitlePostMaxLength);
 
                 post.Property(p => p.Description)
                     .IsRequired()
@@ -91,6 +91,14 @@ namespace RedditClone.Data
             builder.Entity<Subreddit>(subreddit =>
             {
                 subreddit.HasKey(s => s.Id);
+
+                subreddit.Property(s => s.Name)
+                    .IsRequired()
+                    .HasMaxLength(ModelsConstants.TitleSubredditMaxLength);
+
+                subreddit.Property(s => s.Description)
+                    .IsRequired()
+                    .HasMaxLength(ModelsConstants.DescriptionSubredditMaxLength);
 
                 subreddit.HasOne(s => s.Author)
                     .WithMany(u => u.CreatedSubreddits)

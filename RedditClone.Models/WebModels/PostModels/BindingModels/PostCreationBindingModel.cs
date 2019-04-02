@@ -8,9 +8,6 @@ namespace RedditClone.Models.WebModels.PostModels.BindingModels
     public class PostCreationBindingModel
     {
         [Required]
-        public string AuthorId { get; set; }
-
-        [Required]
         [MinLength(ModelsConstants.TitlePostMinLength)]
         [MaxLength(ModelsConstants.TitlePostMaxLength)]
         public string Title { get; set; }

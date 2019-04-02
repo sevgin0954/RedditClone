@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Moq;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
@@ -11,16 +10,10 @@ namespace RedditClone.Tests.UserAccountServiceTests.UserPostServiceTests
 {
     public abstract class BaseUserAccountServiceTest : BaseTest
     {
-        private readonly IMapper mapper;
-
-        public BaseUserAccountServiceTest()
-        {
-            this.mapper = CommonTestMethods.GetMapper();
-        }
-
         public IUserAccountService GetService(IRedditCloneUnitOfWork unitOfWork, UserManager<User> userManager)
         {
-            var service = new UserAccountService(unitOfWork, userManager, this.mapper);
+            var mapper = CommonTestMethods.GetMapper();
+            var service = new UserAccountService(unitOfWork, userManager, mapper);
 
             return service;
         }

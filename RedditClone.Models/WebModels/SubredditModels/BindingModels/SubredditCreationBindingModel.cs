@@ -14,8 +14,5 @@ namespace RedditClone.Models.WebModels.SubredditModels.BindingModels
         [MinLength(ModelsConstants.DescriptionSubredditMinLength)]
         [MaxLength(ModelsConstants.DescriptionSubredditMaxLength)]
         public string Description { get; set; }
-
-        [Required]
-        public string AuthorId { get; set; }
     }
 }

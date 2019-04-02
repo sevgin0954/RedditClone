@@ -159,7 +159,7 @@ namespace RedditClone.Data.Migrations
                 {
                     Id = table.Column<string>(nullable: false),
                     Name = table.Column<string>(maxLength: 15, nullable: false),
-                    Description = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(maxLength: 300, nullable: false),
                     AuthorId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -181,7 +181,7 @@ namespace RedditClone.Data.Migrations
                     AuthorId = table.Column<string>(nullable: true),
                     Title = table.Column<string>(maxLength: 150, nullable: false),
                     Description = table.Column<string>(maxLength: 9000, nullable: false),
-                    PostDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 4, 2, 17, 26, 50, 539, DateTimeKind.Utc).AddTicks(9993)),
+                    PostDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 4, 2, 22, 10, 29, 758, DateTimeKind.Utc).AddTicks(3397)),
                     VotesCount = table.Column<int>(nullable: false),
                     SubredditId = table.Column<string>(nullable: true)
                 },
@@ -232,7 +232,7 @@ namespace RedditClone.Data.Migrations
                 {
                     Id = table.Column<string>(nullable: false),
                     Description = table.Column<string>(maxLength: 9000, nullable: false),
-                    PostDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 4, 2, 17, 26, 50, 554, DateTimeKind.Utc).AddTicks(1038)),
+                    PostDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 4, 2, 22, 10, 29, 774, DateTimeKind.Utc).AddTicks(7)),
                     VotesCount = table.Column<int>(nullable: false),
                     AuthorId = table.Column<string>(nullable: true),
                     PostId = table.Column<string>(nullable: true),

@@ -37,7 +37,6 @@ namespace RedditClone.Services.UserServices
         {
             var model = new PostCreationBindingModel
             {
-                AuthorId = userId,
                 SelectedSubredditId = subredditId
             };
 

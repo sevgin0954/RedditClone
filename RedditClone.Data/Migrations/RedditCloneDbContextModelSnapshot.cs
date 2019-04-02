@@ -144,7 +144,7 @@ namespace RedditClone.Data.Migrations
 
                     b.Property<DateTime>("PostDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 4, 2, 17, 26, 50, 554, DateTimeKind.Utc).AddTicks(1038));
+                        .HasDefaultValue(new DateTime(2019, 4, 2, 22, 10, 29, 774, DateTimeKind.Utc).AddTicks(7));
 
                     b.Property<string>("PostId");
 
@@ -174,7 +174,7 @@ namespace RedditClone.Data.Migrations
 
                     b.Property<DateTime>("PostDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 4, 2, 17, 26, 50, 539, DateTimeKind.Utc).AddTicks(9993));
+                        .HasDefaultValue(new DateTime(2019, 4, 2, 22, 10, 29, 758, DateTimeKind.Utc).AddTicks(3397));
 
                     b.Property<string>("SubredditId");
 
@@ -200,7 +200,9 @@ namespace RedditClone.Data.Migrations
 
                     b.Property<string>("AuthorId");
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(300);
 
                     b.Property<string>("Name")
                         .IsRequired()
