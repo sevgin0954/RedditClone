@@ -16,7 +16,7 @@ namespace RedditClone.Web.Mapping
                 .ForMember(dest => dest.PostId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.ActionInvokerId, opt => opt.MapFrom(src => src.AuthorId))
                 .ForMember(dest => dest.ActionInvokerUsername, opt => opt.MapFrom(src => src.Author.UserName))
-                .ForMember(dest => dest.PostTitle, opt => opt.MapFrom(src => src.Title))
+                .ForMember(dest => dest.PostTitle, opt => opt.MapFrom(src => string.Concat(src.Title.Take(ModelsConstants.TitlePostPreviewLength))))
                 .ForMember(dest => dest.SubredditName, opt => opt.MapFrom(src => src.Subreddit.Name))
                 .ForMember(dest => dest.PostCreatorId, opt => opt.MapFrom(src => src.AuthorId))
                 .ForMember(dest => dest.PostCreatorUsername, opt => opt.MapFrom(src => src.Author.UserName))
@@ -24,15 +24,10 @@ namespace RedditClone.Web.Mapping
                     opt => opt.MapFrom(src => string.Concat(src.Description.Take(ModelsConstants.DescriptionPreviewLength))))
                 .ForMember(dest => dest.ActionName, opt => opt.MapFrom(src => ModelsConstants.ActionNamePost));
 
-            this.CreateMap<PostCreationBindingModel, Post>()
-                .ForMember(dest => dest.SubredditId, opt => opt.MapFrom(src => src.SelectedSubredditId));
-
-            //------------------------------------------------------------------------------------------------------------
-
             this.CreateMap<Comment, UserIndexViewModel>()
                 .ForMember(dest => dest.ActionInvokerId, opt => opt.MapFrom(src => src.AuthorId))
                 .ForMember(dest => dest.ActionInvokerUsername, opt => opt.MapFrom(src => src.Author.UserName))
-                .ForMember(dest => dest.PostTitle, opt => opt.MapFrom(src => src.Post.Title))
+                .ForMember(dest => dest.PostTitle, opt => opt.MapFrom(src => string.Concat(src.Post.Title.Take(ModelsConstants.TitlePostPreviewLength))))
                 .ForMember(dest => dest.SubredditId, opt => opt.MapFrom(src => src.Post.SubredditId))
                 .ForMember(dest => dest.SubredditName, opt => opt.MapFrom(src => src.Post.Subreddit.Name))
                 .ForMember(dest => dest.PostCreatorId, opt => opt.MapFrom(src => src.Post.AuthorId))
@@ -40,6 +35,11 @@ namespace RedditClone.Web.Mapping
                 .ForMember(dest => dest.DescriptionConcise,
                     opt => opt.MapFrom(src => string.Concat(src.Description.Take(ModelsConstants.DescriptionPreviewLength))))
                 .ForMember(dest => dest.ActionName, opt => opt.MapFrom(src => ModelsConstants.ActionNameComment));
+
+            //------------------------------------------------------------------------------------------------------------
+
+            this.CreateMap<PostCreationBindingModel, Post>()
+                .ForMember(dest => dest.SubredditId, opt => opt.MapFrom(src => src.SelectedSubredditId));
 
             //------------------------------------------------------------------------------------------------------------
 

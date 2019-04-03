@@ -9,7 +9,7 @@
         public const int DescriptionSubredditMinLength = 20;
         public const int DescriptionSubredditMaxLength = 300;
 
-        public const int TitlePostPreviewLength = 50;
+        public const int TitlePostPreviewLength = 20;
         public const int TitlePostMinLength = 7;
         public const int TitlePostMaxLength = 150;
 

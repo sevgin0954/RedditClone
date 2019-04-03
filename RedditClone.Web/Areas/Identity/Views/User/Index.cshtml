@@ -24,7 +24,19 @@ else
     @foreach (var postModel in Model)
     {
         <div class="post-container">
-            @postModel.ActionInvokerId
+            <div>
+                <a class="link-green-hover" asp-route-userId="@postModel.ActionInvokerId">@postModel.ActionInvokerUsername</a>
+                @postModel.ActionName
+                <a class="link-grey" href="#">@postModel.PostTitle</a>
+                at
+                <a class="link-black" asp-route-subredditId="@postModel.SubredditId">r/@postModel.SubredditName</a>
+                posted by
+                <a class="link-grey" asp-route-userId="@postModel.PostCreatorId">@postModel.PostCreatorUsername</a>
+            </div>
+            <hr />
+            <div>
+                @postModel.DescriptionConcise
+            </div>
         </div>
     }
 }

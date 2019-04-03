@@ -65,6 +65,28 @@
     color: #ff4500;
 }
 
+.link-green-hover {
+    font-weight: 500;
+}
+.link-green-hover:hover {
+    color: #B4CC14;
+}
+
+.link-grey {
+    color: grey;
+}
+.link-grey:hover {
+    color: grey;
+}
+
+.link-black {
+    font-weight: 700;
+    color: black;
+}
+.link-black:hover {
+    color: black;
+}
+
 .btn-nav {
     padding-top: 3px;
     padding-bottom: 3px;
