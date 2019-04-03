@@ -309,11 +309,11 @@ namespace RedditClone.Tests.UserAccountServiceTests.UserPostServiceTests
             Assert.Equal(creatorUsername, firstModelPostCreatorUsername);
         }
 
-        [Fact]
-        public async Task WithUserWithCreatedCommentWithLongDescription_ShouldReturnModelWithCorrectDescriptionConcise()
+        [Theory]
+        [InlineData("Description")]
+        public async Task WithUserWithCreatedCommentWithDescription_ShouldReturnModelWithCorrectDescriptionConcise(
+            string description)
         {
-            var description = new string('a', ModelsConstants.DescriptionPreviewLength * 2);
-
             var dbUser = new User();
             var dbComment = new Comment()
             {
@@ -323,16 +323,15 @@ namespace RedditClone.Tests.UserAccountServiceTests.UserPostServiceTests
 
             var models = await this.CallPrepareIndexModelAsyncWithUserAsync(dbUser);
             var firstModelDescriptionConcise = models.First().DescriptionConcise;
-            var expectedDescription = description.Substring(0, ModelsConstants.DescriptionPreviewLength);
 
-            Assert.Equal(expectedDescription, firstModelDescriptionConcise);
+            Assert.Equal(description, firstModelDescriptionConcise);
         }
 
-        [Fact]
-        public async Task WithUserWithCreatedPostWithLongDescription_ShouldReturnModelWithCorrectDescriptionConcise()
+        [Theory]
+        [InlineData("Description")]
+        public async Task WithUserWithCreatedPostWithDescription_ShouldReturnModelWithCorrectDescriptionConcise(
+            string description)
         {
-            var description = new string('a', ModelsConstants.DescriptionPreviewLength * 2);
-
             var dbUser = new User();
             var dbPost = new Post()
             {
@@ -343,9 +342,8 @@ namespace RedditClone.Tests.UserAccountServiceTests.UserPostServiceTests
 
             var models = await this.CallPrepareIndexModelAsyncWithUserAsync(dbUser);
             var firstModelDescriptionConcise = models.First().DescriptionConcise;
-            var expectedDescription = description.Substring(0, ModelsConstants.DescriptionPreviewLength);
 
-            Assert.Equal(expectedDescription, firstModelDescriptionConcise);
+            Assert.Equal(description, firstModelDescriptionConcise);
         }
 
         [Theory]
