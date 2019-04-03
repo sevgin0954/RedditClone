@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using RedditClone.Services.UserServices.Interfaces;
 using System.Collections.Generic;
 using RedditClone.Common.Constants;
+using AutoMapper;
 
 namespace RedditClone.Services.UserServices
 {
@@ -15,11 +16,16 @@ namespace RedditClone.Services.UserServices
     {
         private readonly IRedditCloneUnitOfWork redditCloneUnitOfWork;
         private readonly UserManager<User> userManager;
+        private readonly IMapper mapper;
 
-        public UserPostService(IRedditCloneUnitOfWork redditCloneUnitOfWork, UserManager<User> userManager)
+        public UserPostService(
+            IRedditCloneUnitOfWork redditCloneUnitOfWork, 
+            UserManager<User> userManager,
+            IMapper mapper)
         {
             this.redditCloneUnitOfWork = redditCloneUnitOfWork;
             this.userManager = userManager;
+            this.mapper = mapper;
         }
 
         public async Task<PostCreationBindingModel> PrepareModelForCreatingAsync(ClaimsPrincipal user, string subredditId)
@@ -31,6 +37,32 @@ namespace RedditClone.Services.UserServices
             var model = await this.MapCreationPostBindingModelAsync(dbUserId, dbSubredditId);
 
             return model;
+        }
+
+        public async Task<bool> CreatePostAsync(ClaimsPrincipal user, PostCreationBindingModel model)
+        {
+            var dbSubredditWithId = await this.redditCloneUnitOfWork.Subreddits
+                .GetByIdAsync(model.SelectedSubredditId);
+            var isSubredditWithIdExist = dbSubredditWithId != null;
+
+            var result = false;
+
+            if (isSubredditWithIdExist)
+            {
+                var dbUserId = this.userManager.GetUserId(user);
+                var dbPost = this.mapper.Map<Post>(model);
+                dbPost.AuthorId = dbUserId;
+
+                redditCloneUnitOfWork.Posts.Add(dbPost);
+                var rowsAffected = await redditCloneUnitOfWork.CompleteAsync();
+
+                if (rowsAffected > 0)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
         }
 
         private async Task<PostCreationBindingModel> MapCreationPostBindingModelAsync(string userId, string subredditId)

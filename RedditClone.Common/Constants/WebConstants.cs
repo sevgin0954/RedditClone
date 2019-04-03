@@ -9,8 +9,10 @@
         public const string MessageTypeDanger = "danger";
 
         public const string ErrorMessageSubredditNameTaken = "Subreddit with that name already exist";
+        public const string ErrorMessageUnknownError = "Unknown error has occurred";
 
         public const string MessageSubredditCreated = "Subreddit created successfully";
+        public const string MessagePostCreated = "Post created successfully";
 
         public const string IdentityAreaName = "Identity";
     }

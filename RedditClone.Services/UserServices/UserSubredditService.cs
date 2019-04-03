@@ -36,11 +36,11 @@ namespace RedditClone.Services.UserServices
         public async Task<bool> CreateSubredditAsync(SubredditCreationBindingModel model, ClaimsPrincipal user)
         {
             var subredditsWithName = this.redditCloneUnitOfWork.Subreddits.Find(s => s.Name == model.Name);
-            var isSubredditNameExist = subredditsWithName.Count() > 0;
+            var isSubredditWithNameExist = subredditsWithName.Count() > 0;
 
             var result = false;
 
-            if (isSubredditNameExist == false)
+            if (isSubredditWithNameExist == false)
             {
                 var dbSubreddit = this.mapper.Map<Subreddit>(model);
                 dbSubreddit.AuthorId = this.userManager.GetUserId(user); ;

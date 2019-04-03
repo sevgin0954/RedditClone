@@ -4,6 +4,7 @@ using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Services.UserServices;
 using RedditClone.Services.UserServices.Interfaces;
+using RedditClone.Tests.Common;
 
 namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
 {
@@ -11,7 +12,8 @@ namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
     {
         public IUserPostService GetService(IRedditCloneUnitOfWork unitOfWork, UserManager<User> userManager)
         {
-            var service = new UserPostService(unitOfWork, userManager);
+            var mapper = CommonTestMethods.GetMapper();
+            var service = new UserPostService(unitOfWork, userManager, mapper);
 
             return service;
         }
