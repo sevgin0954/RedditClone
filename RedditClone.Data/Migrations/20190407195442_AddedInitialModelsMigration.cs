@@ -181,8 +181,9 @@ namespace RedditClone.Data.Migrations
                     AuthorId = table.Column<string>(nullable: true),
                     Title = table.Column<string>(maxLength: 150, nullable: false),
                     Description = table.Column<string>(maxLength: 9000, nullable: false),
-                    PostDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 4, 2, 23, 20, 7, 282, DateTimeKind.Utc).AddTicks(7645)),
-                    VotesCount = table.Column<int>(nullable: false),
+                    PostDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 4, 7, 19, 54, 42, 106, DateTimeKind.Utc).AddTicks(3813)),
+                    UpVotesCount = table.Column<int>(nullable: false),
+                    DownVotesCount = table.Column<int>(nullable: false),
                     SubredditId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -232,8 +233,9 @@ namespace RedditClone.Data.Migrations
                 {
                     Id = table.Column<string>(nullable: false),
                     Description = table.Column<string>(maxLength: 9000, nullable: false),
-                    PostDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 4, 2, 23, 20, 7, 297, DateTimeKind.Utc).AddTicks(7557)),
-                    VotesCount = table.Column<int>(nullable: false),
+                    PostDate = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2019, 4, 7, 19, 54, 42, 141, DateTimeKind.Utc).AddTicks(350)),
+                    UpVotesCount = table.Column<int>(nullable: false),
+                    DownVotesCount = table.Column<int>(nullable: false),
                     AuthorId = table.Column<string>(nullable: true),
                     PostId = table.Column<string>(nullable: true),
                     CommentId = table.Column<string>(nullable: true)

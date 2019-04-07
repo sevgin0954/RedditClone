@@ -22,6 +22,7 @@ namespace RedditClone.Web.Mapping
                 .ForMember(dest => dest.PostCreatorUsername, opt => opt.MapFrom(src => src.Author.UserName))
                 .ForMember(dest => dest.DescriptionConcise,
                     opt => opt.MapFrom(src => string.Concat(src.Description.Take(ModelsConstants.DescriptionPreviewLength))))
+                .ForMember(dest => dest.VotesCount, opt => opt.MapFrom(src => src.UpVotesCount - src.DownVotesCount))
                 .ForMember(dest => dest.ActionName, opt => opt.MapFrom(src => ModelsConstants.ActionNamePost));
 
             this.CreateMap<Comment, UserIndexViewModel>()
@@ -34,6 +35,7 @@ namespace RedditClone.Web.Mapping
                 .ForMember(dest => dest.PostCreatorUsername, opt => opt.MapFrom(src => src.Post.Author.UserName))
                 .ForMember(dest => dest.DescriptionConcise,
                     opt => opt.MapFrom(src => string.Concat(src.Description.Take(ModelsConstants.DescriptionPreviewLength))))
+                .ForMember(dest => dest.VotesCount, opt => opt.MapFrom(src => src.UpVotesCount - src.DownVotesCount))
                 .ForMember(dest => dest.ActionName, opt => opt.MapFrom(src => ModelsConstants.ActionNameComment));
 
             //------------------------------------------------------------------------------------------------------------

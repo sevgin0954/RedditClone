@@ -7,6 +7,8 @@ namespace RedditClone.Data.Repositories.Interfaces
 {
     public interface ISubredditRepository : IRepository<Subreddit>
     {
-        Task<IEnumerable<Subreddit>> GetBySubcribedUserIdAsync(string userId);
+        Task<IEnumerable<Subreddit>> GetBySubcribedUserAsync(string userId);
+
+        Task<IEnumerable<Subreddit>> GetByAuthorAsync(string authorId);
     }
 }

@@ -2,7 +2,6 @@
 using RedditClone.Common.Constants;
 using RedditClone.Models;
 using RedditClone.Models.WebModels.UserModels.ViewModels;
-using RedditClone.Tests.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +21,18 @@ namespace RedditClone.Tests.UserAccountServiceTests.UserPostServiceTests
             var models = await this.CallPrepareIndexModelAsyncWithUserAsync(dbUser);
 
             Assert.Empty(models);
+        }
+
+        [Fact]
+        public async Task WithIncorrectUserId_ShouldReturnNull()
+        {
+            var unitOfWork = this.GetRedditCloneUnitOfWork();
+            var service = this.GetService(unitOfWork);
+
+            var dbUserIncorrectId = Guid.NewGuid().ToString();
+            var models = await service.PrepareIndexModelAsync(dbUserIncorrectId);
+
+            Assert.Null(models);
         }
 
         [Fact]
@@ -347,41 +358,51 @@ namespace RedditClone.Tests.UserAccountServiceTests.UserPostServiceTests
         }
 
         [Theory]
-        [InlineData(-5)]
-        [InlineData(0)]
-        [InlineData(5)]
-        public async Task WithUserWithCreatedCommentWithVotes_ShouldReturnModelWithCorrectVotesCount(int votesCount)
+        [InlineData(5, 5)]
+        [InlineData(0, 5)]
+        [InlineData(5, 0)]
+        public async Task WithUserWithCreatedCommentsWithVotes_ShouldReturnModelWithCorrectVotesCount(
+            int upvotesCount,
+            int downVotesCount)
         {
             var dbUser = new User();
             var dbComment = new Comment()
             {
-                VotesCount = votesCount
+                UpVotesCount = upvotesCount,
+                DownVotesCount = downVotesCount
             };
             dbUser.Comments.Add(dbComment);
 
             var models = await this.CallPrepareIndexModelAsyncWithUserAsync(dbUser);
-            var firstModelVotesCount = models.First().VotesCount;
+            var firstModel = models.First();
+            var firstModelVotesCount = firstModel.VotesCount;
+            var expectedVotesCount = upvotesCount - downVotesCount;
 
-            Assert.Equal(votesCount, firstModelVotesCount);
+            Assert.Equal(expectedVotesCount, firstModelVotesCount);
         }
 
         [Theory]
-        [InlineData(-5)]
-        [InlineData(0)]
-        [InlineData(5)]
-        public async Task WithUserWithCreatedPostWithVotes_ShouldReturnModelWithCorrectVotesCount(int votesCount)
+        [InlineData(1, 5)]
+        [InlineData(0, 5)]
+        [InlineData(5, 0)]
+        public async Task WithUserWithCreatedPostWithVotes_ShouldReturnModelWithCorrectVotesCount(
+            int upvotesCount, 
+            int downVotesCount)
         {
             var dbUser = new User();
             var dbPost = new Post()
             {
-                VotesCount = votesCount
+                UpVotesCount = upvotesCount, 
+                DownVotesCount = downVotesCount
             };
             dbUser.Posts.Add(dbPost);
 
             var models = await this.CallPrepareIndexModelAsyncWithUserAsync(dbUser);
-            var firstModelVotesCount = models.First().VotesCount;
+            var firstModel = models.First();
+            var firstModelVotesCount = firstModel.VotesCount;
+            var expectedVotesCount = upvotesCount - downVotesCount;
 
-            Assert.Equal(votesCount, firstModelVotesCount);
+            Assert.Equal(expectedVotesCount, firstModelVotesCount);
         }
 
         [Fact]
@@ -426,13 +447,10 @@ namespace RedditClone.Tests.UserAccountServiceTests.UserPostServiceTests
             unitOfWork.Users.Add(user);
             unitOfWork.Complete();
 
-            var mockedUserManager = this.GetMockedUserManager();
-            CommonTestMethods.SetupMockedUserManagerGetUserAsync(mockedUserManager, user);
-
-            var service = this.GetService(unitOfWork, mockedUserManager.Object);
+            var service = this.GetService(unitOfWork);
             var mockedClaimsPrincipal = new Mock<ClaimsPrincipal>();
 
-            var models = await service.PrepareIndexModelAsync(mockedClaimsPrincipal.Object);
+            var models = await service.PrepareIndexModelAsync(user.Id);
             return models;
         }
     }

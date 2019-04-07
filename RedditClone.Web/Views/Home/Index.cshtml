@@ -1,3 +1,46 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+
+@foreach (var postModel in Model.Posts)
+{
+    <div class="post-container container d-flex flex-row">
+        <div class="d-flex flex-column">
+            <div>
+                <a class="link-grey link-green-hover" href="#">
+                    <i class="fas fa-arrow-up fa-lg"></i>
+                </a>
+            </div>
+            <div>
+                &nbsp;@postModel.VotesCount
+            </div>
+            <div>
+                <a class="link-grey link-red-hover" href="#">
+                    <i class="fas fa-arrow-down fa-lg"></i>
+                </a>
+            </div>
+        </div>
+        &nbsp;
+        <div class="d-flex flex-column flex-grow-1">
+            <div class="flex-row">
+                <a class="link-green-hover" asp-route-userId="@postModel.ActionInvokerId">
+                    @postModel.ActionInvokerUsername
+                </a>
+                @postModel.ActionName
+                <a class="link-grey" href="#">@postModel.PostTitle</a>
+                at
+                <a class="link-black" asp-controller="Post" asp-action="Index" asp-route-subredditId="@postModel.SubredditId">
+                    r/@postModel.SubredditName
+                </a>
+                posted by
+                <a class="link-grey" asp-route-userId="@postModel.PostCreatorId">@postModel.PostCreatorUsername</a>
+            </div>
+            <div class="flex-row">
+                <hr />
+            </div>
+            <div class="flex-row">
+                @postModel.DescriptionConcise
+            </div>
+        </div>
+    </div>
+}

@@ -7,6 +7,6 @@ namespace RedditClone.Data.Repositories.Interfaces
 {
     public interface ICommentRepository : IRepository<Comment>
     {
-        Task<IEnumerable<Comment>> GetAllWithPostByUserIdAsync(string userId);
+        Task<IEnumerable<Comment>> GetWithPostByUserIdAsync(string userId);
     }
 }

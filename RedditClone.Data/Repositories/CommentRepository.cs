@@ -13,7 +13,7 @@ namespace RedditClone.Data.Repositories
         public CommentRepository(RedditCloneDbContext dbContext) 
             : base(dbContext) { }
 
-        public async Task<IEnumerable<Comment>> GetAllWithPostByUserIdAsync(string userId)
+        public async Task<IEnumerable<Comment>> GetWithPostByUserIdAsync(string userId)
         {
             var comments = await this.RedditCloneDbContext.Comments
                 .Include(c => c.Post)

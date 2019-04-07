@@ -1,0 +1,57 @@
+﻿@model IndexViewModel
+@using RedditClone.Common.Enums
+<nav class="navbar-secondary bg-white">
+    <div class="container d-flex flex-row">
+        <div class="btn-grey">
+            Sort
+        </div>
+        <div class="dropdown nav-item">
+            <button class="btn btn-white btn-secondary-nav dropdown-toggle" type="button" data-toggle="dropdown">
+                @{ var sortTypeName = Model.PostSortType.ToString(); }
+                @Html.Raw(PostSortTypeLinks.SortTypeIconLink[sortTypeName])
+                @sortTypeName
+            </button>
+            <div class="dropdown-menu dropdown-menu-small">
+                @foreach (var postSortType in (PostSortType[])Enum.GetValues(typeof(PostSortType)))
+                {
+                    if (postSortType != Model.PostSortType)
+                    {
+                        sortTypeName = postSortType.ToString();
+
+                        <form asp-route-sortType="@sortTypeName" asp-controller="Home" asp-action="ChangeSortType" method="post">
+                            <button class="btn dropdown-item btn-dropdown-item btn-grey" type="submit">
+                                @Html.Raw(PostSortTypeLinks.SortTypeIconLink[sortTypeName])
+                                @sortTypeName
+                            </button>
+                        </form>
+                    }
+                }
+            </div>
+        </div>
+
+        @if (Model.PostShowTimeFrame != null)
+        {
+            <div class="dropdown nav-item">
+                <button class="btn btn-white btn-secondary-nav dropdown-toggle" type="button" data-toggle="dropdown">
+                    @{ var timeFrameName = Model.PostShowTimeFrame.ToString(); }
+                    @timeFrameName
+                </button>
+                <div class="dropdown-menu dropdown-menu-small">
+                @foreach (var postTimeFrame in (PostShowTimeFrame[])Enum.GetValues(typeof(PostShowTimeFrame)))
+                {
+                    if (postTimeFrame != Model.PostShowTimeFrame)
+                    {
+                        timeFrameName = postTimeFrame.ToString();
+                        <form asp-route-timeFrame="@timeFrameName" asp-controller="Home" asp-action="ChangeTimeFrame" method="post">
+                            <button class="btn dropdown-item btn-dropdown-item btn-grey" type="submit" >
+                                @{ timeFrameName = postTimeFrame.ToString(); }
+                                @timeFrameName
+                            </button>
+                        </form>
+                    }
+                }
+            </div>
+            </div>
+        }
+    </div>
+</nav>

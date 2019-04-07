@@ -9,6 +9,17 @@ using RedditClone.Services.UserServices.Interfaces;
 using System.Collections.Generic;
 using RedditClone.Common.Constants;
 using AutoMapper;
+using RedditClone.Models.WebModels.PostModels.ViewModels;
+using RedditClone.Common.Enums;
+using System;
+using RedditClone.Data.Factories.TimeFactories;
+using RedditClone.Data.Factories.PostsFactories;
+using RedditClone.Models.WebModels.IndexModels.ViewModels;
+using RedditClone.Data.Orders.PostOrders.Interfaces;
+using RedditClone.Data.Orders.PostOrders;
+using Microsoft.AspNetCore.Http;
+using RedditClone.Common.Helpers;
+using System.Linq;
 
 namespace RedditClone.Services.UserServices
 {
@@ -65,6 +76,86 @@ namespace RedditClone.Services.UserServices
             return result;
         }
 
+        public async Task<IndexViewModel> GetPostsCustomizedByUser(
+            ClaimsPrincipal user,
+            IRequestCookieCollection requestCookies,
+            IResponseCookies responseCookies)
+        {
+            var postSortTypeKey = WebConstants.CookieKeyPostSortType;
+            var postTimeFrameKey = WebConstants.CookieKeyPostShowTimeFrame;
+            var postSortTypeValue = requestCookies[postSortTypeKey];
+            var postTimeFrameValue = requestCookies[postTimeFrameKey];
+
+            var postSortType = PostSortType.Best;
+            var postShowTimeFrame = PostShowTimeFrame.PastDay;
+
+            if (Enum.TryParse(postSortTypeValue, out postSortType) == false)
+            {
+                CookiesHelper.SetDefaultPostSortTypeCookie(responseCookies);
+                postSortType = PostSortType.Best;
+            }
+            if (Enum.TryParse(postTimeFrameValue, out postShowTimeFrame) == false)
+            {
+                CookiesHelper.SetDefaultPostShowTimeFrameCookie(responseCookies);
+                postShowTimeFrame = PostShowTimeFrame.PastDay;
+            }
+
+            var timeFrame = TimeFrameFactory.GetTimeFrame(postShowTimeFrame);
+            var sortPostsStrategy = SortPostsFactory
+                .GetSortPostsStrategy(this.redditCloneUnitOfWork, timeFrame, postSortType);
+
+            var dbUserId = this.userManager.GetUserId(user);
+            var dbPosts = await sortPostsStrategy.GetSortedPostsAsync(dbUserId);
+
+            var isHaveTimeFrame = CheckIsHaveTimeFrame(sortPostsStrategy);
+            if (isHaveTimeFrame)
+            {
+                var model = this.MapIndexModelWithTimeFrame(dbPosts, postSortType, postShowTimeFrame);
+                return model;
+            }
+            else
+            {
+                CookiesHelper.SetDefaultPostShowTimeFrameCookie(responseCookies);
+                var model = this.MapIndexModel(dbPosts, postSortType);
+                return model;
+            }
+        }
+
+        public async Task<IndexViewModel> GetPostsForQuest(
+            IRequestCookieCollection requestCookies, 
+            IResponseCookies responseCookies)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ChangePostSortType(IResponseCookies responseCookies, PostSortType postSortType)
+        {
+            var sortTypeKey = WebConstants.CookieKeyPostSortType;
+            var sortTypeValue = postSortType.ToString();
+
+            responseCookies.Append(sortTypeKey, sortTypeValue);
+        }
+
+        public void ChangePostTimeFrame(IResponseCookies responseCookies, PostShowTimeFrame postShowTimeFrame)
+        {
+            var timeFrameKey = WebConstants.CookieKeyPostShowTimeFrame;
+            var timeFrameValue = postShowTimeFrame.ToString();
+
+            responseCookies.Append(timeFrameKey, timeFrameValue);
+        }
+
+        private bool CheckIsHaveTimeFrame(ISortPostsStrategy sortPostsStrategy)
+        {
+            var isHaveTimeFrame = false;
+
+            if (sortPostsStrategy is BaseTimeDependentPostSortingStrategy)
+            {
+                isHaveTimeFrame = true;
+            }
+
+            return isHaveTimeFrame;
+        }
+
         private async Task<PostCreationBindingModel> MapCreationPostBindingModelAsync(string userId, string subredditId)
         {
             var model = new PostCreationBindingModel
@@ -72,34 +163,28 @@ namespace RedditClone.Services.UserServices
                 SelectedSubredditId = subredditId
             };
 
-            var createdSubreddits = redditCloneUnitOfWork.Subreddits.Find(s => s.AuthorId == userId);
-            var subscribedSubreddits = await redditCloneUnitOfWork.Subreddits.GetBySubcribedUserIdAsync(userId);
-
-            var createdGroupName = ModelsConstants.SelectListGroupNameCreatedSubreddits;
-            var subscribedGroupName = ModelsConstants.SelectListGroupNameSubscribedSubreddits;
-
-            var createdSubredditsSelectListItems 
-                = this.MapSelectListItemsBySubreddits(createdSubreddits, createdGroupName, subredditId);
-            if (createdSubredditsSelectListItems.Count == 0)
-            {
-                var text = ModelsConstants.SelectListItemNameEmpty;
-                var initialCreatedItem = this.CreateEmptySelectListItem(createdGroupName, text);
-                createdSubredditsSelectListItems.Add(initialCreatedItem);
-            }
-
-            var subscribedSubredditsSelectListItem 
-                = this.MapSelectListItemsBySubreddits(subscribedSubreddits, subscribedGroupName, subredditId);
-            if (subscribedSubredditsSelectListItem.Count == 0)
-            {
-                var text = ModelsConstants.SelectListItemNameEmpty;
-                var initialCreatedItem = this.CreateEmptySelectListItem(subscribedGroupName, text);
-                subscribedSubredditsSelectListItem.Add(initialCreatedItem);
-            }
-            
-            model.Subreddits.AddRange(createdSubredditsSelectListItems);
-            model.Subreddits.AddRange(subscribedSubredditsSelectListItem);
+            await this.MapPostModelSubredditsAsync(model, userId, subredditId);
 
             return model;
+        }
+
+        private async Task MapPostModelSubredditsAsync(PostCreationBindingModel model, string userId, string subredditId)
+        {
+            var createdSubreddits = await redditCloneUnitOfWork.Subreddits
+                .GetByAuthorAsync(userId);
+            var subscribedSubreddits = await redditCloneUnitOfWork.Subreddits
+                .GetBySubcribedUserAsync(userId);
+
+            var createdSubredditGroupName = ModelsConstants.SelectListGroupNameCreatedSubreddits;
+            var createdSubredditsSelectListItems
+                = this.MapSelectListItemsBySubreddits(createdSubreddits, createdSubredditGroupName, subredditId);
+
+            var subscribedSubredditGroupName = ModelsConstants.SelectListGroupNameSubscribedSubreddits;
+            var subscribedSubredditsSelectListItem
+                = this.MapSelectListItemsBySubreddits(subscribedSubreddits, subscribedSubredditGroupName, subredditId);
+
+            model.Subreddits.AddRange(createdSubredditsSelectListItems);
+            model.Subreddits.AddRange(subscribedSubredditsSelectListItem);
         }
 
         private ICollection<SelectListItem> MapSelectListItemsBySubreddits(
@@ -112,6 +197,13 @@ namespace RedditClone.Services.UserServices
             {
                 Name = groupName
             };
+
+            if (subreddits.Count() == 0)
+            {
+                var text = ModelsConstants.SelectListItemNameEmpty;
+                var initialCreatedItem = this.CreateEmptySelectListItem(groupName, text);
+                models.Add(initialCreatedItem);
+            }
 
             foreach (var subreddit in subreddits)
             {
@@ -158,6 +250,38 @@ namespace RedditClone.Services.UserServices
             };
 
             return selectListItem;
+        }
+
+        private IndexViewModel MapIndexModelWithTimeFrame(
+            IEnumerable<Post> posts,
+            PostSortType selectedSortType,
+            PostShowTimeFrame selectedTimeFrame)
+        {
+            var postModels = this.mapper.Map<IEnumerable<PostConciseViewModel>>(posts);
+
+            var model = new IndexViewModel
+            {
+                Posts = postModels,
+                PostSortType = selectedSortType,
+                PostShowTimeFrame = selectedTimeFrame
+            };
+
+            return model;
+        }
+
+        private IndexViewModel MapIndexModel(
+            IEnumerable<Post> posts,
+            PostSortType selectedSortType)
+        {
+            var postModels = this.mapper.Map<IEnumerable<PostConciseViewModel>>(posts);
+
+            var model = new IndexViewModel
+            {
+                Posts = postModels,
+                PostSortType = selectedSortType
+            };
+
+            return model;
         }
     }
 }

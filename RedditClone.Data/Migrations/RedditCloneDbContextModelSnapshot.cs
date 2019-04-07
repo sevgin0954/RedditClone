@@ -142,13 +142,15 @@ namespace RedditClone.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(9000);
 
+                    b.Property<int>("DownVotesCount");
+
                     b.Property<DateTime>("PostDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 4, 2, 23, 20, 7, 297, DateTimeKind.Utc).AddTicks(7557));
+                        .HasDefaultValue(new DateTime(2019, 4, 7, 19, 54, 42, 141, DateTimeKind.Utc).AddTicks(350));
 
                     b.Property<string>("PostId");
 
-                    b.Property<int>("VotesCount");
+                    b.Property<int>("UpVotesCount");
 
                     b.HasKey("Id");
 
@@ -172,9 +174,11 @@ namespace RedditClone.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(9000);
 
+                    b.Property<int>("DownVotesCount");
+
                     b.Property<DateTime>("PostDate")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 4, 2, 23, 20, 7, 282, DateTimeKind.Utc).AddTicks(7645));
+                        .HasDefaultValue(new DateTime(2019, 4, 7, 19, 54, 42, 106, DateTimeKind.Utc).AddTicks(3813));
 
                     b.Property<string>("SubredditId");
 
@@ -182,7 +186,7 @@ namespace RedditClone.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(150);
 
-                    b.Property<int>("VotesCount");
+                    b.Property<int>("UpVotesCount");
 
                     b.HasKey("Id");
 

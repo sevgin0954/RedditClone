@@ -11,7 +11,9 @@ namespace RedditClone.Models
 
         public DateTime PostDate { get; set; }
 
-        public int VotesCount { get; set; }
+        public int UpVotesCount { get; set; }
+
+        public int DownVotesCount { get; set; }
 
         public string AuthorId { get; set; }
         public User Author { get; set; }

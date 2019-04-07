@@ -48,7 +48,10 @@ namespace RedditClone.Data
                     .HasDefaultValue(DateTime.UtcNow)
                     .IsRequired();
 
-                post.Property(p => p.VotesCount)
+                post.Property(p => p.UpVotesCount)
+                    .IsRequired();
+
+                post.Property(p => p.DownVotesCount)
                     .IsRequired();
 
                 post.HasOne(p => p.Author)
@@ -76,7 +79,10 @@ namespace RedditClone.Data
                     .HasDefaultValue(DateTime.UtcNow)
                     .IsRequired();
 
-                comments.Property(c => c.VotesCount)
+                comments.Property(c => c.UpVotesCount)
+                    .IsRequired();
+
+                comments.Property(c => c.DownVotesCount)
                     .IsRequired();
 
                 comments.HasOne(c => c.Author)

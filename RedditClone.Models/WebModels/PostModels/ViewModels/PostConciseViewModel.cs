@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace RedditClone.Models
+namespace RedditClone.Models.WebModels.PostModels.ViewModels
 {
-    public class Post
+    public class PostConciseViewModel
     {
         public string Id { get; set; }
 
@@ -16,13 +15,11 @@ namespace RedditClone.Models
 
         public DateTime PostDate { get; set; }
 
-        public int UpVotesCount { get; set; }
-
-        public int DownVotesCount { get; set; }
+        public int VotesCount { get; set; }
 
         public string SubredditId { get; set; }
         public Subreddit Subreddit { get; set; }
 
-        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public int CommentsCount { get; set; }
     }
 }
