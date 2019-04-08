@@ -114,6 +114,10 @@ namespace RedditClone.Services.UserServices
             {
                 var dbUserId = this.userManager.GetUserId(user);
                 dbPosts = await sortPostsStrategy.GetSortedPostsByUserAsync(dbUserId);
+                if (dbPosts.Count() == 0)
+                {
+                    dbPosts = await sortPostsStrategy.GetSortedPostsAsync();
+                }
             }
             else
             {
