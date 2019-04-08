@@ -15,9 +15,15 @@ namespace RedditClone.Data.Orders.PostOrders
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Post>> GetSortedPostsAsync(string userId)
+        public async Task<IEnumerable<Post>> GetSortedPostsByUserAsync(string userId)
         {
             var dbPosts = await this.unitOfWork.Posts.GetBySubcribedUserOrderedByNewAsync(userId);
+            return dbPosts;
+        }
+
+        public async Task<IEnumerable<Post>> GetSortedPostsAsync()
+        {
+            var dbPosts = await this.unitOfWork.Posts.GetOrderByNewAsync();
             return dbPosts;
         }
     }

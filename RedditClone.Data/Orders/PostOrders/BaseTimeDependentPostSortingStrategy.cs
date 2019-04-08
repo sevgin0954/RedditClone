@@ -15,6 +15,8 @@ namespace RedditClone.Data.Orders.PostOrders
 
         protected TimeSpan TimeFrame { get; }
 
-        public abstract Task<IEnumerable<Post>> GetSortedPostsAsync(string userId);
+        public abstract Task<IEnumerable<Post>> GetSortedPostsByUserAsync(string userId);
+
+        public abstract Task<IEnumerable<Post>> GetSortedPostsAsync();
     }
 }

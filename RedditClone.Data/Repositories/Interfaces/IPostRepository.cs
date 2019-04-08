@@ -10,8 +10,12 @@ namespace RedditClone.Data.Repositories.Interfaces
     {
         Task<IEnumerable<Post>> GetWithSubredditByAuthorAsync(string userId);
         Task<IEnumerable<Post>> GetBySubcribedUserOrderedByNewAsync(string userId);
+        Task<IEnumerable<Post>> GetOrderByNewAsync();
         Task<IEnumerable<Post>> GetBySubcribedUserOrderedByTopAsync(string userId, TimeSpan timeFrame);
+        Task<IEnumerable<Post>> GetOrderedByTopAsync(TimeSpan timeFrame);
         Task<IEnumerable<Post>> GetBySubscribedUserOrderedByControversialAsync(string userId, TimeSpan timeFrame);
+        Task<IEnumerable<Post>> GetOrderedByControversialAsync(TimeSpan timeFrame);
         Task<IEnumerable<Post>> GetBySubscribedUserOrderedByBestAsync(string userId);
+        Task<IEnumerable<Post>> GetOrderedByBestAsync();
     }
 }

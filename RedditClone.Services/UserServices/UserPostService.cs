@@ -105,7 +105,7 @@ namespace RedditClone.Services.UserServices
                 .GetSortPostsStrategy(this.redditCloneUnitOfWork, timeFrame, postSortType);
 
             var dbUserId = this.userManager.GetUserId(user);
-            var dbPosts = await sortPostsStrategy.GetSortedPostsAsync(dbUserId);
+            var dbPosts = await sortPostsStrategy.GetSortedPostsByUserAsync(dbUserId);
 
             var isHaveTimeFrame = CheckIsHaveTimeFrame(sortPostsStrategy);
             if (isHaveTimeFrame)
@@ -125,7 +125,43 @@ namespace RedditClone.Services.UserServices
             IRequestCookieCollection requestCookies, 
             IResponseCookies responseCookies)
         {
-            throw new NotImplementedException();
+            var postSortTypeKey = WebConstants.CookieKeyPostSortType;
+            var postTimeFrameKey = WebConstants.CookieKeyPostShowTimeFrame;
+            var postSortTypeValue = requestCookies[postSortTypeKey];
+            var postTimeFrameValue = requestCookies[postTimeFrameKey];
+
+            var postSortType = PostSortType.Best;
+            var postShowTimeFrame = PostShowTimeFrame.PastDay;
+
+            if (Enum.TryParse(postSortTypeValue, out postSortType) == false)
+            {
+                CookiesHelper.SetDefaultPostSortTypeCookie(responseCookies);
+                postSortType = PostSortType.Best;
+            }
+            if (Enum.TryParse(postTimeFrameValue, out postShowTimeFrame) == false)
+            {
+                CookiesHelper.SetDefaultPostShowTimeFrameCookie(responseCookies);
+                postShowTimeFrame = PostShowTimeFrame.PastDay;
+            }
+
+            var timeFrame = TimeFrameFactory.GetTimeFrame(postShowTimeFrame);
+            var sortPostsStrategy = SortPostsFactory
+                .GetSortPostsStrategy(this.redditCloneUnitOfWork, timeFrame, postSortType);
+
+            var dbPosts = await sortPostsStrategy.GetSortedPostsAsync();
+
+            var isHaveTimeFrame = CheckIsHaveTimeFrame(sortPostsStrategy);
+            if (isHaveTimeFrame)
+            {
+                var model = this.MapIndexModelWithTimeFrame(dbPosts, postSortType, postShowTimeFrame);
+                return model;
+            }
+            else
+            {
+                CookiesHelper.SetDefaultPostShowTimeFrameCookie(responseCookies);
+                var model = this.MapIndexModel(dbPosts, postSortType);
+                return model;
+            }
         }
 
         public void ChangePostSortType(IResponseCookies responseCookies, PostSortType postSortType)

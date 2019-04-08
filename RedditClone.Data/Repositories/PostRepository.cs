@@ -34,6 +34,14 @@ namespace RedditClone.Data.Repositories
             return filteredPosts;
         }
 
+        public async Task<IEnumerable<Post>> GetOrderByNewAsync()
+        {
+            var postsQueryable = this.GetOrderedByNew();
+            var posts = await postsQueryable.ToListAsync();
+
+            return posts;
+        }
+
         private IQueryable<Post> GetOrderedByNew()
         {
             var postsQueryable = this.RedditCloneDbContext.Posts
@@ -52,6 +60,14 @@ namespace RedditClone.Data.Repositories
                 .ToListAsync();
 
             return filteredPosts;
+        }
+
+        public async Task<IEnumerable<Post>> GetOrderedByTopAsync(TimeSpan timeFrame)
+        {
+            var postsQueryable = this.GetOrderedByTop(timeFrame);
+            var posts = await postsQueryable.ToListAsync();
+
+            return posts;
         }
 
         private IQueryable<Post> GetOrderedByTop(TimeSpan timeFrame)
@@ -78,7 +94,15 @@ namespace RedditClone.Data.Repositories
             return filteredPosts;
         }
 
-        public IQueryable<Post> GetOrderedByControversial(TimeSpan timeFrame)
+        public async Task<IEnumerable<Post>> GetOrderedByControversialAsync(TimeSpan timeFrame)
+        {
+            var postsQueryable = this.GetOrderedByControversial(timeFrame);
+            var posts = await postsQueryable.ToListAsync();
+
+            return posts;
+        }
+
+        private IQueryable<Post> GetOrderedByControversial(TimeSpan timeFrame)
         {
             var startDate = DateTime.UtcNow - timeFrame;
 
@@ -100,6 +124,14 @@ namespace RedditClone.Data.Repositories
                 .ToListAsync();
 
             return filteredPosts;
+        }
+
+        public async Task<IEnumerable<Post>> GetOrderedByBestAsync()
+        {
+            var postsQueryable = this.GetOrderedByBest();
+            var posts = await postsQueryable.ToListAsync();
+
+            return posts;
         }
 
         private IQueryable<Post> GetOrderedByBest()

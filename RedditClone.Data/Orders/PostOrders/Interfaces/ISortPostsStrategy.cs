@@ -6,6 +6,8 @@ namespace RedditClone.Data.Orders.PostOrders.Interfaces
 {
     public interface ISortPostsStrategy
     {
-        Task<IEnumerable<Post>> GetSortedPostsAsync(string userId);
+        Task<IEnumerable<Post>> GetSortedPostsByUserAsync(string userId);
+
+        Task<IEnumerable<Post>> GetSortedPostsAsync();
     }
 }
