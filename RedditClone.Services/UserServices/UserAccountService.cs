@@ -21,14 +21,14 @@ namespace RedditClone.Services.UserServices
 
         public async Task<IEnumerable<UserIndexViewModel>> PrepareIndexModelAsync(string userId)
         {
-            var dbUser = await this.redditCloneUnitOfWork.Users.GetByIdAsync(userId);
+            var dbUser = await this.redditCloneUnitOfWork.Users.GetWithPostsWithSubredditAndCommentsAsync(userId);
             if (dbUser == null)
             {
                 return null;
             }
 
-            var dbAllPostsFromUser = await this.redditCloneUnitOfWork.Posts.GetWithSubredditByAuthorAsync(dbUser.Id);
-            var dbAllCommentsFromUser = await this.redditCloneUnitOfWork.Comments.GetWithPostByUserIdAsync(dbUser.Id);
+            var dbAllPostsFromUser = dbUser.Posts;
+            var dbAllCommentsFromUser = dbUser.Comments;
 
             var models = new List<UserIndexViewModel>();
             models.AddRange(this.mapper.Map<IEnumerable<UserIndexViewModel>>(dbAllPostsFromUser));

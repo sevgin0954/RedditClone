@@ -13,6 +13,10 @@
     box-shadow: none;
 }
 
+.votes-container {
+    margin-right: 25px;
+}
+
 .searchbar-element {
     border: none;
 }
@@ -26,6 +30,7 @@
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 0 10px 1px black;
+    word-break: break-all;
 }
 .post-container:hover {
     box-shadow: 0 0 5px 2px #007bff;

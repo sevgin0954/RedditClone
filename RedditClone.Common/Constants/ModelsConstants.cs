@@ -4,7 +4,8 @@
     {
         public const int DescriptionPostMinLength = 0;
         public const int DescriptionPostMaxLength = 9000;
-        public const int DescriptionPreviewLength = 100;
+        public const int DescriptionAccountPreviewLength = 100;
+        public const int DescriptionIndexPreviewLength = 500;
 
         public const int DescriptionSubredditMinLength = 20;
         public const int DescriptionSubredditMaxLength = 300;

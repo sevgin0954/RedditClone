@@ -14,16 +14,6 @@ namespace RedditClone.Data.Repositories
         public PostRepository(RedditCloneDbContext dbContext)
             : base(dbContext) { }
 
-        public async Task<IEnumerable<Post>> GetWithSubredditByAuthorAsync(string authorId)
-        {
-            var posts = await this.RedditCloneDbContext.Posts
-                .Include(p => p.Subreddit)
-                .Where(p => p.AuthorId == authorId)
-                .ToListAsync();
-
-            return posts;
-        }
-
         public async Task<IEnumerable<Post>> GetBySubcribedUserOrderedByNewAsync(string userId)
         {
             var postsQueryable = this.GetOrderedByNew();
@@ -140,6 +130,8 @@ namespace RedditClone.Data.Repositories
 
             var postsQueryable = this.RedditCloneDbContext.Posts
                 .Where(p => p.PostDate >= startDate)
+                .Include(p => p.Author)
+                .Include(p => p.Subreddit)
                 .OrderByDescending(p => p.UpVotesCount - p.DownVotesCount)
                 .ThenByDescending(p => p.PostDate);
 

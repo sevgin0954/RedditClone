@@ -1,11 +1,12 @@
-﻿@{
+﻿@model IndexViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
 @foreach (var postModel in Model.Posts)
 {
     <div class="post-container container d-flex flex-row">
-        <div class="d-flex flex-column">
+        <div class="flex-column">
             <div>
                 <a class="link-grey link-green-hover" href="#">
                     <i class="fas fa-arrow-up fa-lg"></i>
@@ -21,19 +22,17 @@
             </div>
         </div>
         &nbsp;
-        <div class="d-flex flex-column flex-grow-1">
+        <div class="flex-column flex-grow-1 min-width-0">
             <div class="flex-row">
-                <a class="link-green-hover" asp-route-userId="@postModel.ActionInvokerId">
-                    @postModel.ActionInvokerUsername
-                </a>
-                @postModel.ActionName
-                <a class="link-grey" href="#">@postModel.PostTitle</a>
+                <a class="link-grey" href="#">@postModel.Title</a>
                 at
                 <a class="link-black" asp-controller="Post" asp-action="Index" asp-route-subredditId="@postModel.SubredditId">
                     r/@postModel.SubredditName
                 </a>
                 posted by
-                <a class="link-grey" asp-route-userId="@postModel.PostCreatorId">@postModel.PostCreatorUsername</a>
+                <a class="link-grey" asp-area="Identity" asp-controller="User" asp-action="Index" asp-route-userId="@postModel.AuthorId">
+                    @postModel.AuthorUsername
+                </a>
             </div>
             <div class="flex-row">
                 <hr />

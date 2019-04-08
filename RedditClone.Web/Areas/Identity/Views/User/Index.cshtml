@@ -23,24 +23,24 @@ else
 {
     @foreach (var postModel in Model)
     {
-        <div class="post-container container d-flex flex-row">
-            <div class="d-flex flex-column">
-                    <div>
+        <div class="post-container d-flex">
+            <div class="votes-container flex-column">
+                    <div class="flex-row">
                         <a class="link-grey link-green-hover" href="#">
                             <i class="fas fa-arrow-up fa-lg"></i>
                         </a>
                     </div>
-                    <div>
+                    <div class="flex-row">
                         &nbsp;@postModel.VotesCount
                     </div>
-                    <div>
+                    <div class="flex-row">
                         <a class="link-grey link-red-hover" href="#">
                             <i class="fas fa-arrow-down fa-lg"></i>
                         </a>
                     </div>
             </div>
             &nbsp;
-            <div class="d-flex flex-column flex-grow-1">
+            <div class="flex-column flex-grow-1">
                 <div class="flex-row">
                     <a class="link-green-hover" asp-route-userId="@postModel.ActionInvokerId">
                         @postModel.ActionInvokerUsername
