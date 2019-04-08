@@ -13,12 +13,8 @@ namespace RedditClone.Services.UserServices.Interfaces
 
         Task<bool> CreatePostAsync(ClaimsPrincipal user, PostCreationBindingModel model);
 
-        Task<IndexViewModel> GetPostsCustomizedByUser(
+        Task<IndexViewModel> GetOrderedPosts(
             ClaimsPrincipal user,
-            IRequestCookieCollection requestCookies,
-            IResponseCookies responseCookies);
-
-        Task<IndexViewModel> GetPostsForQuest(
             IRequestCookieCollection requestCookies,
             IResponseCookies responseCookies);
 

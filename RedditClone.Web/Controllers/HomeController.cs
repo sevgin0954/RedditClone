@@ -25,19 +25,10 @@ namespace RedditClone.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            IndexViewModel model = null;
-            
-            if (signInManager.IsSignedIn(this.User))
-            {
-                model = await this.userPostService.GetPostsCustomizedByUser(
-                    this.User, 
-                    this.Request.Cookies, 
+            IndexViewModel model = await this.userPostService.GetOrderedPosts(
+                    this.User,
+                    this.Request.Cookies,
                     this.Response.Cookies);
-            }
-            else
-            {
-                model = await this.userPostService.GetPostsForQuest(this.Request.Cookies, this.Response.Cookies);
-            }
 
             return View(model);
         }

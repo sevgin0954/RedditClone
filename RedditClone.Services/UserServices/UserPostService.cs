@@ -27,15 +27,18 @@ namespace RedditClone.Services.UserServices
     {
         private readonly IRedditCloneUnitOfWork redditCloneUnitOfWork;
         private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
         private readonly IMapper mapper;
 
         public UserPostService(
             IRedditCloneUnitOfWork redditCloneUnitOfWork, 
             UserManager<User> userManager,
+            SignInManager<User> signInManager,
             IMapper mapper)
         {
             this.redditCloneUnitOfWork = redditCloneUnitOfWork;
             this.userManager = userManager;
+            this.signInManager = signInManager;
             this.mapper = mapper;
         }
 
@@ -76,7 +79,7 @@ namespace RedditClone.Services.UserServices
             return result;
         }
 
-        public async Task<IndexViewModel> GetPostsCustomizedByUser(
+        public async Task<IndexViewModel> GetOrderedPosts(
             ClaimsPrincipal user,
             IRequestCookieCollection requestCookies,
             IResponseCookies responseCookies)
@@ -104,51 +107,18 @@ namespace RedditClone.Services.UserServices
             var sortPostsStrategy = SortPostsFactory
                 .GetSortPostsStrategy(this.redditCloneUnitOfWork, timeFrame, postSortType);
 
-            var dbUserId = this.userManager.GetUserId(user);
-            var dbPosts = await sortPostsStrategy.GetSortedPostsByUserAsync(dbUserId);
+            IEnumerable<Post> dbPosts = new List<Post>();
 
-            var isHaveTimeFrame = CheckIsHaveTimeFrame(sortPostsStrategy);
-            if (isHaveTimeFrame)
+            var isSignIn = this.signInManager.IsSignedIn(user);
+            if (isSignIn)
             {
-                var model = this.MapIndexModelWithTimeFrame(dbPosts, postSortType, postShowTimeFrame);
-                return model;
+                var dbUserId = this.userManager.GetUserId(user);
+                dbPosts = await sortPostsStrategy.GetSortedPostsByUserAsync(dbUserId);
             }
             else
             {
-                CookiesHelper.SetDefaultPostShowTimeFrameCookie(responseCookies);
-                var model = this.MapIndexModel(dbPosts, postSortType);
-                return model;
+                dbPosts = await sortPostsStrategy.GetSortedPostsAsync();
             }
-        }
-
-        public async Task<IndexViewModel> GetPostsForQuest(
-            IRequestCookieCollection requestCookies, 
-            IResponseCookies responseCookies)
-        {
-            var postSortTypeKey = WebConstants.CookieKeyPostSortType;
-            var postTimeFrameKey = WebConstants.CookieKeyPostShowTimeFrame;
-            var postSortTypeValue = requestCookies[postSortTypeKey];
-            var postTimeFrameValue = requestCookies[postTimeFrameKey];
-
-            var postSortType = PostSortType.Best;
-            var postShowTimeFrame = PostShowTimeFrame.PastDay;
-
-            if (Enum.TryParse(postSortTypeValue, out postSortType) == false)
-            {
-                CookiesHelper.SetDefaultPostSortTypeCookie(responseCookies);
-                postSortType = PostSortType.Best;
-            }
-            if (Enum.TryParse(postTimeFrameValue, out postShowTimeFrame) == false)
-            {
-                CookiesHelper.SetDefaultPostShowTimeFrameCookie(responseCookies);
-                postShowTimeFrame = PostShowTimeFrame.PastDay;
-            }
-
-            var timeFrame = TimeFrameFactory.GetTimeFrame(postShowTimeFrame);
-            var sortPostsStrategy = SortPostsFactory
-                .GetSortPostsStrategy(this.redditCloneUnitOfWork, timeFrame, postSortType);
-
-            var dbPosts = await sortPostsStrategy.GetSortedPostsAsync();
 
             var isHaveTimeFrame = CheckIsHaveTimeFrame(sortPostsStrategy);
             if (isHaveTimeFrame)
