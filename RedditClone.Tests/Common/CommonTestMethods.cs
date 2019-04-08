@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 using RedditClone.Models;
@@ -21,6 +22,14 @@ namespace RedditClone.Tests.Common
             return mapper;
         }
 
+        public static Mock<UserManager<User>> GetMockedUserManager()
+        {
+            var userStore = new Mock<IUserStore<User>>().Object;
+            var mockedUserManager = new Mock<UserManager<User>>(userStore, null, null, null, null, null, null, null, null);
+
+            return mockedUserManager;
+        }
+
         public static void SetupMockedUserManagerGetUserAsync(Mock<UserManager<User>> mock, User user)
         {
             mock.Setup(um => um.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
@@ -31,6 +40,15 @@ namespace RedditClone.Tests.Common
         {
             mock.Setup(um => um.GetUserId(It.IsAny<ClaimsPrincipal>()))
                 .Returns(userId);
+        }
+
+        public static Mock<SignInManager<User>> GetMockedSignInManager(UserManager<User> userManager)
+        {
+            var contextAccessor = new Mock<IHttpContextAccessor>().Object;
+            var claimsFactory = new Mock<IUserClaimsPrincipalFactory<User>>().Object;
+            var mockedSignInManager = new Mock<SignInManager<User>>(userManager, contextAccessor, claimsFactory, null, null, null);
+
+            return mockedSignInManager;
         }
     }
 }

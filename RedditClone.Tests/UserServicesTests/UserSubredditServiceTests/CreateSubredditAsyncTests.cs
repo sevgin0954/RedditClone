@@ -98,7 +98,7 @@ namespace RedditClone.Tests.UserServicesTests.UserSubredditServiceTests
             IRedditCloneUnitOfWork unitOfWork, 
             SubredditCreationBindingModel model)
         {
-            var mockedUserManager = this.GetMockedUserManager();
+            var mockedUserManager = CommonTestMethods.GetMockedUserManager();
             var mockedClaimsPrincipal = new Mock<ClaimsPrincipal>();
 
             var service = this.GetService(unitOfWork, mockedUserManager.Object);
@@ -112,7 +112,7 @@ namespace RedditClone.Tests.UserServicesTests.UserSubredditServiceTests
             SubredditCreationBindingModel model,
             string userId)
         {
-            var mockedUserManager = this.GetMockedUserManager();
+            var mockedUserManager = CommonTestMethods.GetMockedUserManager();
             CommonTestMethods.SetupMockedUserManagerGetUserId(mockedUserManager, userId);
             var mockedClaimsPrincipal = new Mock<ClaimsPrincipal>();
 

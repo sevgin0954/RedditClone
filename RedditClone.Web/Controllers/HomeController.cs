@@ -25,7 +25,7 @@ namespace RedditClone.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            IndexViewModel model = await this.userPostService.GetOrderedPosts(
+            IndexViewModel model = await this.userPostService.GetOrderedPostsAsync(
                     this.User,
                     this.Request.Cookies,
                     this.Response.Cookies);

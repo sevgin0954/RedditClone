@@ -79,7 +79,7 @@ namespace RedditClone.Services.UserServices
             return result;
         }
 
-        public async Task<IndexViewModel> GetOrderedPosts(
+        public async Task<IndexViewModel> GetOrderedPostsAsync(
             ClaimsPrincipal user,
             IRequestCookieCollection requestCookies,
             IResponseCookies responseCookies)

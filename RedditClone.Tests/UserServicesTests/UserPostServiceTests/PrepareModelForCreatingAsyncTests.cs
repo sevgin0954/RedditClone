@@ -249,7 +249,7 @@ namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
             User user,
             string subredditId)
         {
-            var mockedUserManager = this.GetMockedUserManager();
+            var mockedUserManager = CommonTestMethods.GetMockedUserManager();
             CommonTestMethods.SetupMockedUserManagerGetUserId(mockedUserManager, user.Id);
 
             var service = this.GetService(unitOfWork, mockedUserManager.Object);

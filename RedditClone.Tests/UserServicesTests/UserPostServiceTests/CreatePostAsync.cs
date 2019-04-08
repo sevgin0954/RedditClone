@@ -145,7 +145,7 @@ namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
             PostCreationBindingModel model, 
             string userId)
         {
-            var mockedUserManager = this.GetMockedUserManager();
+            var mockedUserManager = CommonTestMethods.GetMockedUserManager();
             CommonTestMethods.SetupMockedUserManagerGetUserId(mockedUserManager, userId);
 
             var service = this.GetService(unitOfWork, mockedUserManager.Object);

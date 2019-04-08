@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Moq;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Services.UserServices;
@@ -13,17 +12,21 @@ namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
         public IUserPostService GetService(IRedditCloneUnitOfWork unitOfWork, UserManager<User> userManager)
         {
             var mapper = CommonTestMethods.GetMapper();
-            var service = new UserPostService(unitOfWork, userManager, mapper);
+            var signInManager = CommonTestMethods.GetMockedSignInManager(userManager).Object;
+            var service = new UserPostService(unitOfWork, userManager, signInManager, mapper);
 
             return service;
         }
 
-        public Mock<UserManager<User>> GetMockedUserManager()
+        public IUserPostService GetService(
+            IRedditCloneUnitOfWork unitOfWork, 
+            UserManager<User> userManager, 
+            SignInManager<User> signInManager)
         {
-            var userStore = new Mock<IUserStore<User>>().Object;
-            var mockedUserManager = new Mock<UserManager<User>>(userStore, null, null, null, null, null, null, null, null);
+            var mapper = CommonTestMethods.GetMapper();
+            var service = new UserPostService(unitOfWork, userManager, signInManager, mapper);
 
-            return mockedUserManager;
+            return service;
         }
     }
 }
