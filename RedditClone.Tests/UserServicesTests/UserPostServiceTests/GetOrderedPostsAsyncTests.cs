@@ -113,7 +113,7 @@ namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
         }
 
         [Fact]
-        public async Task WithoutLogin_ShouldReturnModelWithAllPosts()
+        public async Task WithQuest_ShouldReturnModelWithAllPosts()
         {
             var dbPost1 = this.CreatePostWithCurrectTime();
             var dbPost2 = this.CreatePostWithCurrectTime();
@@ -131,17 +131,18 @@ namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
         }
 
         [Fact]
-        public async Task WithLoginWithoutSubscribedSubreddits_ShowReturnModelWithAllPosts()
+        public async Task WithUserWithSubscribedSubreddits_ShouldReturnModelWithOnlySubsribedSubredditsPosts()
         {
             var dbUser = new User();
             var dbPost1 = this.CreatePostWithCurrectTime();
             var dbPost2 = this.CreatePostWithCurrectTime();
+            var dbPost3 = this.CreatePostWithCurrectTime();
             var dbSubreddit = new Subreddit();
             dbSubreddit.Posts.Add(dbPost1);
             dbSubreddit.Posts.Add(dbPost2);
             this.SubscribeUserToSubreddit(dbUser, dbSubreddit);
                 
-            var model = await this.CallOrderedPostsAsyncWithUser(dbUser);
+            var model = await this.CallOrderedPostsAsyncWithUserAndPosts(dbUser, dbPost3);
 
             var modelPosts = model.Posts;
             var modelPost1 = modelPosts.ElementAt(0);
@@ -153,7 +154,7 @@ namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
         }
 
         [Fact]
-        public async Task WithLoginSubscribedSubreddits_ShouldReturnModelWithSubribedSubredditsPosts()
+        public async Task WithUserWithoudSubscribedSubreddits_ShouldReturnModelWithAllPosts()
         {
             var dbUser = new User();
             var dbPost1 = this.CreatePostWithCurrectTime();
