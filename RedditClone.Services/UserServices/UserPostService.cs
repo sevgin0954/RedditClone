@@ -104,7 +104,7 @@ namespace RedditClone.Services.UserServices
             }
 
             var timeFrame = TimeFrameFactory.GetTimeFrame(postShowTimeFrame);
-            var sortPostsStrategy = SortPostsFactory
+            var sortPostsStrategy = SortPostsStartegyFactory
                 .GetSortPostsStrategy(this.redditCloneUnitOfWork, timeFrame, postSortType);
 
             IEnumerable<Post> dbPosts = new List<Post>();

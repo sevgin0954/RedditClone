@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace RedditClone.Data.Factories.PostsFactories
 {
-    public static class SortPostsFactory
+    public static class SortPostsStartegyFactory
     {
         public static ISortPostsStrategy GetSortPostsStrategy(
             IRedditCloneUnitOfWork unitOfWork,
