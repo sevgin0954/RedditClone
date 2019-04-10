@@ -171,7 +171,7 @@ namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
             Assert.Contains(modelPosts, p => p.Id == dbPost2.Id);
         }
 
-        private Post CreatePostWithCurrectTime()
+        private Post CreatePostWithCurrentTime()
         {
             var dbPost = new Post()
             {
