@@ -13,7 +13,7 @@ namespace RedditClone.Models
         public string AuthorId { get; set; }
         public User Author { get; set; }
 
-        public ICollection<Post> Posts { get; set; }
+        public ICollection<Post> Posts { get; set; } = new List<Post>();
 
         public ICollection<UserSubreddit> SubscribedUsers { get; set; } = new List<UserSubreddit>();
     }
