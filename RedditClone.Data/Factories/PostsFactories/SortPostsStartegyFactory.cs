@@ -12,17 +12,17 @@ namespace RedditClone.Data.Factories.PostsFactories
         public static ISortPostsStrategy GetSortPostsStrategy(
             IRedditCloneUnitOfWork unitOfWork,
             TimeSpan timeFrame,
-            PostSortType postSortType)
+            SortType postSortType)
         {
             switch (postSortType)
             {
-                case PostSortType.New:
+                case SortType.New:
                     return new SortPostsByNew(unitOfWork);
-                case PostSortType.Top:
+                case SortType.Top:
                     return new SortPostsByTop(unitOfWork, timeFrame);
-                case PostSortType.Controversial:
+                case SortType.Controversial:
                     return new SortPostsByControversial(unitOfWork, timeFrame);
-                case PostSortType.Best:
+                case SortType.Best:
                     return new SortPostsByBest(unitOfWork);
                 default:
                     throw new InvalidEnumArgumentException();

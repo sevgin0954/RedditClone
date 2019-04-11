@@ -8,7 +8,7 @@ namespace RedditClone.Models.WebModels.IndexModels.ViewModels
     {
         public PostShowTimeFrame? PostShowTimeFrame { get; set; }
 
-        public PostSortType PostSortType { get; set; }
+        public SortType PostSortType { get; set; }
 
         public IEnumerable<PostConciseViewModel> Posts { get; set; } = new List<PostConciseViewModel>();
     }

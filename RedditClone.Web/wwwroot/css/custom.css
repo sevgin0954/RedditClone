@@ -30,10 +30,17 @@
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 0 10px 1px black;
-    word-break: break-all;
 }
 .post-container:hover {
     box-shadow: 0 0 5px 2px #007bff;
+}
+
+.comments-container {
+    background-color: white;
+    margin: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 1px black;
 }
 
 .form-outline-green {
@@ -104,6 +111,13 @@
 }
 .link-black:hover {
     color: black;
+}
+
+.link-blue {
+    color: #007bff;
+}
+.link-blue:hover {
+    color: #007bff;
 }
 
 .dropdown-menu-small {
@@ -218,4 +232,12 @@
 .btn-outline-red:hover, .btn-outline-red:focus {
     background-color: #FF0000;
     color: white;
+}
+
+.hr-no-bottom-margin {
+    margin-bottom: 0;
+}
+
+.hr-no-top-margin {
+    margin-top: 0;
 }

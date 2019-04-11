@@ -1,6 +1,6 @@
 ﻿namespace RedditClone.Common.Constants
 {
-    public abstract class ModelsConstants
+    public static class ModelsConstants
     {
         public const int DescriptionPostMinLength = 0;
         public const int DescriptionPostMaxLength = 9000;

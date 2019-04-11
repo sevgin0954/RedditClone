@@ -1,0 +1,100 @@
+﻿@using RedditClone.Common.Enums
+@model PostViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="comments-container d-flex">
+    <div class="flex-column">
+        <div>
+            <a class="link-grey link-green-hover" href="#">
+                <i class="fas fa-arrow-up fa-lg"></i>
+            </a>
+        </div>
+        <div>
+            &nbsp;@Model.VotesCount
+        </div>
+        <div>
+            <a class="link-grey link-red-hover" href="#">
+                <i class="fas fa-arrow-down fa-lg"></i>
+            </a>
+        </div>
+    </div>
+    &nbsp;  
+    <div class="flex-column flex-grow-1">
+        <div class="flex-row d-flex">
+            <a class="link-grey" asp-controller="Post" asp-action="Index" asp-route-subredditId="@Model.SubredditId">
+                r/@Model.Subreddit.Name
+            </a>
+
+            &nbsp;
+            @Model.Title
+            posted by
+            &nbsp;
+
+            <a class="link-blue" asp-area="Identity" asp-controller="User" asp-action="Index" asp-route-userId="@Model.AuthorId">
+                @Model.Author.UserName
+            </a>
+
+            <div class="ml-auto">
+                @Model.PostDate
+            </div>
+        </div>
+
+        <hr class="hr-no-bottom-margin hr-no-top-margin" />
+
+        <div class="flex-row">
+            @Model.Description
+        </div>
+
+        <br />
+
+        <div class="flex-row">
+            <i class="fas fa-comment"></i>
+            @Model.CommentsCount
+            Comments
+        </div>
+
+        <br />
+
+        <div class="flex-row">
+            <button class="btn btn-outline-blue">New comment</button>
+        </div>
+
+        <hr class="hr-no-bottom-margin" />
+        <div class="d-flex flex-row">
+            <div class="btn-grey">
+                Sort
+            </div>
+            &nbsp;
+            <div class="dropdown">
+                <button class="btn btn-white btn-secondary-nav dropdown-toggle" type="button" data-toggle="dropdown">
+                    @Model.SelectedSortType.ToString()
+                </button>
+                <div class="dropdown-menu dropdown-menu-small">
+                    @foreach (var postSortType in (SortType[])Enum.GetValues(typeof(SortType)))
+                    {
+                        if (postSortType != Model.SelectedSortType)
+                        {
+                            var sortTypeName = postSortType.ToString();
+
+                            <form asp-route-sortType="@sortTypeName" asp-controller="Post" asp-action="Index" method="post">
+                                <button class="btn dropdown-item btn-dropdown-item btn-grey" type="submit">
+                                    @sortTypeName
+                                </button>
+                            </form>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <hr class="hr-no-top-margin" />
+
+        <div class="flex-row">
+            @foreach (var comment in Model.Comments)
+            {
+                <partial name="_CommentWithRepliesPartial" model="comment" />
+            }
+        </div>
+    </div>
+</div>

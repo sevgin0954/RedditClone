@@ -18,7 +18,7 @@ namespace RedditClone.Services.UserServices.Interfaces
             IRequestCookieCollection requestCookies,
             IResponseCookies responseCookies);
 
-        void ChangePostSortType(IResponseCookies responseCookies, PostSortType postSortType);
+        void ChangePostSortType(IResponseCookies responseCookies, SortType postSortType);
 
         void ChangePostTimeFrame(IResponseCookies responseCookies, PostShowTimeFrame postShowTimeFrame);
     }

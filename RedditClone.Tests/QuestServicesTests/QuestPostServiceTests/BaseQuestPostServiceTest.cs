@@ -1,0 +1,18 @@
+﻿using RedditClone.Data.Interfaces;
+using RedditClone.Services.QuestServices;
+using RedditClone.Services.QuestServices.Interfaces;
+using RedditClone.Tests.Common;
+
+namespace RedditClone.Tests.QuestServicesTests.QuestPostServiceTests
+{
+    public class BaseQuestPostServiceTest : BaseTest
+    {
+        public IQuestPostService GetService(IRedditCloneUnitOfWork unitOfWork)
+        {
+            var mapper = CommonTestMethods.GetMapper();
+            var service = new QuestPostService(unitOfWork, mapper);
+
+            return service;
+        }
+    }
+}

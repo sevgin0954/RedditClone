@@ -1,6 +1,7 @@
 ﻿@model IndexViewModel
 @{
     ViewData["Title"] = "Home Page";
+    Layout = "_LayoutIndex";
 }
 
 @foreach (var postModel in Model.Posts)
@@ -24,7 +25,7 @@
         &nbsp;
         <div class="flex-column flex-grow-1 min-width-0">
             <div class="flex-row">
-                <a class="link-grey" href="#">@postModel.Title</a>
+                <a class="link-grey" asp-controller="Post" asp-action="Index" asp-route-postId="@postModel.Id">@postModel.Title</a>
                 at
                 <a class="link-black" asp-controller="Post" asp-action="Index" asp-route-subredditId="@postModel.SubredditId">
                     r/@postModel.SubredditName

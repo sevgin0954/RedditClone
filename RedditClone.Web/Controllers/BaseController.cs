@@ -14,7 +14,7 @@ namespace RedditClone.Web.Controllers
             this.TempData[WebConstants.StatusMessageTypeKey] = type;
         }
 
-        protected void AddStatusMessage(ModelStateDictionary modelState, string type = WebConstants.MessageTypeDanger)
+        protected void AddStatusMessage(ModelStateDictionary modelState, string type = AlertConstants.AlertTypeDanger)
         {
             this.TempData[WebConstants.StatusMessageTypeKey] = type;
 

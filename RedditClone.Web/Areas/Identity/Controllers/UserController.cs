@@ -21,7 +21,7 @@ namespace RedditClone.Web.Areas.Identity.Controllers
 
             if (models == null)
             {
-                this.AddStatusMessage(WebConstants.ErrorMessageWrongId, WebConstants.MessageTypeDanger);
+                this.AddStatusMessage(AlertConstants.ErrorMessageWrongId, AlertConstants.AlertTypeDanger);
                 return this.Redirect("/");
             }
 

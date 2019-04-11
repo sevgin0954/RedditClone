@@ -36,11 +36,11 @@ namespace RedditClone.Web.Areas.Identity.Controllers
 
             if (result == false)
             {
-                this.AddStatusMessage(WebConstants.ErrorMessageUnknownError, WebConstants.MessageTypeDanger);
+                this.AddStatusMessage(AlertConstants.ErrorMessageUnknownError, AlertConstants.AlertTypeDanger);
                 return Redirect("/");
             }
 
-            this.AddStatusMessage(WebConstants.MessagePostCreated, WebConstants.MessageTypeSuccess);
+            this.AddStatusMessage(AlertConstants.MessagePostCreated, AlertConstants.AlertTypeSuccess);
             return Redirect("/");
         }
     }

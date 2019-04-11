@@ -1,6 +1,6 @@
 ﻿namespace RedditClone.Common.Enums
 {
-    public enum PostSortType
+    public enum SortType
     {
         Top,
         Controversial,

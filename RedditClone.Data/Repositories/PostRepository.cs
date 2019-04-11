@@ -14,6 +14,18 @@ namespace RedditClone.Data.Repositories
         public PostRepository(RedditCloneDbContext dbContext)
             : base(dbContext) { }
 
+        public async Task<Post> GetByIdWithIncludedAllProperties(string postId)
+        {
+            var post = await this.RedditCloneDbContext.Posts
+                .Where(p => p.Id == postId)
+                .Include(p => p.Author)
+                .Include(p => p.Subreddit)
+                .Include(p => p.Comments)
+                .FirstOrDefaultAsync();
+
+            return post;
+        }
+
         public async Task<IEnumerable<Post>> GetBySubcribedUserOrderedByNewAsync(string userId)
         {
             var postsQueryable = this.GetOrderedByNew();

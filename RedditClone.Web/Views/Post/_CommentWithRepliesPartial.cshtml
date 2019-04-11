@@ -1,0 +1,34 @@
+﻿@model CommentViewModel
+
+@foreach (var comment in Model.Replies)
+{
+    <div class="flex-column">
+        <div>
+            <a class="link-grey link-green-hover" href="#">
+                <i class="fas fa-arrow-up fa-lg"></i>
+            </a>
+        </div>
+        <div>
+            &nbsp;@Model.VotesCount
+        </div>
+        <div>
+            <a class="link-grey link-red-hover" href="#">
+                <i class="fas fa-arrow-down fa-lg"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="flex-column">
+        <a class="link-blue" asp-area="Identity" asp-controller="User" asp-action="Index" asp-route-userId="@comment.Author">
+            @comment.Author
+        </a>
+
+        <div class="ml-auto">
+            @Model.PostDate
+        </div>
+
+        <div>
+            @comment.Description
+        </div>
+    </div>
+}

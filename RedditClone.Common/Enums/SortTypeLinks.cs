@@ -2,7 +2,7 @@
 
 namespace RedditClone.Common.Enums
 {
-    public static class PostSortTypeLinks
+    public static class SortTypeLinks
     {
         public static Dictionary<string, string> SortTypeIconLink { get; private set; } = new Dictionary<string, string>()
         {

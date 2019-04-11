@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using RedditClone.Common.Constants;
 using RedditClone.Models;
+using RedditClone.Models.WebModels.CommentModels.ViewModels;
 using RedditClone.Models.WebModels.PostModels.BindingModels;
 using RedditClone.Models.WebModels.PostModels.ViewModels;
 using RedditClone.Models.WebModels.SubredditModels.BindingModels;
@@ -52,6 +53,16 @@ namespace RedditClone.Web.Mapping
 
             this.CreateMap<Post, PostConciseViewModel>()
                 .ForMember(dest => dest.DescriptionConcise, opt => opt.MapFrom(src => string.Concat(src.Description.Take(ModelsConstants.DescriptionIndexPreviewLength))));
+
+            //------------------------------------------------------------------------------------------------------------
+
+            this.CreateMap<Post, PostViewModel>()
+                .ForMember(dest => dest.VotesCount, opt => opt.MapFrom(src => src.UpVotesCount - src.DownVotesCount));
+
+            //------------------------------------------------------------------------------------------------------------
+
+            this.CreateMap<Comment, CommentViewModel>()
+                .ForMember(dest => dest.VotesCount, opt => opt.MapFrom(src => src.UpVotesCount - src.DownVotesCount));
         }
     }
 }

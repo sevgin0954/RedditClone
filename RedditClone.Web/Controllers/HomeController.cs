@@ -36,12 +36,12 @@ namespace RedditClone.Web.Controllers
         [HttpPost]
         public IActionResult ChangeSortType(string sortType)
         {
-            PostSortType postSortType = PostSortType.Best;
-            var result = Enum.TryParse<PostSortType>(sortType, out postSortType);
+            SortType postSortType = SortType.Best;
+            var result = Enum.TryParse<SortType>(sortType, out postSortType);
 
             if (result == false)
             {
-                this.AddStatusMessage(WebConstants.ErrorMessageWrongParameter, WebConstants.MessageTypeDanger);
+                this.AddStatusMessage(AlertConstants.ErrorMessageWrongParameter, AlertConstants.AlertTypeDanger);
             }
             else
             {
@@ -63,7 +63,7 @@ namespace RedditClone.Web.Controllers
             }
             else
             {
-                this.AddStatusMessage(WebConstants.ErrorMessageWrongParameter, WebConstants.MessageTypeDanger);
+                this.AddStatusMessage(AlertConstants.ErrorMessageWrongParameter, AlertConstants.AlertTypeDanger);
             }
 
             return this.Redirect("/");

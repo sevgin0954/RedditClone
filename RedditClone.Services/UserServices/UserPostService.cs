@@ -89,13 +89,13 @@ namespace RedditClone.Services.UserServices
             var postSortTypeValue = requestCookies[postSortTypeKey];
             var postTimeFrameValue = requestCookies[postTimeFrameKey];
 
-            var postSortType = PostSortType.Best;
+            var postSortType = SortType.Best;
             var postShowTimeFrame = PostShowTimeFrame.PastDay;
 
             if (Enum.TryParse(postSortTypeValue, out postSortType) == false)
             {
                 CookiesHelper.SetDefaultPostSortTypeCookie(responseCookies);
-                postSortType = PostSortType.Best;
+                postSortType = SortType.Best;
             }
             if (Enum.TryParse(postTimeFrameValue, out postShowTimeFrame) == false)
             {
@@ -138,7 +138,7 @@ namespace RedditClone.Services.UserServices
             }
         }
 
-        public void ChangePostSortType(IResponseCookies responseCookies, PostSortType postSortType)
+        public void ChangePostSortType(IResponseCookies responseCookies, SortType postSortType)
         {
             var sortTypeKey = WebConstants.CookieKeyPostSortType;
             var sortTypeValue = postSortType.ToString();
@@ -264,7 +264,7 @@ namespace RedditClone.Services.UserServices
 
         private IndexViewModel MapIndexModelWithTimeFrame(
             IEnumerable<Post> posts,
-            PostSortType selectedSortType,
+            SortType selectedSortType,
             PostShowTimeFrame selectedTimeFrame)
         {
             var postModels = this.mapper.Map<IEnumerable<PostConciseViewModel>>(posts);
@@ -281,7 +281,7 @@ namespace RedditClone.Services.UserServices
 
         private IndexViewModel MapIndexModel(
             IEnumerable<Post> posts,
-            PostSortType selectedSortType)
+            SortType selectedSortType)
         {
             var postModels = this.mapper.Map<IEnumerable<PostConciseViewModel>>(posts);
 

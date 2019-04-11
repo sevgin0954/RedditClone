@@ -15,6 +15,8 @@ using RedditClone.Services.UserServices.Interfaces;
 using RedditClone.Services.UserServices;
 using RedditClone.Data.Repositories.Interfaces;
 using RedditClone.Data.Repositories;
+using RedditClone.Services.QuestServices.Interfaces;
+using RedditClone.Services.QuestServices;
 
 namespace RedditClone.Web
 {
@@ -124,6 +126,8 @@ namespace RedditClone.Web
             services.AddScoped<IUserPostService, UserPostService>();
 
             services.AddScoped<IUserSubredditService, UserSubredditService>();
+
+            services.AddScoped<IQuestPostService, QuestPostService>();
         }
     }
 }
