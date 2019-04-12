@@ -24,6 +24,11 @@ namespace RedditClone.Web.Controllers
             }
 
             var model = await this.questPostService.GetPostModelAsync(postId, sortType);
+            if (model == null)
+            {
+                this.AddStatusMessage(AlertConstants.ErrorMessageWrongId, AlertConstants.AlertTypeDanger);
+                return this.Redirect("/");
+            }
 
             return View(model);
         }

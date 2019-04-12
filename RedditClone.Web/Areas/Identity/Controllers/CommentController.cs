@@ -20,7 +20,8 @@ namespace RedditClone.Web.Areas.Identity.Controllers
         {
             var model = new CommentBindingModel()
             {
-                SourceId = postId
+                SourceId = postId,
+                PostId = postId
             };
 
             return View(model);
@@ -32,17 +33,17 @@ namespace RedditClone.Web.Areas.Identity.Controllers
             if (this.ModelState.IsValid == false)
             {
                 this.AddStatusMessage(this.ModelState);
-                return this.RedirectToAction("AddToPost", new { postId = model.SourceId });
+                return this.RedirectToAction("AddToPost", new { postId = model.PostId });
             }
 
             var isSubccessfull = await this.userCommentService.AddCommentToPostAsync(this.User, model);
             if (isSubccessfull == false)
             {
                 this.AddStatusMessage(AlertConstants.ErrorMessageUnknownError, AlertConstants.AlertTypeDanger);
-                return this.RedirectToAction("AddToPost", new { postId = model.SourceId });
+                return this.RedirectToAction("AddToPost", new { postId = model.PostId });
             }
 
-            return this.RedirectToAction("Index", "Post", new { postId = model.SourceId });
+            return this.RedirectToAction("Index", "Post", new { postId = model.PostId });
         }
 
         [HttpPost]
@@ -51,17 +52,17 @@ namespace RedditClone.Web.Areas.Identity.Controllers
             if (this.ModelState.IsValid == false)
             {
                 this.AddStatusMessage(this.ModelState);
-                return this.RedirectToAction("Index", "Post", new { postId = model.SourceId });
+                return this.RedirectToAction("Index", "Post", new { postId = model.PostId });
             }
 
             var isSubccessfull = await this.userCommentService.AddResponseToCommentAsync(this.User, model);
             if (isSubccessfull == false)
             {
                 this.AddStatusMessage(AlertConstants.ErrorMessageUnknownError, AlertConstants.AlertTypeDanger);
-                return this.RedirectToAction("AddToPost", new { postId = model.SourceId });
+                return this.RedirectToAction("Index", "Post", new { postId = model.PostId });
             }
 
-            return this.RedirectToAction("Index", "Post", new { postId = model.SourceId });
+            return this.RedirectToAction("Index", "Post", new { postId = model.PostId });
         }
     }
 }

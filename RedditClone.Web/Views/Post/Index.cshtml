@@ -98,3 +98,86 @@
         </div>
     </div>
 </div>
+
+<script>
+//-----------------------------------------------------------------
+@* Display and hide scripts *@
+//-----------------------------------------------------------------
+window.onload = function () {
+    let repleyButtons = $(".btn-reply");
+
+    repleyButtons.on("click", function (e) {
+        hideAllForms();
+        showAllReplyBtns();
+
+        var targetBtn = $(e.currentTarget);
+        targetBtn.attr("hidden", "hidden");
+
+        var targetBtnParrent = $(targetBtn.parent()[0]);
+        showForm(targetBtnParrent);
+
+        var btnCancel = $(targetBtnParrent.find(".btn-reply-cancel")[0]);
+        btnCancel.on("click", function (e) {
+            var targetBtn = $(e.currentTarget);
+            var targetBtnParrent = $(targetBtn.parent()[0]);
+
+            hideForm(targetBtnParrent);
+            showReplyBtn(targetBtnParrent);
+        })
+    })
+
+    function hideForm(parent) {
+        var btnPost = $(parent.find(".btn-reply-post")[0]);
+        var btnCancel = $(parent.find(".btn-reply-cancel")[0]);
+        var form = $(parent.find(".form-reply")[0]);
+
+        btnPost.attr("hidden", "hidden");
+        btnCancel.attr("hidden", "hidden");
+        form.attr("hidden", "hidden");
+    }
+
+    function showForm(parent) {
+        var btnPost = $(parent.find(".btn-reply-post")[0]);
+        var btnCancel = $(parent.find(".btn-reply-cancel")[0]);
+        var form = $(parent.find(".form-reply")[0]);
+
+        btnPost.removeAttr("hidden");
+        btnCancel.removeAttr("hidden");
+        form.removeAttr("hidden");
+    }
+
+    function hideAllForms() {
+        var btnsPost = $(".btn-reply-post");
+        var btnsCancel = $(".btn-reply-cancel");
+        var forms = $(".form-reply");
+
+        btnsPost.attr("hidden", "hidden");
+        btnsCancel.attr("hidden", "hidden");
+        forms.attr("hidden", "hidden");
+    }
+
+    function showAllReplyBtns() {
+        let repleyButtons = $(".btn-reply");
+        repleyButtons.removeAttr("hidden");
+    }
+
+    function showReplyBtn(parent) {
+        let repleybtn = $(parent.find(".btn-reply")[0]);
+        repleybtn.removeAttr("hidden");
+    }
+
+//-----------------------------------------------------------------
+@*Submit form scrips*@
+//-----------------------------------------------------------------
+
+    let fakePostButtons = $(".btn-reply-post");
+
+    fakePostButtons.on("click", function (e) {
+        var targetFakePostBtn = $(e.currentTarget);
+        var targetBtnParrent = $(targetFakePostBtn.parent()[0]);
+
+        var realPostBtn = targetBtnParrent.find(".btn-reply-submit")[0];
+        realPostBtn.click();
+    })
+}
+</script>

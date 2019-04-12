@@ -2,7 +2,7 @@
 
 @foreach (var comment in Model)
 {
-    <div class="d-flex comment-container">
+    <div class="d-flex">
         <div class="flex-column">
             <div>
                 <a class="link-grey link-green-hover" href="#">
@@ -37,12 +37,24 @@
                 @comment.Description
             </div>
 
-            <a class="link-grey" href="#">
+            <button class="btn btn-grey btn-reply" type="button">
                 <i class="fas fa-comment"></i>
                 Reply
-            </a>
+            </button>
+            <button class="btn btn-outline-green btn-menu btn-reply-post" type="button" hidden>Post</button>
+            <button class="btn btn-outline-red btn-menu btn-reply-cancel" type="button" hidden>Cancel</button>
+
+            <div class="d-flex flex-row flex-grow-1">
+                <form hidden class="flex-grow-1 form-reply" method="post" asp-area="Identity" asp-controller="Comment" asp-action="AddToComment">
+                    <input name="SourceId" value="@comment.Id" hidden />
+                    <input name="PostId" value="@comment.PostId" hidden />
+                    <textarea class="form-control form-outline-green" rows="3" name="Description"></textarea>
+                    <button class="btn-reply-submit" type="submit" hidden></button>
+                </form>
+            </div>
         </div>
     </div>
-
-    <partial name="_CommentsWithRepliesPartial" model="comment.Replies" />
+    <div class="reply-container">
+        <partial name="_CommentsWithRepliesPartial" model="comment.Replies" />
+    </div>
 }

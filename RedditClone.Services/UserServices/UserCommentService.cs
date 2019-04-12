@@ -29,7 +29,7 @@ namespace RedditClone.Services.UserServices
             }
 
             var dbUserId = this.userManager.GetUserId(user);
-            var dbComment = this.MapComment(model, dbUserId);
+            var dbComment = this.MapComment(dbPost.Id, model.Description, dbUserId);
 
             this.unitOfWork.Comments.Add(dbComment);
             var rowsAffected = await unitOfWork.CompleteAsync();
@@ -52,7 +52,7 @@ namespace RedditClone.Services.UserServices
             }
 
             var dbUserId = this.userManager.GetUserId(user);
-            var dbReply = this.MapComment(model, dbUserId);
+            var dbReply = this.MapComment(dbComment.PostId, model.Description, dbUserId);
 
             dbComment.Replies.Add(dbReply);
             var rowsAffected = await unitOfWork.CompleteAsync();
@@ -66,13 +66,13 @@ namespace RedditClone.Services.UserServices
             }
         }
 
-        private Comment MapComment(CommentBindingModel model, string dbUserId)
+        private Comment MapComment(string postId, string description, string dbUserId)
         {
             var comment = new Comment()
             {
-                PostId = model.SourceId,
+                PostId = postId,
                 AuthorId = dbUserId,
-                Description = model.Description,
+                Description = description,
                 PostDate = DateTime.UtcNow
             };
 
