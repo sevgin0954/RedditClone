@@ -1,0 +1,24 @@
+﻿@model CommentBindingModel
+@{
+    ViewData["Title"] = "Add new comment";
+}
+
+<h3>@ViewData["Title"]</h3>
+
+<form class="form-group d-flex flex-column" asp-area="Identity" asp-controller="Comment" asp-action="AddToPost" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input asp-for="SourceId" hidden />
+    <label asp-for="Description"></label>
+    <textarea class="form-control form-outline-green" asp-for="Description" rows="10"></textarea>
+
+    <div class="mx-auto d-flex flex-row">
+        <button class="btn btn-outline-green btn-menu" type="submit">Post</button>
+        <a class="btn btn-outline-red btn-menu" asp-controller="Post" asp-action="Index" asp-route-postId="@Model.SourceId">
+            Cancel
+        </a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

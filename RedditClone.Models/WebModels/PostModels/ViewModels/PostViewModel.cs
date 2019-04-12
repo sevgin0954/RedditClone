@@ -7,6 +7,8 @@ namespace RedditClone.Models.WebModels.PostModels.ViewModels
 {
     public class PostViewModel
     {
+        public string Id { get; set; }
+
         public string AuthorId { get; set; }
         public User Author { get; set; }
 

@@ -58,7 +58,9 @@
         <br />
 
         <div class="flex-row">
-            <button class="btn btn-outline-blue">New comment</button>
+            <a class="btn btn-outline-blue" asp-area="Identity" asp-controller="Comment" asp-action="AddToPost" asp-route-postId="@Model.Id">
+                New comment
+            </a>
         </div>
 
         <hr class="hr-no-bottom-margin" />
