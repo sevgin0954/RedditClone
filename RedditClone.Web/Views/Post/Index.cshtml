@@ -37,7 +37,8 @@
             </a>
 
             <div class="ml-auto">
-                @Model.PostDate
+                @Model.PostDate.ToShortDateString()
+                @Model.PostDate.ToShortTimeString()
             </div>
         </div>
 
@@ -93,10 +94,7 @@
         <hr class="hr-no-top-margin" />
 
         <div class="flex-row">
-            @foreach (var comment in Model.Comments)
-            {
-                <partial name="_CommentWithRepliesPartial" model="comment" />
-            }
+            <partial name="_CommentsWithRepliesPartial" model="Model.Comments" />
         </div>
     </div>
 </div>

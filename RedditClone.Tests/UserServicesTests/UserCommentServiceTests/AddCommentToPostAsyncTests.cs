@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Moq;
+﻿using Moq;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Models.WebModels.CommentModels.BindingModels;

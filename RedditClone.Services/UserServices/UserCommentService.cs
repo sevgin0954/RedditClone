@@ -29,14 +29,7 @@ namespace RedditClone.Services.UserServices
             }
 
             var dbUserId = this.userManager.GetUserId(user);
-
-            var dbComment = new Comment()
-            {
-                PostId = model.SourceId,
-                AuthorId = dbUserId,
-                Description = model.Description,
-                PostDate = DateTime.UtcNow
-            };
+            var dbComment = this.MapComment(model, dbUserId);
 
             this.unitOfWork.Comments.Add(dbComment);
             var rowsAffected = await unitOfWork.CompleteAsync();
@@ -48,6 +41,42 @@ namespace RedditClone.Services.UserServices
             {
                 return false;
             }
+        }
+
+        public async Task<bool> AddResponseToCommentAsync(ClaimsPrincipal user, CommentBindingModel model)
+        {
+            var dbComment = await this.unitOfWork.Comments.GetByIdAsync(model.SourceId);
+            if (dbComment == null)
+            {
+                return false;
+            }
+
+            var dbUserId = this.userManager.GetUserId(user);
+            var dbReply = this.MapComment(model, dbUserId);
+
+            dbComment.Replies.Add(dbReply);
+            var rowsAffected = await unitOfWork.CompleteAsync();
+            if (rowsAffected > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private Comment MapComment(CommentBindingModel model, string dbUserId)
+        {
+            var comment = new Comment()
+            {
+                PostId = model.SourceId,
+                AuthorId = dbUserId,
+                Description = model.Description,
+                PostDate = DateTime.UtcNow
+            };
+
+            return comment;
         }
     }
 }

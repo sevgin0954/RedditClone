@@ -1,0 +1,48 @@
+﻿@model IEnumerable<CommentViewModel>
+
+@foreach (var comment in Model)
+{
+    <div class="d-flex comment-container">
+        <div class="flex-column">
+            <div>
+                <a class="link-grey link-green-hover" href="#">
+                    <i class="fas fa-arrow-up fa-lg"></i>
+                </a>
+            </div>
+            <div>
+                &nbsp;@comment.VotesCount
+            </div>
+            <div>
+                <a class="link-grey link-red-hover" href="#">
+                    <i class="fas fa-arrow-down fa-lg"></i>
+                </a>
+            </div>
+        </div>
+        &nbsp;
+        <div class="flex-column flex-grow-1">
+            <div class="d-flex flex-row">
+                <a class="link-blue" asp-area="Identity" asp-controller="User" asp-action="Index" asp-route-userId="@comment.Author">
+                    @comment.Author
+                </a>
+
+                <div class="ml-auto">
+                    @comment.PostDate.ToShortDateString()
+                    @comment.PostDate.ToShortTimeString()
+                </div>
+            </div>
+
+            <hr class="hr-no-bottom-margin hr-no-top-margin" />
+
+            <div>
+                @comment.Description
+            </div>
+
+            <a class="link-grey" href="#">
+                <i class="fas fa-comment"></i>
+                Reply
+            </a>
+        </div>
+    </div>
+
+    <partial name="_CommentsWithRepliesPartial" model="comment.Replies" />
+}
