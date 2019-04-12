@@ -7,7 +7,7 @@
     </div>
     <div class="nav-item d-none d-sm-inline">
         <div>
-            <a class="nav-link-inactive" asp-area="" asp-controller="Home" asp-action="Index">
+            <a id="-" class="nav-link-inactive" asp-area="" asp-controller="Home" asp-action="Index">
                 <i class="fas fa-igloo fa-lg"></i>
                 <span class="d-none d-lg-inline">Home</span>
             </a>
@@ -31,3 +31,25 @@
     </div>
     <partial name="_LoginPartial" />
 </nav>
+
+<script>
+window.onload = function () {
+    let homeNavBtn = $("#btn-navbar-home");
+    let createPostNavBtn = $("#btn-navbar-create-post");
+
+    let urlParts = document.URL.split("/").splice(3, 2);
+    let part1 = urlParts[0];
+    let part2 = urlParts[1];
+    if (part1 === undefined) {
+        part1 = "";
+    }
+    if (part2 === undefined) {
+        part2 = "";
+    }
+
+    let btnCurrentId = part1.toLowerCase() + "-" + part2.toLowerCase();
+    let btnCurrent = $("#" + btnCurrentId);
+    btnCurrent.removeClass("nav-link-inactive");
+    btnCurrent.addClass("nav-link-active");
+}
+</script>
