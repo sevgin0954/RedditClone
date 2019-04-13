@@ -5,7 +5,7 @@ using RedditClone.Common.Enums;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Models.WebModels.IndexModels.ViewModels;
-using RedditClone.Tests.Common;
+using RedditClone.Services.Tests.Common;
 using System;
 using System.Linq;
 using System.Security.Claims;

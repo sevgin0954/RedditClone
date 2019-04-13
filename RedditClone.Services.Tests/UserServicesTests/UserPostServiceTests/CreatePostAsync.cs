@@ -2,7 +2,7 @@
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Models.WebModels.PostModels.BindingModels;
-using RedditClone.Tests.Common;
+using RedditClone.Services.Tests.Common;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;

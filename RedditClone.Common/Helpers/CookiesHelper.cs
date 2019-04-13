@@ -24,6 +24,15 @@ namespace RedditClone.Common.Helpers
             responseCookies.Append(postTimeFrameKey, postTimeFrameValue, cookieOptions);
         }
 
+        public static void SetDefaultCommentSortTypeCookie(IResponseCookies responseCookies)
+        {
+            var commentSortTypeKey = WebConstants.CookieKeyCommentSortType;
+            var commentSortTypeValue = WebConstants.CookieDefaultValueCommentSortType;
+
+            var cookieOptions = GetOptionForDeaultCookies();
+            responseCookies.Append(commentSortTypeKey, commentSortTypeValue, cookieOptions);
+        }
+
         private static CookieOptions GetOptionForDeaultCookies()
         {
             var cookieOptions = new CookieOptions()

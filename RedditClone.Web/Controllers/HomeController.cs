@@ -37,9 +37,9 @@ namespace RedditClone.Web.Controllers
         public IActionResult ChangeSortType(string sortType)
         {
             SortType postSortType = SortType.Best;
-            var result = Enum.TryParse<SortType>(sortType, out postSortType);
+            var isParseSuccessfull = Enum.TryParse(sortType, out postSortType);
 
-            if (result == false)
+            if (isParseSuccessfull == false)
             {
                 this.AddStatusMessage(AlertConstants.ErrorMessageWrongParameter, AlertConstants.AlertTypeDanger);
             }

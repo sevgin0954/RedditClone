@@ -81,7 +81,7 @@
                         {
                             var sortTypeName = postSortType.ToString();
 
-                            <form asp-route-sortType="@sortTypeName" asp-controller="Post" asp-action="Index" method="post">
+                            <form asp-route-sortType="@sortTypeName" asp-route-postId="@Model.Id" asp-controller="Post" asp-action="ChangeSortType" method="post">
                                 <button class="btn dropdown-item btn-dropdown-item btn-grey" type="submit">
                                     @sortTypeName
                                 </button>

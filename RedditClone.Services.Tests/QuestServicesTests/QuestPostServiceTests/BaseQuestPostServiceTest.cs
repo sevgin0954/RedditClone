@@ -1,7 +1,7 @@
 ﻿using RedditClone.Data.Interfaces;
 using RedditClone.Services.QuestServices;
 using RedditClone.Services.QuestServices.Interfaces;
-using RedditClone.Tests.Common;
+using RedditClone.Services.Tests.Common;
 
 namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
 {

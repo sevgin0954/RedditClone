@@ -1,7 +1,6 @@
 ﻿using Moq;
 using RedditClone.Models;
 using RedditClone.Models.WebModels.PostModels.BindingModels;
-using RedditClone.Tests.Common;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
@@ -9,6 +8,7 @@ using System.Linq;
 using RedditClone.Data.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RedditClone.Common.Constants;
+using RedditClone.Services.Tests.Common;
 
 namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
 {

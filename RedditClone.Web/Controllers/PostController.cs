@@ -2,6 +2,7 @@
 using RedditClone.Common.Constants;
 using RedditClone.Common.Enums;
 using RedditClone.Services.QuestServices.Interfaces;
+using System;
 using System.Threading.Tasks;
 
 namespace RedditClone.Web.Controllers
@@ -15,7 +16,7 @@ namespace RedditClone.Web.Controllers
             this.questPostService = questPostService;
         }
 
-        public async Task<IActionResult> Index(string postId, SortType sortType = SortType.Best)
+        public async Task<IActionResult> Index(string postId)
         {
             if (postId == null)
             {
@@ -23,7 +24,7 @@ namespace RedditClone.Web.Controllers
                 return this.Redirect("/");
             }
 
-            var model = await this.questPostService.GetPostModelAsync(postId, sortType);
+            var model = await this.questPostService.GetPostWithOrderedCommentsAsync(postId, this.Request.Cookies, this.Response.Cookies);
             if (model == null)
             {
                 this.AddStatusMessage(AlertConstants.ErrorMessageWrongId, AlertConstants.AlertTypeDanger);
@@ -31,6 +32,24 @@ namespace RedditClone.Web.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult ChangeSortType(string sortType, string postId)
+        {
+            SortType postSortType = SortType.Best;
+            var isParseSuccessfull = Enum.TryParse(sortType, out postSortType);
+
+            if (isParseSuccessfull == false)
+            {
+                this.AddStatusMessage(AlertConstants.ErrorMessageWrongParameter, AlertConstants.AlertTypeDanger);
+            }
+            else
+            {
+                this.questPostService.ChangeCommentSortType(this.Response.Cookies, postSortType);
+            }
+
+            return this.RedirectToAction("Index", new { postId });
         }
     }
 }

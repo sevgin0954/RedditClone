@@ -1,11 +1,12 @@
 ﻿using RedditClone.Common.Enums;
 using RedditClone.Data.Interfaces;
-using RedditClone.Data.Orders.PostOrders;
-using RedditClone.Data.Orders.PostOrders.Interfaces;
+using RedditClone.Data.SortStrategies.PostOrders;
+using RedditClone.Data.SortStrategies.PostStrategies;
+using RedditClone.Data.SortStrategies.PostStrategies.Interfaces;
 using System;
 using System.ComponentModel;
 
-namespace RedditClone.Data.Factories.PostsFactories
+namespace RedditClone.Data.Factories.SortFactories
 {
     public static class SortPostsStartegyFactory
     {

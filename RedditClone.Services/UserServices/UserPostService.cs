@@ -13,13 +13,13 @@ using RedditClone.Models.WebModels.PostModels.ViewModels;
 using RedditClone.Common.Enums;
 using System;
 using RedditClone.Data.Factories.TimeFactories;
-using RedditClone.Data.Factories.PostsFactories;
 using RedditClone.Models.WebModels.IndexModels.ViewModels;
-using RedditClone.Data.Orders.PostOrders.Interfaces;
-using RedditClone.Data.Orders.PostOrders;
 using Microsoft.AspNetCore.Http;
 using RedditClone.Common.Helpers;
 using System.Linq;
+using RedditClone.Data.Factories.SortFactories;
+using RedditClone.Data.SortStrategies.PostStrategies.Interfaces;
+using RedditClone.Data.SortStrategies.PostOrders;
 
 namespace RedditClone.Services.UserServices
 {

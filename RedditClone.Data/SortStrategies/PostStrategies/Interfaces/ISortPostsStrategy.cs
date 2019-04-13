@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace RedditClone.Data.Orders.PostOrders.Interfaces
+namespace RedditClone.Data.SortStrategies.PostStrategies.Interfaces
 {
     public interface ISortPostsStrategy
     {

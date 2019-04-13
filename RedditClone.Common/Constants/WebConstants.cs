@@ -1,6 +1,4 @@
-﻿using RedditClone.Common.Enums;
-
-namespace RedditClone.Common.Constants
+﻿namespace RedditClone.Common.Constants
 {
     public static class WebConstants
     {
@@ -10,9 +8,11 @@ namespace RedditClone.Common.Constants
         public const string IdentityAreaName = "Identity";
 
         public const string CookieKeyPostSortType = "PostSortType";
-        public const string CookieDefaultValuePostSortType = "Best";
-
         public const string CookieKeyPostShowTimeFrame = "PostShowTimeFrame";
+        public const string CookieDefaultValuePostSortType = "Best";
         public const string CookieDefaultValuePostShowTimeFrame = "PastDay";
+
+        public const string CookieKeyCommentSortType = "CookieSortType";
+        public const string CookieDefaultValueCommentSortType = "Best";
     }
 }

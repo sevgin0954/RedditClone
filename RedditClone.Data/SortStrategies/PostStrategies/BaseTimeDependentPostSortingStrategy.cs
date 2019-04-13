@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using RedditClone.Data.Orders.PostOrders.Interfaces;
+using RedditClone.Data.SortStrategies.PostStrategies.Interfaces;
 using RedditClone.Models;
 
-namespace RedditClone.Data.Orders.PostOrders
+namespace RedditClone.Data.SortStrategies.PostOrders
 {
     public abstract class BaseTimeDependentPostSortingStrategy : ISortPostsStrategy
     {

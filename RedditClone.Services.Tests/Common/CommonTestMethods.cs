@@ -7,7 +7,7 @@ using RedditClone.Web.Mapping;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace RedditClone.Tests.Common
+namespace RedditClone.Services.Tests.Common
 {
     public abstract class CommonTestMethods
     {

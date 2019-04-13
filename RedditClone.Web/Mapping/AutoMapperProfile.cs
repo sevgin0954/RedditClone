@@ -57,7 +57,8 @@ namespace RedditClone.Web.Mapping
             //------------------------------------------------------------------------------------------------------------
 
             this.CreateMap<Post, PostViewModel>()
-                .ForMember(dest => dest.VotesCount, opt => opt.MapFrom(src => src.UpVotesCount - src.DownVotesCount));
+                .ForMember(dest => dest.VotesCount, opt => opt.MapFrom(src => src.UpVotesCount - src.DownVotesCount))
+                .ForMember(dest => dest.Comments, opt => opt.Ignore());
 
             //------------------------------------------------------------------------------------------------------------
 

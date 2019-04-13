@@ -8,7 +8,7 @@
 <form class="form-group d-flex flex-column" asp-area="Identity" asp-controller="Comment" asp-action="AddToPost" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
     <input asp-for="SourceId" hidden />
-    <input asp-for="PostId" />
+    <input asp-for="PostId" hidden />
     <label asp-for="Description"></label>
     <textarea class="form-control form-outline-green" asp-for="Description" rows="10"></textarea>
 
