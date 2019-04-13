@@ -49,6 +49,7 @@ namespace RedditClone.Data.Repositories
             var postsQueryable = this.RedditCloneDbContext.Posts
                 .Include(p => p.Subreddit)
                 .Include(p => p.Author)
+                .Include(p => p.Comments)
                 .OrderByDescending(p => p.PostDate);
 
             return postsQueryable;

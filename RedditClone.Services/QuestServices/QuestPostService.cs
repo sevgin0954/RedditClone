@@ -5,6 +5,7 @@ using RedditClone.Common.Enums;
 using RedditClone.Common.Helpers;
 using RedditClone.Data.Factories.SortFactories;
 using RedditClone.Data.Factories.TimeFactories;
+using RedditClone.Data.Helpers;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Models.WebModels.CommentModels.ViewModels;
@@ -67,7 +68,7 @@ namespace RedditClone.Services.QuestServices
 
         private PostViewModel MapPostModel(Post post, SortType sortType, IEnumerable<Comment> comments)
         {
-            int commentCount = this.CountComments(comments);
+            int commentCount = CountComments.Count(comments);
 
             var model = this.mapper.Map<PostViewModel>(post);
             model.SelectedSortType = sortType;
@@ -75,24 +76,6 @@ namespace RedditClone.Services.QuestServices
             model.Comments = this.mapper.Map<IEnumerable<CommentViewModel>>(comments);
 
             return model;
-        }
-
-        private int CountComments(IEnumerable<Comment> comments)
-        {
-            if (comments.Count() == 0)
-            {
-                return 0;
-            }
-
-            int totalCommentsCount = comments.Count();
-
-            foreach (var comment in comments)
-            {
-                int RepliesCommentsCount = this.CountComments(comment.Replies);
-                totalCommentsCount += RepliesCommentsCount;
-            }
-
-            return totalCommentsCount;
         }
     }
 }
