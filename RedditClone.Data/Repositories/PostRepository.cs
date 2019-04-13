@@ -74,7 +74,7 @@ namespace RedditClone.Data.Repositories
 
         private IQueryable<Post> GetOrderedByTop(TimeSpan timeFrame)
         {
-            var startDate = DateTime.UtcNow - timeFrame;
+            var startDate = DateTime.UtcNow.Subtract(timeFrame);
 
             var postsQueryable = this.RedditCloneDbContext.Posts
                    .Where(p => p.PostDate >= startDate)
@@ -106,7 +106,7 @@ namespace RedditClone.Data.Repositories
 
         private IQueryable<Post> GetOrderedByControversial(TimeSpan timeFrame)
         {
-            var startDate = DateTime.UtcNow - timeFrame;
+            var startDate = DateTime.UtcNow.Subtract(timeFrame);
 
             var postsQueryable = this.RedditCloneDbContext.Posts
                 .Where(p => p.PostDate >= startDate)
@@ -138,7 +138,7 @@ namespace RedditClone.Data.Repositories
 
         private IQueryable<Post> GetOrderedByBest()
         {
-            var startDate = DateTime.UtcNow - TimeSpan.FromDays(1);
+            var startDate = DateTime.UtcNow.Subtract(TimeSpan.FromDays(1));
 
             var postsQueryable = this.RedditCloneDbContext.Posts
                 .Where(p => p.PostDate >= startDate)

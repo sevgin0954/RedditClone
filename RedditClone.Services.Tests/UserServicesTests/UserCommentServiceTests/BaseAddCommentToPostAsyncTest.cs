@@ -4,7 +4,7 @@ using RedditClone.Models;
 using RedditClone.Services.UserServices;
 using RedditClone.Services.UserServices.Interfaces;
 
-namespace RedditClone.Tests.UserServicesTests.UserCommentServiceTests
+namespace RedditClone.Services.Tests.UserServicesTests.UserCommentServiceTests
 {
     public class BaseAddCommentToPostAsyncTest : BaseTest
     {

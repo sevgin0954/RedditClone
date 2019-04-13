@@ -3,7 +3,7 @@ using RedditClone.Services.UserServices;
 using RedditClone.Services.UserServices.Interfaces;
 using RedditClone.Tests.Common;
 
-namespace RedditClone.Tests.UserAccountServiceTests.UserPostServiceTests
+namespace RedditClone.Services.Tests.UserAccountServiceTests.UserPostServiceTests
 {
     public abstract class BaseUserAccountServiceTest : BaseTest
     {

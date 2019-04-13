@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedditClone.Services", "Red
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedditClone.Common", "RedditClone.Common\RedditClone.Common.csproj", "{251C6C69-F600-42CE-8511-A84E57306C19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedditClone.Tests", "RedditClone.Tests\RedditClone.Tests.csproj", "{098A3387-38A5-4172-B803-4985EEAEA62D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedditClone.Services.Tests", "RedditClone.Services.Tests\RedditClone.Services.Tests.csproj", "{DE737C7E-3067-4D6B-8C4C-62C9E7161D17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{251C6C69-F600-42CE-8511-A84E57306C19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{251C6C69-F600-42CE-8511-A84E57306C19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{251C6C69-F600-42CE-8511-A84E57306C19}.Release|Any CPU.Build.0 = Release|Any CPU
-		{098A3387-38A5-4172-B803-4985EEAEA62D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{098A3387-38A5-4172-B803-4985EEAEA62D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{098A3387-38A5-4172-B803-4985EEAEA62D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{098A3387-38A5-4172-B803-4985EEAEA62D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE737C7E-3067-4D6B-8C4C-62C9E7161D17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE737C7E-3067-4D6B-8C4C-62C9E7161D17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE737C7E-3067-4D6B-8C4C-62C9E7161D17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE737C7E-3067-4D6B-8C4C-62C9E7161D17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

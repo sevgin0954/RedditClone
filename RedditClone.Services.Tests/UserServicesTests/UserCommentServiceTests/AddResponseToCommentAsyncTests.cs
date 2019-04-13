@@ -4,12 +4,11 @@ using RedditClone.Models;
 using RedditClone.Models.WebModels.CommentModels.BindingModels;
 using RedditClone.Tests.Common;
 using System;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace RedditClone.Tests.UserServicesTests.UserCommentServiceTests
+namespace RedditClone.Services.Tests.UserServicesTests.UserCommentServiceTests
 {
     public class AddResponseToCommentAsyncTests : BaseAddCommentToPostAsyncTest
     {

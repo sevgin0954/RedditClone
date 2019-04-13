@@ -5,7 +5,7 @@ using RedditClone.Services.UserServices;
 using RedditClone.Services.UserServices.Interfaces;
 using RedditClone.Tests.Common;
 
-namespace RedditClone.Tests.UserServicesTests.UserSubredditServiceTests
+namespace RedditClone.Services.Tests.UserServicesTests.UserSubredditServiceTests
 {
     public abstract class BaseUserSubredditServiceTest : BaseTest
     {

@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace RedditClone.Tests.QuestServicesTests.QuestPostServiceTests
+namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
 {
     public class GetPostModelAsyncTests : BaseQuestPostServiceTest
     {

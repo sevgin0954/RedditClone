@@ -3,7 +3,7 @@ using RedditClone.Data;
 using RedditClone.Data.Interfaces;
 using System;
 
-namespace RedditClone.Tests
+namespace RedditClone.Services.Tests
 {
     public abstract class BaseTest
     {

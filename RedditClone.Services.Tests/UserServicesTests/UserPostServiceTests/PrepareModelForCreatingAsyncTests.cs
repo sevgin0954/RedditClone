@@ -10,7 +10,7 @@ using RedditClone.Data.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RedditClone.Common.Constants;
 
-namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
+namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
 {
     public class PrepareModelForCreatingAsyncTests : BaseUserPostServiceTest
     {

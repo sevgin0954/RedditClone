@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace RedditClone.Tests.UserServicesTests.UserCommentServiceTests
+namespace RedditClone.Services.Tests.UserServicesTests.UserCommentServiceTests
 {
     public class AddCommentToPostAsyncTests : BaseAddCommentToPostAsyncTest
     {

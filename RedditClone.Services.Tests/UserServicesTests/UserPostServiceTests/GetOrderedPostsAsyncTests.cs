@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Moq;
 using RedditClone.Common.Constants;
 using RedditClone.Common.Enums;
@@ -13,7 +12,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace RedditClone.Tests.UserServicesTests.UserPostServiceTests
+namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
 {
     public class GetOrderedPostsAsyncTests : BaseUserPostServiceTest
     {

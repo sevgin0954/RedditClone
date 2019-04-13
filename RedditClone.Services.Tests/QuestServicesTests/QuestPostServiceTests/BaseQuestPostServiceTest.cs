@@ -3,7 +3,7 @@ using RedditClone.Services.QuestServices;
 using RedditClone.Services.QuestServices.Interfaces;
 using RedditClone.Tests.Common;
 
-namespace RedditClone.Tests.QuestServicesTests.QuestPostServiceTests
+namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
 {
     public class BaseQuestPostServiceTest : BaseTest
     {

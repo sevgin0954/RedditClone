@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace RedditClone.Tests.UserAccountServiceTests.UserPostServiceTests
+namespace RedditClone.Services.Tests.UserAccountServiceTests.UserPostServiceTests
 {
     public class PrepareIndexModelTests : BaseUserAccountServiceTest
     {

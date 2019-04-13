@@ -8,7 +8,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace RedditClone.Tests.UserServicesTests.UserSubredditServiceTests
+namespace RedditClone.Services.Tests.UserServicesTests.UserSubredditServiceTests
 {
     public class CreateSubredditAsyncTests : BaseUserSubredditServiceTest
     {

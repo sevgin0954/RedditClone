@@ -21,7 +21,7 @@ namespace RedditClone.Data.Factories.TimeFactories
                 case PostShowTimeFrame.PastYear:
                     return TimeSpan.FromDays(365);
                 case PostShowTimeFrame.AllTime:
-                    return TimeSpan.Zero;
+                    return TimeSpan.FromDays(365 * 100);
                 default:
                     throw new InvalidEnumArgumentException();
             }
