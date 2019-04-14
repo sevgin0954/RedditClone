@@ -10,10 +10,12 @@ namespace RedditClone.Web.Controllers
     public class PostController : BaseController
     {
         private readonly IQuestPostService questPostService;
+        private readonly ICookieService cookieService;
 
-        public PostController(IQuestPostService questPostService)
+        public PostController(IQuestPostService questPostService, ICookieService cookieService)
         {
             this.questPostService = questPostService;
+            this.cookieService = cookieService;
         }
 
         public async Task<IActionResult> Index(string postId)
@@ -46,7 +48,7 @@ namespace RedditClone.Web.Controllers
             }
             else
             {
-                this.questPostService.ChangeCommentSortType(this.Response.Cookies, postSortType);
+                this.cookieService.ChangeCommentSortTypeCookie(this.Response.Cookies, postSortType);
             }
 
             return this.RedirectToAction("Index", new { postId });

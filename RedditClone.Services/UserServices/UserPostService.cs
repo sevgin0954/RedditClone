@@ -11,15 +11,14 @@ using RedditClone.Common.Constants;
 using AutoMapper;
 using RedditClone.Models.WebModels.PostModels.ViewModels;
 using RedditClone.Common.Enums;
-using System;
 using RedditClone.Data.Factories.TimeFactories;
 using RedditClone.Models.WebModels.IndexModels.ViewModels;
 using Microsoft.AspNetCore.Http;
-using RedditClone.Common.Helpers;
 using System.Linq;
 using RedditClone.Data.Factories.SortFactories;
 using RedditClone.Data.SortStrategies.PostStrategies.Interfaces;
 using RedditClone.Data.SortStrategies.PostOrders;
+using RedditClone.Services.QuestServices.Interfaces;
 
 namespace RedditClone.Services.UserServices
 {
@@ -27,18 +26,18 @@ namespace RedditClone.Services.UserServices
     {
         private readonly IRedditCloneUnitOfWork redditCloneUnitOfWork;
         private readonly UserManager<User> userManager;
-        private readonly SignInManager<User> signInManager;
+        private readonly ICookieService cookieService;
         private readonly IMapper mapper;
 
         public UserPostService(
             IRedditCloneUnitOfWork redditCloneUnitOfWork, 
             UserManager<User> userManager,
-            SignInManager<User> signInManager,
+            ICookieService cookieService,
             IMapper mapper)
         {
             this.redditCloneUnitOfWork = redditCloneUnitOfWork;
             this.userManager = userManager;
-            this.signInManager = signInManager;
+            this.cookieService = cookieService;
             this.mapper = mapper;
         }
 
@@ -84,47 +83,21 @@ namespace RedditClone.Services.UserServices
             IRequestCookieCollection requestCookies,
             IResponseCookies responseCookies)
         {
-            var postSortTypeKey = WebConstants.CookieKeyPostSortType;
-            var postTimeFrameKey = WebConstants.CookieKeyPostShowTimeFrame;
-            var postSortTypeValue = requestCookies[postSortTypeKey];
-            var postTimeFrameValue = requestCookies[postTimeFrameKey];
-
-            var postSortType = SortType.Best;
-            var postShowTimeFrame = PostShowTimeFrame.PastDay;
-
-            if (Enum.TryParse(postSortTypeValue, out postSortType) == false)
-            {
-                CookiesHelper.SetDefaultPostSortTypeCookie(responseCookies);
-                postSortType = SortType.Best;
-            }
-            if (Enum.TryParse(postTimeFrameValue, out postShowTimeFrame) == false)
-            {
-                CookiesHelper.SetDefaultPostShowTimeFrameCookie(responseCookies);
-                postShowTimeFrame = PostShowTimeFrame.PastDay;
-            }
+            var postSortType = this.cookieService.GetPostSortTypeFromCookieOrDefault(requestCookies);
+            var postShowTimeFrame = this.cookieService.GetPostShowTimeFrameFromCookieOrDefault(requestCookies);
 
             var timeFrame = TimeFrameFactory.GetTimeFrame(postShowTimeFrame);
             var sortPostsStrategy = SortPostsStartegyFactory
                 .GetSortPostsStrategy(this.redditCloneUnitOfWork, timeFrame, postSortType);
 
-            IEnumerable<Post> dbPosts = new List<Post>();
-
-            var isSignIn = this.signInManager.IsSignedIn(user);
-            if (isSignIn)
-            {
-                var dbUserId = this.userManager.GetUserId(user);
-                dbPosts = await sortPostsStrategy.GetSortedPostsByUserAsync(dbUserId);
-                if (dbPosts.Count() == 0)
-                {
-                    dbPosts = await sortPostsStrategy.GetSortedPostsAsync();
-                }
-            }
-            else
+            var dbUserId = this.userManager.GetUserId(user);
+            var dbPosts = await sortPostsStrategy.GetSortedPostsByUserAsync(dbUserId);
+            if (dbPosts.Count() == 0)
             {
                 dbPosts = await sortPostsStrategy.GetSortedPostsAsync();
             }
 
-            var isHaveTimeFrame = CheckIsHaveTimeFrame(sortPostsStrategy);
+            var isHaveTimeFrame = CheckIsSortStrategyHaveTimeFrame(sortPostsStrategy);
             if (isHaveTimeFrame)
             {
                 var model = this.MapIndexModelWithTimeFrame(dbPosts, postSortType, postShowTimeFrame);
@@ -132,29 +105,12 @@ namespace RedditClone.Services.UserServices
             }
             else
             {
-                CookiesHelper.SetDefaultPostShowTimeFrameCookie(responseCookies);
                 var model = this.MapIndexModel(dbPosts, postSortType);
                 return model;
             }
         }
 
-        public void ChangePostSortType(IResponseCookies responseCookies, SortType postSortType)
-        {
-            var sortTypeKey = WebConstants.CookieKeyPostSortType;
-            var sortTypeValue = postSortType.ToString();
-
-            responseCookies.Append(sortTypeKey, sortTypeValue);
-        }
-
-        public void ChangePostTimeFrame(IResponseCookies responseCookies, PostShowTimeFrame postShowTimeFrame)
-        {
-            var timeFrameKey = WebConstants.CookieKeyPostShowTimeFrame;
-            var timeFrameValue = postShowTimeFrame.ToString();
-
-            responseCookies.Append(timeFrameKey, timeFrameValue);
-        }
-
-        private bool CheckIsHaveTimeFrame(ISortPostsStrategy sortPostsStrategy)
+        private bool CheckIsSortStrategyHaveTimeFrame(ISortPostsStrategy sortPostsStrategy)
         {
             var isHaveTimeFrame = false;
 
@@ -267,14 +223,8 @@ namespace RedditClone.Services.UserServices
             SortType selectedSortType,
             PostShowTimeFrame selectedTimeFrame)
         {
-            var postModels = this.mapper.Map<IEnumerable<PostConciseViewModel>>(posts);
-
-            var model = new IndexViewModel
-            {
-                Posts = postModels,
-                PostSortType = selectedSortType,
-                PostShowTimeFrame = selectedTimeFrame
-            };
+            var model = this.MapIndexModel(posts, selectedSortType);
+            model.PostShowTimeFrame = selectedTimeFrame;
 
             return model;
         }
@@ -284,7 +234,6 @@ namespace RedditClone.Services.UserServices
             SortType selectedSortType)
         {
             var postModels = this.mapper.Map<IEnumerable<PostConciseViewModel>>(posts);
-
             var model = new IndexViewModel
             {
                 Posts = postModels,

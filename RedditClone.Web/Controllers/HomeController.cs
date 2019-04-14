@@ -7,6 +7,7 @@ using RedditClone.Common.Constants;
 using RedditClone.Common.Enums;
 using RedditClone.Models;
 using RedditClone.Models.WebModels.IndexModels.ViewModels;
+using RedditClone.Services.QuestServices.Interfaces;
 using RedditClone.Services.UserServices.Interfaces;
 using RedditClone.Web.Models;
 
@@ -14,21 +15,39 @@ namespace RedditClone.Web.Controllers
 {
     public class HomeController : BaseController
     {
+        private readonly IQuestPostService questPostService;
         private readonly IUserPostService userPostService;
+        private readonly ICookieService cookieService;
         private readonly SignInManager<User> signInManager;
 
-        public HomeController(IUserPostService userPostService, SignInManager<User> signInManager)
+        public HomeController(
+            IQuestPostService questPostService,
+            IUserPostService userPostService,
+            ICookieService cookieService,
+            SignInManager<User> signInManager)
         {
+            this.questPostService = questPostService;
             this.userPostService = userPostService;
+            this.cookieService = cookieService;
             this.signInManager = signInManager;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            IndexViewModel model = await this.userPostService.GetOrderedPostsAsync(
+            IndexViewModel model = null;
+
+            if (signInManager.IsSignedIn(this.User))
+            {
+                model = await this.userPostService.GetOrderedPostsAsync(
                     this.User,
                     this.Request.Cookies,
                     this.Response.Cookies);
+            }
+            else
+            {
+                model = await this.questPostService.GetOrderedPostsAsync(this.Request.Cookies, this.Response.Cookies);
+            }
 
             return View(model);
         }
@@ -45,7 +64,7 @@ namespace RedditClone.Web.Controllers
             }
             else
             {
-                this.userPostService.ChangePostSortType(this.Response.Cookies, postSortType);
+                this.cookieService.ChangePostSortTypeCookie(this.Response.Cookies, postSortType);
             }
 
             return this.Redirect("/");
@@ -55,11 +74,11 @@ namespace RedditClone.Web.Controllers
         public IActionResult ChangeTimeFrame(string timeFrame)
         {
             PostShowTimeFrame postTimeFrame = PostShowTimeFrame.AllTime;
-            var isParseSuccessfull = Enum.TryParse<PostShowTimeFrame>(timeFrame, out postTimeFrame);
+            var isParseSuccessfull = Enum.TryParse(timeFrame, out postTimeFrame);
 
             if (isParseSuccessfull)
             {
-                this.userPostService.ChangePostTimeFrame(this.Response.Cookies, postTimeFrame);
+                this.cookieService.ChangePostTimeFrameCookie(this.Response.Cookies, postTimeFrame);
             }
             else
             {

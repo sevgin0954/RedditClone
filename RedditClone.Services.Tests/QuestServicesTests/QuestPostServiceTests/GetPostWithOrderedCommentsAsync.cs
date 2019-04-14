@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Moq;
-using RedditClone.Common.Constants;
 using RedditClone.Models;
 using RedditClone.Models.WebModels.PostModels.ViewModels;
 using System;
@@ -43,24 +42,6 @@ namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
             var model = await this.CallGetPostWithOrderedCommentsAsyncWithPost(dbPost);
 
             Assert.Equal(2, model.CommentsCount);
-        }
-
-        [Fact]
-        public async Task WithoutCommentSortTypeCookie_ShouldSetDefaultCommentSortTypeCookie()
-        {
-            var dbPost = new Post();
-
-            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
-            var mockedResponseCookies = new Mock<IResponseCookies>();
-            var model = await this.CallGetPostWithOrderedCommentsAsyncWithCookies(
-                dbPost, 
-                mockedRequestCookies.Object, 
-                mockedResponseCookies.Object);
-
-            var commentSortTypeKey = WebConstants.CookieKeyCommentSortType;
-            var commentSortTypeValue = WebConstants.CookieDefaultValueCommentSortType;
-            mockedResponseCookies
-                .Verify(rc => rc.Append(commentSortTypeKey, commentSortTypeValue, It.IsAny<CookieOptions>()), Times.Once);
         }
 
         private async Task<PostViewModel> CallGetPostWithOrderedCommentsAsync(string postId)

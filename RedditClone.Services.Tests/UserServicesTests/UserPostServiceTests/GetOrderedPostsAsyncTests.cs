@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Moq;
-using RedditClone.Common.Constants;
-using RedditClone.Common.Enums;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Models.WebModels.IndexModels.ViewModels;
@@ -17,119 +15,6 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
     public class GetOrderedPostsAsyncTests : BaseUserPostServiceTest
     {
         [Fact]
-        public async Task WithoutCookies_ShouldSetDefaultCookies()
-        {
-            var mockedRequestCookieCollection = new Mock<IRequestCookieCollection>();
-            var mockedResponseCookies = new Mock<IResponseCookies>();
-
-            await this.CallOrderedPostsAsyncWithCookies(mockedRequestCookieCollection.Object, mockedResponseCookies.Object);
-
-            var postSortTypeKey = WebConstants.CookieKeyPostSortType;
-            var postSortTypeValue = WebConstants.CookieDefaultValuePostSortType;
-            mockedResponseCookies
-                .Verify(rc => rc.Append(postSortTypeKey, postSortTypeValue, It.IsAny<CookieOptions>()), Times.Once);
-
-            var postTimeFrameKey = WebConstants.CookieKeyPostShowTimeFrame;
-            var postTimeFrameValue = WebConstants.CookieDefaultValuePostShowTimeFrame;
-            mockedResponseCookies
-                .Verify(rc => rc.Append(postTimeFrameKey, postTimeFrameValue, It.IsAny<CookieOptions>()), Times.Exactly(2));
-        }
-
-        [Fact]
-        public async Task WithNotTimeDependentSortType_ShouldReturnModelWithNullPostShowTimeFrame()
-        {
-            var mockedResponseCookies = new Mock<IResponseCookies>();
-            var mockedRequestCookieCollection = new Mock<IRequestCookieCollection>();
-
-            var postSortTypeKey = WebConstants.CookieKeyPostSortType;
-            mockedRequestCookieCollection.SetupGet(r => r[postSortTypeKey])
-                .Returns(SortType.New.ToString());
-
-            var model = await this.CallOrderedPostsAsyncWithCookies(
-                mockedRequestCookieCollection.Object, 
-                mockedResponseCookies.Object);
-
-            Assert.Null(model.PostShowTimeFrame);
-        }
-
-        [Fact]
-        public async Task WithTimeDependentSortType_ShouldReturnModelWithPostShowTimeFrame()
-        {
-            var mockedResponseCookies = new Mock<IResponseCookies>();
-            var mockedRequestCookieCollection = new Mock<IRequestCookieCollection>();
-
-            var postSortTypeKey = WebConstants.CookieKeyPostSortType;
-            mockedRequestCookieCollection.SetupGet(r => r[postSortTypeKey])
-                .Returns(SortType.Controversial.ToString());
-
-            var model = await this.CallOrderedPostsAsyncWithCookies(
-                mockedRequestCookieCollection.Object,
-                mockedResponseCookies.Object);
-
-            Assert.NotNull(model.PostShowTimeFrame);
-        }
-
-        [Fact]
-        public async Task WithTimeDependentSortTypeAndPostShowTimeFrameCookie_ShouldReturnModelWithCorrectPostShowTimeFrame()
-        {
-            var mockedResponseCookies = new Mock<IResponseCookies>();
-            var mockedRequestCookieCollection = new Mock<IRequestCookieCollection>();
-
-            var postSortTypeKey = WebConstants.CookieKeyPostSortType;
-            mockedRequestCookieCollection.SetupGet(r => r[postSortTypeKey])
-                .Returns(SortType.Controversial.ToString());
-
-            var postShowTimeFrame = PostShowTimeFrame.PastMonth;
-            var postTimeFrameKey = WebConstants.CookieKeyPostShowTimeFrame;
-            mockedRequestCookieCollection.SetupGet(r => r[postTimeFrameKey])
-                .Returns(postShowTimeFrame.ToString());
-
-            var model = await this.CallOrderedPostsAsyncWithCookies(
-                mockedRequestCookieCollection.Object,
-                mockedResponseCookies.Object);
-
-            Assert.Equal(postShowTimeFrame, model.PostShowTimeFrame);
-        }
-
-        [Fact]
-        public async Task WithNotTimeDependentSortType_ShouldSetDefaultPostShowTimeFrameCookie()
-        {
-            var mockedResponseCookies = new Mock<IResponseCookies>();
-            var mockedRequestCookieCollection = new Mock<IRequestCookieCollection>();
-
-            var postSortTypeKey = WebConstants.CookieKeyPostSortType;
-            mockedRequestCookieCollection.SetupGet(r => r[postSortTypeKey])
-                .Returns(SortType.New.ToString());
-
-            var model = await this.CallOrderedPostsAsyncWithCookies(
-                mockedRequestCookieCollection.Object, 
-                mockedResponseCookies.Object);
-
-            var postTimeFrameKey = WebConstants.CookieKeyPostShowTimeFrame;
-            var postTimeFrameValue = WebConstants.CookieDefaultValuePostShowTimeFrame;
-            mockedResponseCookies
-                .Verify(rc => rc.Append(postTimeFrameKey, postTimeFrameValue, It.IsAny<CookieOptions>()), Times.Exactly(2));
-        }
-
-        [Fact]
-        public async Task WithQuest_ShouldReturnModelWithAllPosts()
-        {
-            var dbPost1 = this.CreatePostWithCurrentTime();
-            var dbPost2 = this.CreatePostWithCurrentTime();
-
-            var model = await this.CallOrderedPostsAsyncWithPosts(dbPost1, dbPost2);
-
-            var modelPosts = model.Posts;
-            var modelPost1 = modelPosts.ElementAt(0);
-            var modelPost2 = modelPosts.ElementAt(1);
-
-            Assert.Equal(2, modelPosts.Count());
-            Assert.Contains(modelPosts, p => p.Id == modelPost1.Id);
-            Assert.Contains(modelPosts, p => p.Id == modelPost2.Id);
-
-        }
-
-        [Fact]
         public async Task WithUserWithSubscribedSubreddits_ShouldReturnModelWithOnlySubsribedSubredditsPosts()
         {
             var dbUser = new User();
@@ -141,7 +26,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             dbSubreddit.Posts.Add(dbPost2);
             this.SubscribeUserToSubreddit(dbUser, dbSubreddit);
                 
-            var model = await this.CallOrderedPostsAsyncWithUserAndPosts(dbUser, dbPost3);
+            var model = await this.CallGetOrderedPostsAsyncWithUserAndPosts(dbUser, dbPost3);
 
             var modelPosts = model.Posts;
             var modelPost1 = modelPosts.ElementAt(0);
@@ -159,7 +44,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             var dbPost1 = this.CreatePostWithCurrentTime();
             var dbPost2 = this.CreatePostWithCurrentTime();
 
-            var model = await this.CallOrderedPostsAsyncWithUserAndPosts(dbUser, dbPost1, dbPost2);
+            var model = await this.CallGetOrderedPostsAsyncWithUserAndPosts(dbUser, dbPost1, dbPost2);
 
             var modelPosts = model.Posts;
             var modelPost1 = modelPosts.ElementAt(0);
@@ -189,7 +74,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             user.SubscribedSubreddits.Add(dbUserSubreddit);
         }
 
-        private async Task<IndexViewModel> CallOrderedPostsAsyncWithCookies(
+        private async Task<IndexViewModel> CallGetOrderedPostsAsyncWithCookies(
             IRequestCookieCollection requestCokieCollection, 
             IResponseCookies responseCookies)
         {
@@ -207,15 +92,14 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             return model;
         }
 
-        private async Task<IndexViewModel> CallOrderedPostsAsyncWithPosts(params Post[] posts)
+        private async Task<IndexViewModel> CallGetOrderedPostsAsyncWithPosts(params Post[] posts)
         {
             var unitOfWork = this.GetRedditCloneUnitOfWork();
             unitOfWork.Posts.AddRange(posts);
             unitOfWork.Complete();
 
             var userManager = CommonTestMethods.GetMockedUserManager().Object;
-            var signInManager = CommonTestMethods.GetMockedSignInManager(userManager).Object;
-            var service = this.GetService(unitOfWork, userManager, signInManager);
+            var service = this.GetService(unitOfWork, userManager);
 
             var claimsPricipal = new Mock<ClaimsPrincipal>().Object;
             var requestCookieCollection = new Mock<IRequestCookieCollection>().Object;
@@ -228,40 +112,36 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             return model;
         }
 
-        private async Task<IndexViewModel> CallOrderedPostsAsyncWithUser(User user)
+        private async Task<IndexViewModel> CallGetOrderedPostsAsyncWithUser(User user)
         {
             var unitOfWork = this.GetRedditCloneUnitOfWork();
             unitOfWork.Users.Add(user);
             unitOfWork.Complete();
 
-            var model = await this.CallOrderedPostsAsyncWithUser(unitOfWork, user);
+            var model = await this.CallGetOrderedPostsAsyncWithUser(unitOfWork, user);
 
             return model;
         }
 
-        private async Task<IndexViewModel> CallOrderedPostsAsyncWithUserAndPosts(User user, params Post[] posts)
+        private async Task<IndexViewModel> CallGetOrderedPostsAsyncWithUserAndPosts(User user, params Post[] posts)
         {
             var unitOfWork = this.GetRedditCloneUnitOfWork();
             unitOfWork.Users.Add(user);
             unitOfWork.Posts.AddRange(posts);
             unitOfWork.Complete();
 
-            var model = await this.CallOrderedPostsAsyncWithUser(unitOfWork, user);
+            var model = await this.CallGetOrderedPostsAsyncWithUser(unitOfWork, user);
 
             return model;
         }
 
-        private async Task<IndexViewModel> CallOrderedPostsAsyncWithUser(IRedditCloneUnitOfWork unitOfWork, User user)
+        private async Task<IndexViewModel> CallGetOrderedPostsAsyncWithUser(IRedditCloneUnitOfWork unitOfWork, User user)
         {
             var mockedUserManager = CommonTestMethods.GetMockedUserManager();
             mockedUserManager.Setup(um => um.GetUserId(It.IsAny<ClaimsPrincipal>()))
                 .Returns(user.Id);
 
-            var mockedSignInManager = CommonTestMethods.GetMockedSignInManager(mockedUserManager.Object);
-            mockedSignInManager.Setup(sim => sim.IsSignedIn(It.IsAny<ClaimsPrincipal>()))
-                .Returns(true);
-
-            var service = this.GetService(unitOfWork, mockedUserManager.Object, mockedSignInManager.Object);
+            var service = this.GetService(unitOfWork, mockedUserManager.Object);
 
             var claimsPricipal = new Mock<ClaimsPrincipal>().Object;
             var requestCookieCollection = new Mock<IRequestCookieCollection>().Object;

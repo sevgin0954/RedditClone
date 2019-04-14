@@ -130,6 +130,8 @@ namespace RedditClone.Web
             services.AddScoped<IQuestPostService, QuestPostService>();
 
             services.AddScoped<IUserCommentService, UserCommentService>();
+
+            services.AddScoped<ICookieService, CookieService>();
         }
     }
 }
