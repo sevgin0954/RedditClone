@@ -1,14 +1,12 @@
 ﻿using RedditClone.Data.Interfaces;
 using RedditClone.Data.SortStrategies.PostOrders;
-using RedditClone.Data.SortStrategies.PostStrategies.Interfaces;
 using RedditClone.Models;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace RedditClone.Data.SortStrategies.PostStrategies
 {
-    public class SortPostsByTop : BaseTimeDependentPostSortingStrategy, ISortPostsStrategy
+    public class SortPostsByTop : BaseTimeDependentPostSortingStrategy
     {
         private readonly IRedditCloneUnitOfWork unitOfWork;
 
@@ -18,16 +16,17 @@ namespace RedditClone.Data.SortStrategies.PostStrategies
             this.unitOfWork = unitOfWork;
         }
 
-        public override async Task<IEnumerable<Post>> GetSortedPostsByUserAsync(string userId)
+        public override IQueryable<Post> GetSortedPosts()
         {
-            var dbPosts = await this.unitOfWork.Posts.GetBySubcribedUserOrderedByTopAsync(userId, this.TimeFrame);
-            return dbPosts;
-        }
+            var startDate = DateTime.UtcNow.Subtract(this.TimeFrame);
 
-        public override async Task<IEnumerable<Post>> GetSortedPostsAsync()
-        {
-            var dbPosts = await this.unitOfWork.Posts.GetOrderedByTopAsync(this.TimeFrame);
-            return dbPosts;
+            var postsQueryable = this.unitOfWork.Posts
+                   .GetAllAsQueryable()
+                   .Where(p => p.PostDate >= startDate)
+                   .OrderByDescending(p => p.UpVotesCount)
+                   .ThenByDescending(p => p.PostDate);
+
+            return postsQueryable;
         }
     }
 }

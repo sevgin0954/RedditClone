@@ -1,6 +1,6 @@
 ﻿using RedditClone.Data.Repositories.Generic.Interfaces;
+using RedditClone.Data.SortStrategies.PostStrategies.Interfaces;
 using RedditClone.Models;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,13 +9,8 @@ namespace RedditClone.Data.Repositories.Interfaces
     public interface IPostRepository : IRepository<Post>
     {
         Task<Post> GetByIdWithIncludedAllProperties(string postId);
-        Task<IEnumerable<Post>> GetBySubcribedUserOrderedByNewAsync(string userId);
-        Task<IEnumerable<Post>> GetOrderByNewAsync();
-        Task<IEnumerable<Post>> GetBySubcribedUserOrderedByTopAsync(string userId, TimeSpan timeFrame);
-        Task<IEnumerable<Post>> GetOrderedByTopAsync(TimeSpan timeFrame);
-        Task<IEnumerable<Post>> GetBySubscribedUserOrderedByControversialAsync(string userId, TimeSpan timeFrame);
-        Task<IEnumerable<Post>> GetOrderedByControversialAsync(TimeSpan timeFrame);
-        Task<IEnumerable<Post>> GetBySubscribedUserOrderedByBestAsync(string userId);
-        Task<IEnumerable<Post>> GetOrderedByBestAsync();
+        Task<IEnumerable<Post>> GetBySubcribedUserOrderedByAsync(string userId, ISortPostsStrategy sortPostsStrategy);
+        Task<IEnumerable<Post>> GetAllSortedByAsync(ISortPostsStrategy sortPostsStrategy);
+        Task<IEnumerable<Post>> GetBySubredditSortedBy(string subredditId, ISortPostsStrategy sortPostsStrategy);
     }
 }

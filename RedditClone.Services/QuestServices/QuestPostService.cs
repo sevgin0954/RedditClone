@@ -12,6 +12,7 @@ using RedditClone.Models.WebModels.CommentModels.ViewModels;
 using RedditClone.Models.WebModels.IndexModels.ViewModels;
 using RedditClone.Models.WebModels.PostModels.ViewModels;
 using RedditClone.Services.QuestServices.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -40,8 +41,9 @@ namespace RedditClone.Services.QuestServices
             var timeFrame = TimeFrameFactory.GetTimeFrame(postShowTimeFrame);
             var sortPostsStrategy = SortPostsStartegyFactory
                 .GetSortPostsStrategy(this.redditCloneUnitOfWork, timeFrame, postSortType);
-            
-            var dbPosts = await sortPostsStrategy.GetSortedPostsAsync();
+
+            var dbPosts = await this.redditCloneUnitOfWork.Posts.GetAllSortedByAsync(sortPostsStrategy);
+            //var dbPosts = await sortPostsStrategy.GetSortedPostsAsync();
 
             var isHaveTimeFrame = CheckIsSortStrategyHaveTimeFrame(sortPostsStrategy);
             if (isHaveTimeFrame)
@@ -54,6 +56,14 @@ namespace RedditClone.Services.QuestServices
                 var model = this.MapIndexModel(dbPosts, postSortType);
                 return model;
             }
+        }
+
+        public async Task<IndexViewModel> GetOrderedPostsBySubredditAsync(
+            string subredditId, 
+            IRequestCookieCollection requestCookies,
+            IResponseCookies responseCookies)
+        {
+            throw new NotImplementedException();
         }
 
         private bool CheckIsSortStrategyHaveTimeFrame(ISortPostsStrategy sortPostsStrategy)

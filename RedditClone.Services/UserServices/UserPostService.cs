@@ -91,10 +91,11 @@ namespace RedditClone.Services.UserServices
                 .GetSortPostsStrategy(this.redditCloneUnitOfWork, timeFrame, postSortType);
 
             var dbUserId = this.userManager.GetUserId(user);
-            var dbPosts = await sortPostsStrategy.GetSortedPostsByUserAsync(dbUserId);
+            var dbPosts = await this.redditCloneUnitOfWork.Posts
+                .GetBySubcribedUserOrderedByAsync(dbUserId, sortPostsStrategy);
             if (dbPosts.Count() == 0)
             {
-                dbPosts = await sortPostsStrategy.GetSortedPostsAsync();
+                dbPosts = await this.redditCloneUnitOfWork.Posts.GetAllSortedByAsync(sortPostsStrategy);
             }
 
             var isHaveTimeFrame = CheckIsSortStrategyHaveTimeFrame(sortPostsStrategy);

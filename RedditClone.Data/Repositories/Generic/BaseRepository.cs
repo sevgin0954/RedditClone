@@ -47,6 +47,11 @@ namespace RedditClone.Data.Repositories.Generic
             return this.DbContext.Set<TEntity>().ToList();
         }
 
+        public IQueryable<TEntity> GetAllAsQueryable()
+        {
+            return this.DbContext.Set<TEntity>();
+        }
+
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             return await this.DbContext.Set<TEntity>().ToListAsync();

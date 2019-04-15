@@ -18,6 +18,7 @@ namespace RedditClone.Web.Controllers
             this.cookieService = cookieService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index(string postId)
         {
             if (postId == null)

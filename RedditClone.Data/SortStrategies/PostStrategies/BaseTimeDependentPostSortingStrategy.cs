@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 using RedditClone.Data.SortStrategies.PostStrategies.Interfaces;
 using RedditClone.Models;
 
@@ -15,8 +14,6 @@ namespace RedditClone.Data.SortStrategies.PostOrders
 
         protected TimeSpan TimeFrame { get; }
 
-        public abstract Task<IEnumerable<Post>> GetSortedPostsByUserAsync(string userId);
-
-        public abstract Task<IEnumerable<Post>> GetSortedPostsAsync();
+        public abstract IQueryable<Post> GetSortedPosts();
     }
 }

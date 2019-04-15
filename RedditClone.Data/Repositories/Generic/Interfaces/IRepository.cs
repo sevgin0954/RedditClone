@@ -11,6 +11,7 @@ namespace RedditClone.Data.Repositories.Generic.Interfaces
         TEntity GetById(string id);
         Task<TEntity> GetByIdAsync(string id);
         IEnumerable<TEntity> GetAll();
+        IQueryable<TEntity> GetAllAsQueryable();
         Task<IEnumerable<TEntity>> GetAllAsync();
         IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
 

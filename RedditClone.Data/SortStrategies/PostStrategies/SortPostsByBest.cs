@@ -1,8 +1,8 @@
 ﻿using RedditClone.Data.Interfaces;
 using RedditClone.Data.SortStrategies.PostStrategies.Interfaces;
 using RedditClone.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System;
+using System.Linq;
 
 namespace RedditClone.Data.SortStrategies.PostOrders
 {
@@ -15,16 +15,17 @@ namespace RedditClone.Data.SortStrategies.PostOrders
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Post>> GetSortedPostsByUserAsync(string userId)
+        public IQueryable<Post> GetSortedPosts()
         {
-            var dbPosts = await this.unitOfWork.Posts.GetBySubscribedUserOrderedByBestAsync(userId);
-            return dbPosts;
-        }
+            var startDate = DateTime.UtcNow.Subtract(TimeSpan.FromDays(1));
 
-        public async Task<IEnumerable<Post>> GetSortedPostsAsync()
-        {
-            var dbPosts = await this.unitOfWork.Posts.GetOrderedByBestAsync();
-            return dbPosts;
+            var postsQueryable = this.unitOfWork.Posts
+                .GetAllAsQueryable()
+                .Where(p => p.PostDate >= startDate)
+                .OrderByDescending(p => p.UpVotesCount - p.DownVotesCount)
+                .ThenByDescending(p => p.PostDate);
+
+            return postsQueryable;
         }
     }
 }

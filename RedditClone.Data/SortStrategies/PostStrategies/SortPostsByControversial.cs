@@ -1,13 +1,11 @@
 ﻿using RedditClone.Data.Interfaces;
-using RedditClone.Data.SortStrategies.PostStrategies.Interfaces;
 using RedditClone.Models;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace RedditClone.Data.SortStrategies.PostOrders
 {
-    public class SortPostsByControversial : BaseTimeDependentPostSortingStrategy, ISortPostsStrategy
+    public class SortPostsByControversial : BaseTimeDependentPostSortingStrategy
     {
         private readonly IRedditCloneUnitOfWork unitOfWork;
 
@@ -17,16 +15,17 @@ namespace RedditClone.Data.SortStrategies.PostOrders
             this.unitOfWork = unitOfWork;
         }
 
-        public override async Task<IEnumerable<Post>> GetSortedPostsByUserAsync(string userId)
+        public override IQueryable<Post> GetSortedPosts()
         {
-            var dbPosts = await this.unitOfWork.Posts.GetBySubscribedUserOrderedByControversialAsync(userId, this.TimeFrame);
-            return dbPosts;
-        }
+            var startDate = DateTime.UtcNow.Subtract(this.TimeFrame);
 
-        public override async Task<IEnumerable<Post>> GetSortedPostsAsync()
-        {
-            var dbPosts = await this.unitOfWork.Posts.GetOrderedByControversialAsync(this.TimeFrame);
-            return dbPosts;
+            var postsQueryable = this.unitOfWork.Posts
+                .GetAllAsQueryable()
+                .Where(p => p.PostDate >= startDate)
+                .OrderByDescending(p => p.UpVotesCount + p.DownVotesCount)
+                .ThenByDescending(p => p.PostDate);
+
+            return postsQueryable;
         }
     }
 }
