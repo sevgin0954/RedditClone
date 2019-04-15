@@ -122,7 +122,8 @@ namespace RedditClone.Services.QuestServices
             var commentSortType = this.cookieService.GetCommentSortTypeFromCookieOrDefault(requestCookies);
 
             var sortTypeStrategy = SortCommentStrategyFactory.GetSortPostsStrategy(redditCloneUnitOfWork, commentSortType);
-            var sortedComments = await sortTypeStrategy.GetSortedCommentsAsync(postId);
+            var sortedComments = await this.redditCloneUnitOfWork.Comments
+                .GetByPostSortedByAsync(postId, sortTypeStrategy);
 
             var model = this.MapPostModel(dbPost, commentSortType, sortedComments);
 

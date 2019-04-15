@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RedditClone.Data.Repositories.Generic;
 using RedditClone.Data.Repositories.Interfaces;
+using RedditClone.Data.SortStrategies.CommentsStrategies.Interfaces;
 using RedditClone.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,55 +14,16 @@ namespace RedditClone.Data.Repositories
         public CommentRepository(RedditCloneDbContext dbContext)
             : base(dbContext) { }
 
-        public async Task<IEnumerable<Comment>> GetByPostOrderedByNewAsync(string postId)
+        public async Task<IEnumerable<Comment>> GetByPostSortedByAsync(string postId, ISortCommentsStrategy sortStrategy)
         {
-            var comments = await this.RedditCloneDbContext.Comments
+            var sortedComments = sortStrategy.GetSortedComments();
+            var filteredComments = await sortedComments
                 .Where(c => c.PostId == postId)
-                .OrderByDescending(c => c.PostDate)
                 .Include(c => c.Author)
                 .Include(c => c.Replies)
                 .ToListAsync();
 
-            return comments;
-        }
-
-        public async Task<IEnumerable<Comment>> GetByPostOrderedByTopAsync(string postId)
-        {
-            var comments = await this.RedditCloneDbContext.Comments
-                .Where(c => c.PostId == postId)
-                .OrderByDescending(p => p.UpVotesCount)
-                   .ThenByDescending(p => p.PostDate)
-                .Include(c => c.Author)
-                .Include(c => c.Replies)
-                .ToListAsync();
-
-            return comments;
-        }
-
-        public async Task<IEnumerable<Comment>> GetByPostOrderedByControversialAsync(string postId)
-        {
-            var comments = await this.RedditCloneDbContext.Comments
-                .Where(c => c.PostId == postId)
-                .OrderByDescending(p => p.UpVotesCount + p.DownVotesCount)
-                .ThenByDescending(p => p.PostDate)
-                .Include(c => c.Author)
-                .Include(c => c.Replies)
-                .ToListAsync();
-
-            return comments;
-        }
-
-        public async Task<IEnumerable<Comment>> GetByPostOrderedByBestAsync(string postId)
-        {
-            var comments = await this.RedditCloneDbContext.Comments
-                .Where(c => c.PostId == postId)
-                .OrderByDescending(p => p.UpVotesCount - p.DownVotesCount)
-                .ThenByDescending(p => p.PostDate)
-                .Include(p => p.Author)
-                .Include(p => p.Replies)
-                .ToListAsync();
-
-            return comments;
+            return filteredComments;
         }
 
         public RedditCloneDbContext RedditCloneDbContext

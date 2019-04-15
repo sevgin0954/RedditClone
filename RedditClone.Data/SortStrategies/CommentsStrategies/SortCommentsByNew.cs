@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using RedditClone.Data.Interfaces;
 using RedditClone.Data.SortStrategies.CommentsStrategies.Interfaces;
 using RedditClone.Models;
@@ -15,10 +14,13 @@ namespace RedditClone.Data.SortStrategies.CommentsStrategies
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Comment>> GetSortedCommentsAsync(string postId)
+        public IQueryable<Comment> GetSortedComments()
         {
-            var sortedComments = await unitOfWork.Comments.GetByPostOrderedByNewAsync(postId);
-            return sortedComments;
+            var comments = this.unitOfWork.Comments
+                .GetAllAsQueryable()
+                .OrderByDescending(c => c.PostDate);
+
+            return comments;
         }
     }
 }
