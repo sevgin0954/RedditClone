@@ -47,10 +47,10 @@ namespace RedditClone.Data.Repositories
         private IQueryable<Post> GetOrderedByNew()
         {
             var postsQueryable = this.RedditCloneDbContext.Posts
+                .OrderByDescending(p => p.PostDate)
                 .Include(p => p.Subreddit)
                 .Include(p => p.Author)
-                .Include(p => p.Comments)
-                .OrderByDescending(p => p.PostDate);
+                .Include(p => p.Comments);
 
             return postsQueryable;
         }
@@ -79,10 +79,11 @@ namespace RedditClone.Data.Repositories
 
             var postsQueryable = this.RedditCloneDbContext.Posts
                    .Where(p => p.PostDate >= startDate)
+                   .OrderByDescending(p => p.UpVotesCount)
+                   .ThenByDescending(p => p.PostDate)
                    .Include(p => p.Subreddit)
                    .Include(p => p.Author)
-                   .OrderByDescending(p => p.UpVotesCount)
-                   .ThenByDescending(p => p.PostDate);
+                   .Include(p => p.Comments);
 
             return postsQueryable;
         }
@@ -114,7 +115,8 @@ namespace RedditClone.Data.Repositories
                 .OrderByDescending(p => p.UpVotesCount + p.DownVotesCount)
                 .ThenByDescending(p => p.PostDate)
                 .Include(p => p.Subreddit)
-                .Include(p => p.Author);
+                .Include(p => p.Author)
+                .Include(p => p.Comments);
 
             return postsQueryable;
         }
@@ -143,10 +145,11 @@ namespace RedditClone.Data.Repositories
 
             var postsQueryable = this.RedditCloneDbContext.Posts
                 .Where(p => p.PostDate >= startDate)
+                .OrderByDescending(p => p.UpVotesCount - p.DownVotesCount)
+                .ThenByDescending(p => p.PostDate)
                 .Include(p => p.Author)
                 .Include(p => p.Subreddit)
-                .OrderByDescending(p => p.UpVotesCount - p.DownVotesCount)
-                .ThenByDescending(p => p.PostDate);
+                .Include(p => p.Comments);
 
             return postsQueryable;
         }
