@@ -92,35 +92,14 @@ namespace RedditClone.Services.UserServices
 
             var dbUserId = this.userManager.GetUserId(user);
             var dbPosts = await this.redditCloneUnitOfWork.Posts
-                .GetBySubcribedUserOrderedByAsync(dbUserId, sortPostsStrategy);
+                .GetBySubcribedUserSortedByAsync(dbUserId, sortPostsStrategy);
             if (dbPosts.Count() == 0)
             {
                 dbPosts = await this.redditCloneUnitOfWork.Posts.GetAllSortedByAsync(sortPostsStrategy);
             }
 
-            var isHaveTimeFrame = CheckIsSortStrategyHaveTimeFrame(sortPostsStrategy);
-            if (isHaveTimeFrame)
-            {
-                var model = this.MapIndexModelWithTimeFrame(dbPosts, postSortType, postShowTimeFrame);
-                return model;
-            }
-            else
-            {
-                var model = this.MapIndexModel(dbPosts, postSortType);
-                return model;
-            }
-        }
-
-        private bool CheckIsSortStrategyHaveTimeFrame(ISortPostsStrategy sortPostsStrategy)
-        {
-            var isHaveTimeFrame = false;
-
-            if (sortPostsStrategy is BaseTimeDependentPostSortingStrategy)
-            {
-                isHaveTimeFrame = true;
-            }
-
-            return isHaveTimeFrame;
+            var model = this.MapIndexModel(dbPosts, postSortType, sortPostsStrategy, postShowTimeFrame);
+            return model;
         }
 
         private async Task<PostCreationBindingModel> MapCreationPostBindingModelAsync(string userId, string subredditId)
@@ -219,20 +198,11 @@ namespace RedditClone.Services.UserServices
             return selectListItem;
         }
 
-        private IndexViewModel MapIndexModelWithTimeFrame(
-            IEnumerable<Post> posts,
-            SortType selectedSortType,
-            PostShowTimeFrame selectedTimeFrame)
-        {
-            var model = this.MapIndexModel(posts, selectedSortType);
-            model.PostShowTimeFrame = selectedTimeFrame;
-
-            return model;
-        }
-
         private IndexViewModel MapIndexModel(
             IEnumerable<Post> posts,
-            SortType selectedSortType)
+            SortType selectedSortType,
+            ISortPostsStrategy sortStrategy,
+            PostShowTimeFrame selectedTimeFrame)
         {
             var postModels = this.mapper.Map<IEnumerable<PostConciseViewModel>>(posts);
             var model = new IndexViewModel
@@ -241,7 +211,25 @@ namespace RedditClone.Services.UserServices
                 PostSortType = selectedSortType
             };
 
+            var isHaveTimeFrame = CheckIsSortStrategyHaveTimeFrame(sortStrategy);
+            if (isHaveTimeFrame)
+            {
+                model.PostShowTimeFrame = selectedTimeFrame;
+            }
+
             return model;
+        }
+
+        private bool CheckIsSortStrategyHaveTimeFrame(ISortPostsStrategy sortPostsStrategy)
+        {
+            var isHaveTimeFrame = false;
+
+            if (sortPostsStrategy is BaseTimeDependentPostSortingStrategy)
+            {
+                isHaveTimeFrame = true;
+            }
+
+            return isHaveTimeFrame;
         }
     }
 }

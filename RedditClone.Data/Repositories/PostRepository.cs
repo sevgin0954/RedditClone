@@ -26,7 +26,7 @@ namespace RedditClone.Data.Repositories
             return post;
         }
 
-        public async Task<IEnumerable<Post>> GetBySubcribedUserOrderedByAsync(string userId, ISortPostsStrategy sortPostsStrategy)
+        public async Task<IEnumerable<Post>> GetBySubcribedUserSortedByAsync(string userId, ISortPostsStrategy sortPostsStrategy)
         {
             var sortedPosts = await sortPostsStrategy
                 .GetSortedPosts()

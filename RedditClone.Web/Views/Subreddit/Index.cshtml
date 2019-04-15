@@ -1,7 +1,14 @@
-﻿
+﻿@model IndexViewModel
 @{
     ViewData["Title"] = "Index";
+    Layout = "_LayoutIndex";
 }
 
-<h1>@ViewData["Title"]</h1>
+@if (Model.Posts.Any())
+{
+    ViewData["Title"] = Model.Posts.First().SubredditName;
+}
 
+<h1>r/@ViewData["Title"]</h1>
+
+<partial name="_PostsPartial" model="Model.Posts" />

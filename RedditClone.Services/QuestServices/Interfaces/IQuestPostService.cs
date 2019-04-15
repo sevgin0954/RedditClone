@@ -15,5 +15,10 @@ namespace RedditClone.Services.QuestServices.Interfaces
             string postId, 
             IRequestCookieCollection requestCookies, 
             IResponseCookies responseCookies);
+
+        Task<IndexViewModel> GetOrderedPostsBySubredditAsync(
+            string subredditId,
+            IRequestCookieCollection requestCookies,
+            IResponseCookies responseCookies);
     }
 }

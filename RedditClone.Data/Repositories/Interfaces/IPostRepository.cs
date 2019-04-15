@@ -9,7 +9,7 @@ namespace RedditClone.Data.Repositories.Interfaces
     public interface IPostRepository : IRepository<Post>
     {
         Task<Post> GetByIdWithIncludedAllProperties(string postId);
-        Task<IEnumerable<Post>> GetBySubcribedUserOrderedByAsync(string userId, ISortPostsStrategy sortPostsStrategy);
+        Task<IEnumerable<Post>> GetBySubcribedUserSortedByAsync(string userId, ISortPostsStrategy sortPostsStrategy);
         Task<IEnumerable<Post>> GetAllSortedByAsync(ISortPostsStrategy sortPostsStrategy);
         Task<IEnumerable<Post>> GetBySubredditSortedBy(string subredditId, ISortPostsStrategy sortPostsStrategy);
     }

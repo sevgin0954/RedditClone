@@ -1,0 +1,47 @@
+﻿@model IEnumerable<PostConciseViewModel>
+@foreach (var postModel in Model)
+{
+    <div class="post-container container d-flex flex-row">
+        <div class="flex-column">
+            <div>
+                <a class="link-grey link-green-hover" href="#">
+                    <i class="fas fa-arrow-up fa-lg"></i>
+                </a>
+            </div>
+            <div>
+                &nbsp;@postModel.VotesCount
+            </div>
+            <div>
+                <a class="link-grey link-red-hover" href="#">
+                    <i class="fas fa-arrow-down fa-lg"></i>
+                </a>
+            </div>
+        </div>
+        &nbsp;
+        <div class="flex-column flex-grow-1 min-width-0">
+            <div class="flex-row">
+                <a class="link-grey" asp-controller="Post" asp-action="Index" asp-route-postId="@postModel.Id">@postModel.Title</a>
+                at
+                <a class="link-black" asp-controller="Subreddit" asp-action="Index" asp-route-subredditId="@postModel.SubredditId">
+                    r/@postModel.SubredditName
+                </a>
+                posted by
+                <a class="link-grey" asp-area="Identity" asp-controller="User" asp-action="Index" asp-route-userId="@postModel.AuthorId">
+                    @postModel.AuthorUsername
+                </a>
+            </div>
+            <div class="flex-row">
+                <hr />
+            </div>
+            <div class="flex-row">
+                @postModel.DescriptionConcise
+            </div>
+
+            <div class="flex-row">
+                <i class="fas fa-comment link-grey"></i>
+                @postModel.CommentsCount
+                Comments
+            </div>
+        </div>
+    </div>
+}

@@ -12,7 +12,6 @@ using RedditClone.Models.WebModels.CommentModels.ViewModels;
 using RedditClone.Models.WebModels.IndexModels.ViewModels;
 using RedditClone.Models.WebModels.PostModels.ViewModels;
 using RedditClone.Services.QuestServices.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -42,20 +41,11 @@ namespace RedditClone.Services.QuestServices
             var sortPostsStrategy = SortPostsStartegyFactory
                 .GetSortPostsStrategy(this.redditCloneUnitOfWork, timeFrame, postSortType);
 
-            var dbPosts = await this.redditCloneUnitOfWork.Posts.GetAllSortedByAsync(sortPostsStrategy);
-            //var dbPosts = await sortPostsStrategy.GetSortedPostsAsync();
+            var dbPosts = await this.redditCloneUnitOfWork.Posts
+                .GetAllSortedByAsync(sortPostsStrategy);
 
-            var isHaveTimeFrame = CheckIsSortStrategyHaveTimeFrame(sortPostsStrategy);
-            if (isHaveTimeFrame)
-            {
-                var model = this.MapIndexModelWithTimeFrame(dbPosts, postSortType, postShowTimeFrame);
-                return model;
-            }
-            else
-            {
-                var model = this.MapIndexModel(dbPosts, postSortType);
-                return model;
-            }
+            var model = this.MapIndexModel(dbPosts, postSortType, sortPostsStrategy, postShowTimeFrame);
+            return model;
         }
 
         public async Task<IndexViewModel> GetOrderedPostsBySubredditAsync(
@@ -63,7 +53,47 @@ namespace RedditClone.Services.QuestServices
             IRequestCookieCollection requestCookies,
             IResponseCookies responseCookies)
         {
-            throw new NotImplementedException();
+            var dbSubreddit = await this.redditCloneUnitOfWork.Subreddits
+                .GetByIdAsync(subredditId);
+            if (dbSubreddit == null)
+            {
+                return null;
+            }
+
+            var postSortType = this.cookieService.GetPostSortTypeFromCookieOrDefault(requestCookies);
+            var postShowTimeFrame = this.cookieService.GetPostShowTimeFrameFromCookieOrDefault(requestCookies);
+
+            var timeFrame = TimeFrameFactory.GetTimeFrame(postShowTimeFrame);
+            var sortPostsStrategy = SortPostsStartegyFactory
+                .GetSortPostsStrategy(this.redditCloneUnitOfWork, timeFrame, postSortType);
+
+            var dbPosts = await this.redditCloneUnitOfWork.Posts
+                .GetBySubredditSortedBy(subredditId, sortPostsStrategy);
+
+            var model = this.MapIndexModel(dbPosts, postSortType, sortPostsStrategy, postShowTimeFrame);
+            return model;
+        }
+
+        private IndexViewModel MapIndexModel(
+            IEnumerable<Post> posts,
+            SortType selectedSortType,
+            ISortPostsStrategy sortStrategy,
+            PostShowTimeFrame selectedTimeFrame)
+        {
+            var postModels = this.mapper.Map<IEnumerable<PostConciseViewModel>>(posts);
+            var model = new IndexViewModel
+            {
+                Posts = postModels,
+                PostSortType = selectedSortType
+            };
+
+            var isHaveTimeFrame = CheckIsSortStrategyHaveTimeFrame(sortStrategy);
+            if (isHaveTimeFrame)
+            {
+                model.PostShowTimeFrame = selectedTimeFrame;
+            }
+
+            return model;
         }
 
         private bool CheckIsSortStrategyHaveTimeFrame(ISortPostsStrategy sortPostsStrategy)
@@ -76,31 +106,6 @@ namespace RedditClone.Services.QuestServices
             }
 
             return isHaveTimeFrame;
-        }
-
-        private IndexViewModel MapIndexModelWithTimeFrame(
-            IEnumerable<Post> posts,
-            SortType selectedSortType,
-            PostShowTimeFrame selectedTimeFrame)
-        {
-            var model = this.MapIndexModel(posts, selectedSortType);
-            model.PostShowTimeFrame = selectedTimeFrame;
-
-            return model;
-        }
-
-        private IndexViewModel MapIndexModel(
-            IEnumerable<Post> posts,
-            SortType selectedSortType)
-        {
-            var postModels = this.mapper.Map<IEnumerable<PostConciseViewModel>>(posts);
-            var model = new IndexViewModel
-            {
-                Posts = postModels,
-                PostSortType = selectedSortType
-            };
-
-            return model;
         }
 
         public async Task<PostViewModel> GetPostWithOrderedCommentsAsync(
