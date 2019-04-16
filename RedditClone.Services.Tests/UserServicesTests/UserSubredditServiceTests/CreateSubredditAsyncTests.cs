@@ -56,9 +56,10 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserSubredditServiceTests
             };
 
             await this.CallCreateSubredditAsync(unitOfWork, model);
-            var dbSubreddit = unitOfWork.Subreddits.Find(s => s.Name == subredditName).First();
+            var dbSubreddits = await unitOfWork.Subreddits.FindAsync(s => s.Name == subredditName);
+            var dbFirstSubreddit = dbSubreddits.First();
 
-            Assert.Equal(subredditName, dbSubreddit.Name);
+            Assert.Equal(subredditName, dbFirstSubreddit.Name);
         }
 
         [Theory]
@@ -72,9 +73,10 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserSubredditServiceTests
             };
 
             await this.CallCreateSubredditAsync(unitOfWork, model);
-            var dbSubreddit = unitOfWork.Subreddits.Find(s => s.Description == description).First();
+            var dbSubreddits = await unitOfWork.Subreddits.FindAsync(s => s.Description == description);
+            var dbFirstSubreddit = dbSubreddits.First();
 
-            Assert.Equal(description, dbSubreddit.Description);
+            Assert.Equal(description, dbFirstSubreddit.Description);
         }
 
         [Fact]
@@ -88,8 +90,9 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserSubredditServiceTests
 
             var dbUserId = dbUser.Id;
             await this.CallCreateSubredditAsyncWithUser(unitOfWork, model, dbUserId);
-            var dbSubreddit = unitOfWork.Subreddits.Find(s => s.AuthorId == dbUserId).First();
-            var modelAuthorId = dbSubreddit.AuthorId;
+            var dbSubreddits = await unitOfWork.Subreddits.FindAsync(s => s.AuthorId == dbUserId);
+            var dbFirstSubreddit = dbSubreddits.First();
+            var modelAuthorId = dbFirstSubreddit.AuthorId;
 
             Assert.Equal(dbUserId, modelAuthorId);
         }

@@ -13,7 +13,7 @@ namespace RedditClone.Data.Repositories.Generic.Interfaces
         IEnumerable<TEntity> GetAll();
         IQueryable<TEntity> GetAllAsQueryable();
         Task<IEnumerable<TEntity>> GetAllAsync();
-        IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
+        Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
 
         void Add(TEntity entity);
         void AddRange(params TEntity[] entities);

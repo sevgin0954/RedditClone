@@ -45,7 +45,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             };
             var result = await this.CallCreatePostAsync(unitOfWork, model, dbUser.Id);
 
-            var dbPost = this.GetPostWithAuthorId(unitOfWork, dbUser.Id);
+            var dbPost = await this.GetPostWithAuthorIdAsync(unitOfWork, dbUser.Id);
 
             Assert.Equal(dbPost.AuthorId, dbUser.Id);
         }
@@ -67,7 +67,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             };
             var result = await this.CallCreatePostAsync(unitOfWork, model, dbUser.Id);
 
-            var dbPost = this.GetPostWithAuthorId(unitOfWork, dbUser.Id);
+            var dbPost = await this.GetPostWithAuthorIdAsync(unitOfWork, dbUser.Id);
 
             Assert.Equal(titleName, dbPost.Title);
         }
@@ -89,7 +89,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             };
             var result = await this.CallCreatePostAsync(unitOfWork, model, dbUser.Id);
 
-            var dbPost = this.GetPostWithAuthorId(unitOfWork, dbUser.Id);
+            var dbPost = await this.GetPostWithAuthorIdAsync(unitOfWork, dbUser.Id);
 
             Assert.Equal(description, dbPost.Description);
         }
@@ -134,9 +134,9 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             unitOfWork.Complete();
         }
 
-        private Post GetPostWithAuthorId(IRedditCloneUnitOfWork unitOfWork, string authorId)
+        private async Task<Post> GetPostWithAuthorIdAsync(IRedditCloneUnitOfWork unitOfWork, string authorId)
         {
-            var dbPosts = unitOfWork.Posts.Find(p => p.AuthorId == authorId);
+            var dbPosts = await unitOfWork.Posts.FindAsync(p => p.AuthorId == authorId);
             return dbPosts.First();
         }
 

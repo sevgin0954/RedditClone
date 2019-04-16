@@ -3,7 +3,7 @@ using System.Linq;
 using RedditClone.Data.SortStrategies.PostStrategies.Interfaces;
 using RedditClone.Models;
 
-namespace RedditClone.Data.SortStrategies.PostOrders
+namespace RedditClone.Data.SortStrategies
 {
     public abstract class BaseTimeDependentPostSortingStrategy : ISortPostsStrategy
     {

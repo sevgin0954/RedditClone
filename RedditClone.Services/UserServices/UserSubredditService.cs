@@ -35,7 +35,7 @@ namespace RedditClone.Services.UserServices
 
         public async Task<bool> CreateSubredditAsync(SubredditCreationBindingModel model, ClaimsPrincipal user)
         {
-            var subredditsWithName = this.redditCloneUnitOfWork.Subreddits.Find(s => s.Name == model.Name);
+            var subredditsWithName = await this.redditCloneUnitOfWork.Subreddits.FindAsync(s => s.Name == model.Name);
             var isSubredditWithNameExist = subredditsWithName.Count() > 0;
 
             var result = false;

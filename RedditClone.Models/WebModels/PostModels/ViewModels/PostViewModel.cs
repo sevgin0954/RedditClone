@@ -1,4 +1,4 @@
-﻿using RedditClone.Common.Enums;
+﻿using RedditClone.Common.Enums.SortTypes;
 using RedditClone.Models.WebModels.CommentModels.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace RedditClone.Models.WebModels.PostModels.ViewModels
         public string SubredditId { get; set; }
         public Subreddit Subreddit { get; set; }
 
-        public SortType SelectedSortType { get; set; }
+        public CommentSortType SelectedCommentSortType { get; set; }
 
         public IEnumerable<CommentViewModel> Comments { get; set; } = new List<CommentViewModel>();
     }

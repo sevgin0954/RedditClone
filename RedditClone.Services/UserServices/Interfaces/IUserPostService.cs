@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using RedditClone.Common.Enums;
-using RedditClone.Models.WebModels.IndexModels.ViewModels;
 using RedditClone.Models.WebModels.PostModels.BindingModels;
+using RedditClone.Models.WebModels.PostModels.ViewModels;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -13,7 +12,7 @@ namespace RedditClone.Services.UserServices.Interfaces
 
         Task<bool> CreatePostAsync(ClaimsPrincipal user, PostCreationBindingModel model);
 
-        Task<IndexViewModel> GetOrderedPostsAsync(
+        Task<PostsViewModel> GetOrderedPostsAsync(
             ClaimsPrincipal user,
             IRequestCookieCollection requestCookies,
             IResponseCookies responseCookies);

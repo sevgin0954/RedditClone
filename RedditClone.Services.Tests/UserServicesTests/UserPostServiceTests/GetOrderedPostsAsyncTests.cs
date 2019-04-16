@@ -2,7 +2,7 @@
 using Moq;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
-using RedditClone.Models.WebModels.IndexModels.ViewModels;
+using RedditClone.Models.WebModels.PostModels.ViewModels;
 using RedditClone.Services.Tests.Common;
 using System;
 using System.Linq;
@@ -74,7 +74,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             user.SubscribedSubreddits.Add(dbUserSubreddit);
         }
 
-        private async Task<IndexViewModel> CallGetOrderedPostsAsyncWithCookies(
+        private async Task<PostsViewModel> CallGetOrderedPostsAsyncWithCookies(
             IRequestCookieCollection requestCokieCollection, 
             IResponseCookies responseCookies)
         {
@@ -92,7 +92,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             return model;
         }
 
-        private async Task<IndexViewModel> CallGetOrderedPostsAsyncWithPosts(params Post[] posts)
+        private async Task<PostsViewModel> CallGetOrderedPostsAsyncWithPosts(params Post[] posts)
         {
             var unitOfWork = this.GetRedditCloneUnitOfWork();
             unitOfWork.Posts.AddRange(posts);
@@ -112,7 +112,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             return model;
         }
 
-        private async Task<IndexViewModel> CallGetOrderedPostsAsyncWithUser(User user)
+        private async Task<PostsViewModel> CallGetOrderedPostsAsyncWithUser(User user)
         {
             var unitOfWork = this.GetRedditCloneUnitOfWork();
             unitOfWork.Users.Add(user);
@@ -123,7 +123,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             return model;
         }
 
-        private async Task<IndexViewModel> CallGetOrderedPostsAsyncWithUserAndPosts(User user, params Post[] posts)
+        private async Task<PostsViewModel> CallGetOrderedPostsAsyncWithUserAndPosts(User user, params Post[] posts)
         {
             var unitOfWork = this.GetRedditCloneUnitOfWork();
             unitOfWork.Users.Add(user);
@@ -135,7 +135,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             return model;
         }
 
-        private async Task<IndexViewModel> CallGetOrderedPostsAsyncWithUser(IRedditCloneUnitOfWork unitOfWork, User user)
+        private async Task<PostsViewModel> CallGetOrderedPostsAsyncWithUser(IRedditCloneUnitOfWork unitOfWork, User user)
         {
             var mockedUserManager = CommonTestMethods.GetMockedUserManager();
             mockedUserManager.Setup(um => um.GetUserId(It.IsAny<ClaimsPrincipal>()))

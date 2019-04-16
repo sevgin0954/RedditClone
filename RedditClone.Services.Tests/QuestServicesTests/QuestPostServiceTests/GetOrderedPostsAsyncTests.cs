@@ -2,7 +2,7 @@
 using Moq;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
-using RedditClone.Models.WebModels.IndexModels.ViewModels;
+using RedditClone.Models.WebModels.PostModels.ViewModels;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,7 +49,7 @@ namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
             return dbPost;
         }
 
-        private async Task<IndexViewModel> CallGetOrderedPostsAsyncWithPosts(params Post[] posts)
+        private async Task<PostsViewModel> CallGetOrderedPostsAsyncWithPosts(params Post[] posts)
         {
             var unitOfWork = this.GetRedditCloneUnitOfWork();
             unitOfWork.Posts.AddRange(posts);
@@ -59,25 +59,24 @@ namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
             return model;
         }
 
-        private async Task<IndexViewModel> CallGetOrderedPostsAsyncWithCookies(
+        private async Task<PostsViewModel> CallGetOrderedPostsAsyncWithCookies(
             IRequestCookieCollection requestCokieCollection,
             IResponseCookies responseCookies)
         {
             var unitOfWork = this.GetRedditCloneUnitOfWork();
             var service = this.GetService(unitOfWork);
-            var model = await service.GetOrderedPostsAsync(requestCokieCollection, responseCookies);
+            var model = await service.GetOrderedPostsAsync(requestCokieCollection);
 
             return model;
         }
 
-        private async Task<IndexViewModel> CallGetOrderedPostsAsync(IRedditCloneUnitOfWork unitOfWork)
+        private async Task<PostsViewModel> CallGetOrderedPostsAsync(IRedditCloneUnitOfWork unitOfWork)
         {
             var service = this.GetService(unitOfWork);
 
             var requestCookieCollection = new Mock<IRequestCookieCollection>().Object;
-            var responseCookies = new Mock<IResponseCookies>().Object;
 
-            var model = await service.GetOrderedPostsAsync(requestCookieCollection, responseCookies);
+            var model = await service.GetOrderedPostsAsync(requestCookieCollection);
             return model;
         }
     }

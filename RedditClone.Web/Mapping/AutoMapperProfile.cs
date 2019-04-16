@@ -6,6 +6,7 @@ using RedditClone.Models.WebModels.CommentModels.ViewModels;
 using RedditClone.Models.WebModels.PostModels.BindingModels;
 using RedditClone.Models.WebModels.PostModels.ViewModels;
 using RedditClone.Models.WebModels.SubredditModels.BindingModels;
+using RedditClone.Models.WebModels.SubredditModels.ViewModels;
 using RedditClone.Models.WebModels.UserModels.ViewModels;
 using System.Linq;
 
@@ -66,6 +67,11 @@ namespace RedditClone.Web.Mapping
 
             this.CreateMap<Comment, CommentViewModel>()
                 .ForMember(dest => dest.VotesCount, opt => opt.MapFrom(src => src.UpVotesCount - src.DownVotesCount));
+
+            //------------------------------------------------------------------------------------------------------------
+
+            this.CreateMap<Subreddit, SubredditConciseViewModel>()
+                .ForMember(dest => dest.SubscribedUsersCount, opt => opt.MapFrom(src => src.SubscribedUsers.Count));
         }
     }
 }

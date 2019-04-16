@@ -1,0 +1,28 @@
+﻿@model IEnumerable<SubredditConciseViewModel>
+
+@foreach (var subredditModel in Model)
+{
+    <div class="subreddit-container d-flex">
+        <div class="lex-column">
+            <div class="flex-row">
+                <a href="#" class="link-blue">
+                    <h5>r/@subredditModel.Name</h5>
+                </a>
+            </div>
+
+            <div class="flex-row link-grey">
+                @subredditModel.SubscribedUsersCount Members
+            </div>
+        </div>
+
+        <div class="flex-column ml-auto">
+            <div>
+                @subredditModel.Description
+            </div>
+        </div>
+
+        <div>
+            <a class="btn btn-blue btn-menu" href="#">Join</a>
+        </div>
+    </div>
+}

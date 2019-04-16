@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Moq;
 using RedditClone.Common.Constants;
-using RedditClone.Common.Enums;
+using RedditClone.Common.Enums.SortTypes;
 using System;
 using Xunit;
 
@@ -45,7 +45,7 @@ namespace RedditClone.Services.Tests.QuestServicesTests.CookieServiceTests
 
             var mockedRequestCookies = new Mock<IRequestCookieCollection>();
             var postSortTypeKey = WebConstants.CookieKeyPostSortType;
-            var correctSortType = SortType.Controversial;
+            var correctSortType = PostSortType.Controversial;
             mockedRequestCookies.SetupGet(rc => rc[postSortTypeKey])
                 .Returns(correctSortType.ToString());
 

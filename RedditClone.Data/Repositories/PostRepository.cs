@@ -64,6 +64,18 @@ namespace RedditClone.Data.Repositories
             return sortedPosts;
         }
 
+        public async Task<IEnumerable<Post>> GetByKeyWordsSortedByAsync(string[] keyWords, ISortPostsStrategy sortPostsStrategy)
+        {
+            var posts = await this.RedditCloneDbContext.Posts
+                .Include(p => p.Subreddit)
+                .Include(p => p.Author)
+                .Include(p => p.Comments)
+                .Where(p => keyWords.Any(kw => p.Title.ToLower().Contains(kw.ToLower())))
+                .ToListAsync();
+
+            return posts;
+        }
+
         public RedditCloneDbContext RedditCloneDbContext
         {
             get

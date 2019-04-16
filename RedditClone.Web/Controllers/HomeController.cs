@@ -4,9 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RedditClone.Common.Constants;
-using RedditClone.Common.Enums;
+using RedditClone.Common.Enums.SortTypes;
+using RedditClone.Common.Enums.TimeFrameTypes;
 using RedditClone.Models;
-using RedditClone.Models.WebModels.IndexModels.ViewModels;
+using RedditClone.Models.WebModels.PostModels.ViewModels;
 using RedditClone.Services.QuestServices.Interfaces;
 using RedditClone.Services.UserServices.Interfaces;
 using RedditClone.Web.Models;
@@ -35,7 +36,7 @@ namespace RedditClone.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            IndexViewModel model = null;
+            PostsViewModel model = null;
 
             if (signInManager.IsSignedIn(this.User))
             {
@@ -46,7 +47,7 @@ namespace RedditClone.Web.Controllers
             }
             else
             {
-                model = await this.questPostService.GetOrderedPostsAsync(this.Request.Cookies, this.Response.Cookies);
+                model = await this.questPostService.GetOrderedPostsAsync(this.Request.Cookies);
             }
 
             return View(model);
@@ -55,7 +56,7 @@ namespace RedditClone.Web.Controllers
         [HttpPost]
         public IActionResult ChangeSortType(string sortType)
         {
-            SortType postSortType = SortType.Best;
+            PostSortType postSortType = PostSortType.Best;
             var isParseSuccessfull = Enum.TryParse(sortType, out postSortType);
 
             if (isParseSuccessfull == false)
@@ -73,12 +74,12 @@ namespace RedditClone.Web.Controllers
         [HttpPost]
         public IActionResult ChangeTimeFrame(string timeFrame)
         {
-            PostShowTimeFrame postTimeFrame = PostShowTimeFrame.AllTime;
-            var isParseSuccessfull = Enum.TryParse(timeFrame, out postTimeFrame);
+            TimeFrameType timeFrameType = TimeFrameType.AllTime;
+            var isParseSuccessfull = Enum.TryParse(timeFrame, out timeFrameType);
 
             if (isParseSuccessfull)
             {
-                this.cookieService.ChangePostTimeFrameCookie(this.Response.Cookies, postTimeFrame);
+                this.cookieService.ChangePostTimeFrameCookie(this.Response.Cookies, timeFrameType);
             }
             else
             {

@@ -1,6 +1,6 @@
-﻿namespace RedditClone.Common.Enums
+﻿namespace RedditClone.Common.Enums.TimeFrameTypes
 {
-    public enum PostShowTimeFrame
+    public enum TimeFrameType
     {
         PastHour,
         PastDay,

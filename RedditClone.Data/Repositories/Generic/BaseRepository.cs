@@ -27,9 +27,11 @@ namespace RedditClone.Data.Repositories.Generic
             this.DbContext.Set<TEntity>().AddRange(entities);
         }
 
-        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+        public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return this.DbContext.Set<TEntity>().Where(predicate);
+            return await this.DbContext.Set<TEntity>()
+                .Where(predicate)
+                .ToListAsync();
         }
 
         public TEntity GetById(string id)

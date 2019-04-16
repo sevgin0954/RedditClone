@@ -1,4 +1,4 @@
-﻿using RedditClone.Common.Enums;
+﻿using RedditClone.Common.Enums.SortTypes;
 using RedditClone.Data.Interfaces;
 using RedditClone.Data.SortStrategies.PostOrders;
 using RedditClone.Data.SortStrategies.PostStrategies;
@@ -13,17 +13,17 @@ namespace RedditClone.Data.Factories.SortFactories
         public static ISortPostsStrategy GetSortPostsStrategy(
             IRedditCloneUnitOfWork unitOfWork,
             TimeSpan timeFrame,
-            SortType postSortType)
+            PostSortType postSortType)
         {
             switch (postSortType)
             {
-                case SortType.New:
+                case PostSortType.New:
                     return new SortPostsByNew(unitOfWork);
-                case SortType.Top:
+                case PostSortType.Top:
                     return new SortPostsByTop(unitOfWork, timeFrame);
-                case SortType.Controversial:
+                case PostSortType.Controversial:
                     return new SortPostsByControversial(unitOfWork, timeFrame);
-                case SortType.Best:
+                case PostSortType.Best:
                     return new SortPostsByBest(unitOfWork);
                 default:
                     throw new InvalidEnumArgumentException();

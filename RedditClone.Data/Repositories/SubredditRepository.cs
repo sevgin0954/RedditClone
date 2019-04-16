@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RedditClone.Data.Repositories.Generic;
 using RedditClone.Data.Repositories.Interfaces;
+using RedditClone.Data.SortStrategies.SubredditStrategies.Interfaces;
 using RedditClone.Models;
 
 namespace RedditClone.Data.Repositories
@@ -30,6 +31,18 @@ namespace RedditClone.Data.Repositories
                 .ToListAsync();
 
             return subreddits;
+        }
+
+        public async Task<IEnumerable<Subreddit>> GetByKeyWordsSortedByAsync(
+            string[] keyWords, 
+            ISubredditSortStrategy sortStrategy)
+        {
+            var filteredSubreddit = await sortStrategy.GetSortedSubreddits()
+                .Where(s => keyWords.Any(kw => s.Name.ToLower().Contains(kw.ToLower())))
+                .Include(s => s.SubscribedUsers)
+                .ToListAsync();
+
+            return filteredSubreddit;
         }
 
         public RedditCloneDbContext RedditCloneDbContext

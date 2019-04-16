@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace RedditClone.Models
 {
@@ -12,6 +13,8 @@ namespace RedditClone.Models
 
         public string AuthorId { get; set; }
         public User Author { get; set; }
+
+        public DateTime CreatedDate { get; set; }
 
         public ICollection<Post> Posts { get; set; } = new List<Post>();
 

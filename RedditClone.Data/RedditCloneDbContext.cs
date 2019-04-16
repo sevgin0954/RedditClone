@@ -109,6 +109,10 @@ namespace RedditClone.Data
                     .IsRequired()
                     .HasMaxLength(ModelsConstants.DescriptionSubredditMaxLength);
 
+                subreddit.Property(s => s.CreatedDate)
+                    .HasDefaultValue(DateTime.UtcNow)
+                    .IsRequired();
+
                 subreddit.HasOne(s => s.Author)
                     .WithMany(u => u.CreatedSubreddits)
                     .HasForeignKey(s => s.AuthorId);

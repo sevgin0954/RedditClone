@@ -1,0 +1,8 @@
+﻿@model SearchResultViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<partial name="_SubredditsPartial" model="Model.Subreddits" />
+
+<partial name="_PostsPartial" model="Model.Posts.Posts" />

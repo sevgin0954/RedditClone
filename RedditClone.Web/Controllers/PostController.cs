@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RedditClone.Common.Constants;
 using RedditClone.Common.Enums;
+using RedditClone.Common.Enums.SortTypes;
 using RedditClone.Services.QuestServices.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace RedditClone.Web.Controllers
                 return this.Redirect("/");
             }
 
-            var model = await this.questPostService.GetPostWithOrderedCommentsAsync(postId, this.Request.Cookies, this.Response.Cookies);
+            var model = await this.questPostService.GetPostWithOrderedCommentsAsync(postId, this.Request.Cookies);
             if (model == null)
             {
                 this.AddStatusMessage(AlertConstants.ErrorMessageWrongId, AlertConstants.AlertTypeDanger);
@@ -38,10 +39,10 @@ namespace RedditClone.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult ChangeSortType(string sortType, string postId)
+        public IActionResult ChangeCommentSortType(string sortType, string postId)
         {
-            SortType postSortType = SortType.Best;
-            var isParseSuccessfull = Enum.TryParse(sortType, out postSortType);
+            CommentSortType commentSortType = CommentSortType.Best;
+            var isParseSuccessfull = Enum.TryParse(sortType, out commentSortType);
 
             if (isParseSuccessfull == false)
             {
@@ -49,7 +50,7 @@ namespace RedditClone.Web.Controllers
             }
             else
             {
-                this.cookieService.ChangeCommentSortTypeCookie(this.Response.Cookies, postSortType);
+                this.cookieService.ChangeCommentSortTypeCookie(this.Response.Cookies, commentSortType);
             }
 
             return this.RedirectToAction("Index", new { postId });

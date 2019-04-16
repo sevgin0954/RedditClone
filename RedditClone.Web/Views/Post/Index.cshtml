@@ -1,4 +1,4 @@
-﻿@using RedditClone.Common.Enums
+﻿@using RedditClone.Common.Enums.SortTypes
 @model PostViewModel
 @{
     ViewData["Title"] = "Index";
@@ -72,16 +72,16 @@
             &nbsp;
             <div class="dropdown">
                 <button class="btn btn-white btn-secondary-nav dropdown-toggle" type="button" data-toggle="dropdown">
-                    @Model.SelectedSortType.ToString()
+                    @Model.SelectedCommentSortType.ToString()
                 </button>
                 <div class="dropdown-menu dropdown-menu-small">
-                    @foreach (var postSortType in (SortType[])Enum.GetValues(typeof(SortType)))
+                    @foreach (var commentSortType in (CommentSortType[])Enum.GetValues(typeof(CommentSortType)))
                     {
-                        if (postSortType != Model.SelectedSortType)
+                        if (commentSortType != Model.SelectedCommentSortType)
                         {
-                            var sortTypeName = postSortType.ToString();
+                            var sortTypeName = commentSortType.ToString();
 
-                            <form asp-route-sortType="@sortTypeName" asp-route-postId="@Model.Id" asp-controller="Post" asp-action="ChangeSortType" method="post">
+                            <form asp-route-sortType="@sortTypeName" asp-route-postId="@Model.Id" asp-controller="Post" asp-action="ChangeCommentSortType" method="post">
                                 <button class="btn dropdown-item btn-dropdown-item btn-grey" type="submit">
                                     @sortTypeName
                                 </button>

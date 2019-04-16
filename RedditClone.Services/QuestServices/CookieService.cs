@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using RedditClone.Common.Constants;
-using RedditClone.Common.Enums;
+using RedditClone.Common.Enums.SortTypes;
+using RedditClone.Common.Enums.TimeFrameTypes;
 using RedditClone.Services.QuestServices.Interfaces;
 using System;
 
@@ -8,57 +9,57 @@ namespace RedditClone.Services.QuestServices
 {
     public class CookieService : ICookieService
     {
-        public SortType GetPostSortTypeFromCookieOrDefault(IRequestCookieCollection requestCookies)
+        public PostSortType GetPostSortTypeFromCookieOrDefault(IRequestCookieCollection requestCookies)
         {
             var postSortTypeKey = WebConstants.CookieKeyPostSortType;
             var postSortTypeValue = requestCookies[postSortTypeKey];
 
-            var postSortType = SortType.Best;
+            var postSortType = PostSortType.Best;
             if (Enum.TryParse(postSortTypeValue, out postSortType) == false)
             {
-                postSortType = Enum.Parse<SortType>(WebConstants.CookieDefaultValuePostSortType);
+                postSortType = Enum.Parse<PostSortType>(WebConstants.CookieDefaultValuePostSortType);
             }
 
             return postSortType;
         }
 
-        public SortType GetCommentSortTypeFromCookieOrDefault(IRequestCookieCollection requestCookies)
+        public CommentSortType GetCommentSortTypeFromCookieOrDefault(IRequestCookieCollection requestCookies)
         {
             var commentSortTypeKey = WebConstants.CookieKeyCommentSortType;
             var commentSortTypeValue = requestCookies[commentSortTypeKey];
 
-            var commentSortType = SortType.Best;
+            var commentSortType = CommentSortType.Best;
             if (Enum.TryParse(commentSortTypeValue, out commentSortType) == false)
             {
-                commentSortType = Enum.Parse<SortType>(WebConstants.CookieDefaultValueCommentSortType);
+                commentSortType = Enum.Parse<CommentSortType>(WebConstants.CookieDefaultValueCommentSortType);
             }
 
             return commentSortType;
         }
 
-        public PostShowTimeFrame GetPostShowTimeFrameFromCookieOrDefault(IRequestCookieCollection requestCookies)
+        public TimeFrameType GetPostTimeFrameTypeFromCookieOrDefault(IRequestCookieCollection requestCookies)
         {
-            var postTimeFrameKey = WebConstants.CookieKeyPostShowTimeFrame;
+            var postTimeFrameKey = WebConstants.CookieKeyPostTimeFrameType;
             var postTimeFrameValue = requestCookies[postTimeFrameKey];
 
-            var postShowTimeFrame = PostShowTimeFrame.PastDay;
-            if (Enum.TryParse(postTimeFrameValue, out postShowTimeFrame) == false)
+            var postTimeFrameType = TimeFrameType.PastDay;
+            if (Enum.TryParse(postTimeFrameValue, out postTimeFrameType) == false)
             {
-                postShowTimeFrame = Enum.Parse<PostShowTimeFrame>(WebConstants.CookieDefaultValuePostShowTimeFrame);
+                postTimeFrameType = Enum.Parse<TimeFrameType>(WebConstants.CookieDefaultValuePostTimeFrameType);
             }
 
-            return postShowTimeFrame;
+            return postTimeFrameType;
         }
 
-        public void ChangeCommentSortTypeCookie(IResponseCookies responseCookies, SortType sortType)
+        public void ChangeCommentSortTypeCookie(IResponseCookies responseCookies, CommentSortType commentSortType)
         {
             var sortTypeKey = WebConstants.CookieKeyCommentSortType;
-            var sortTypeValue = sortType.ToString();
+            var sortTypeValue = commentSortType.ToString();
 
             responseCookies.Append(sortTypeKey, sortTypeValue);
         }
 
-        public void ChangePostSortTypeCookie(IResponseCookies responseCookies, SortType postSortType)
+        public void ChangePostSortTypeCookie(IResponseCookies responseCookies, PostSortType postSortType)
         {
             var sortTypeKey = WebConstants.CookieKeyPostSortType;
             var sortTypeValue = postSortType.ToString();
@@ -66,10 +67,10 @@ namespace RedditClone.Services.QuestServices
             responseCookies.Append(sortTypeKey, sortTypeValue);
         }
 
-        public void ChangePostTimeFrameCookie(IResponseCookies responseCookies, PostShowTimeFrame postShowTimeFrame)
+        public void ChangePostTimeFrameCookie(IResponseCookies responseCookies, TimeFrameType timeFrameType)
         {
-            var timeFrameKey = WebConstants.CookieKeyPostShowTimeFrame;
-            var timeFrameValue = postShowTimeFrame.ToString();
+            var timeFrameKey = WebConstants.CookieKeyPostTimeFrameType;
+            var timeFrameValue = timeFrameType.ToString();
 
             responseCookies.Append(timeFrameKey, timeFrameValue);
         }

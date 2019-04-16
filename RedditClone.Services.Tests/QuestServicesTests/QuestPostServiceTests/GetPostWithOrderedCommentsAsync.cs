@@ -50,8 +50,7 @@ namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
             var service = this.GetService(unitOfWork);
 
             var requestCookies = new Mock<IRequestCookieCollection>().Object;
-            var responseCookies = new Mock<IResponseCookies>().Object;
-            var model = await service.GetPostWithOrderedCommentsAsync(postId, requestCookies, responseCookies);
+            var model = await service.GetPostWithOrderedCommentsAsync(postId, requestCookies);
 
             return model;
         }
@@ -65,8 +64,7 @@ namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
             var service = this.GetService(unitOfWork);
 
             var requestCookies = new Mock<IRequestCookieCollection>().Object;
-            var responseCookies = new Mock<IResponseCookies>().Object;
-            var model = await service.GetPostWithOrderedCommentsAsync(post.Id, requestCookies, responseCookies);
+            var model = await service.GetPostWithOrderedCommentsAsync(post.Id, requestCookies);
 
             return model;
         }
@@ -82,7 +80,7 @@ namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
 
             var service = this.GetService(unitOfWork);
             
-            var model = await service.GetPostWithOrderedCommentsAsync(post.Id, requestCookies, responseCookies);
+            var model = await service.GetPostWithOrderedCommentsAsync(post.Id, requestCookies);
 
             return model;
         }

@@ -2,7 +2,7 @@
 using Moq;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
-using RedditClone.Models.WebModels.IndexModels.ViewModels;
+using RedditClone.Models.WebModels.PostModels.ViewModels;
 using System;
 using System.Threading.Tasks;
 using Xunit;
@@ -54,15 +54,14 @@ namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
             subreddit.Posts.Add(dbPost);
         }
 
-        private async Task<IndexViewModel> CallGetOrderedPostsBySubredditAsync(
+        private async Task<PostsViewModel> CallGetOrderedPostsBySubredditAsync(
             IRedditCloneUnitOfWork unitOfWork, 
             string subredditId)
         {
             var requestCookies = new Mock<IRequestCookieCollection>().Object;
-            var responseCookies = new Mock<IResponseCookies>().Object;
 
             var service = this.GetService(unitOfWork);
-            var model = await service.GetOrderedPostsBySubredditAsync(subredditId, requestCookies, responseCookies);
+            var model = await service.GetOrderedPostsBySubredditAsync(subredditId, requestCookies);
 
             return model;
         }

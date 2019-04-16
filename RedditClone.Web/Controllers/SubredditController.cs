@@ -19,8 +19,7 @@ namespace RedditClone.Web.Controllers
         {
             var model = await this.questPostService.GetOrderedPostsBySubredditAsync(
                 subredditId,
-                this.Request.Cookies,
-                this.Response.Cookies);
+                this.Request.Cookies);
 
             if (model == null)
             {

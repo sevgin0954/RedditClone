@@ -22,10 +22,16 @@
         </div>
     </div>
     <div class="nav-item mx-auto">
-        <form class="form-inline">
-            <div class="searchbar-container form-control" tabindex="-1">
-                <i class="fas fa-search searchbar-element"></i>
-                <input class="searchbar-element" placeholder="Search..." />
+        <form asp-controller="Search" asp-action="Index" class="form-inline" method="get">
+            <div class="input-group searchbar-container">
+                <div tabindex="-1" class="form-control">
+                    <input name="keyWords" type="search" class="searchbar-element" placeholder="Search..." />
+                </div>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-white-no-outline">
+                        <i class="fas fa-search searchbar-element"></i>
+                    </button>
+                </div>
             </div>
         </form>
     </div>
@@ -34,9 +40,6 @@
 
 <script>
 window.onload = function () {
-    let homeNavBtn = $("#btn-navbar-home");
-    let createPostNavBtn = $("#btn-navbar-create-post");
-
     let urlParts = document.URL.split("/").splice(3, 2);
     let part1 = urlParts[0];
     let part2 = urlParts[1];

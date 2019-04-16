@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RedditClone.Common.Enums
+namespace RedditClone.Common.Enums.SortTypes
 {
     public static class SortTypeLinks
     {

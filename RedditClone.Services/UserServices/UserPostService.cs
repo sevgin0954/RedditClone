@@ -10,15 +10,15 @@ using System.Collections.Generic;
 using RedditClone.Common.Constants;
 using AutoMapper;
 using RedditClone.Models.WebModels.PostModels.ViewModels;
-using RedditClone.Common.Enums;
 using RedditClone.Data.Factories.TimeFactories;
-using RedditClone.Models.WebModels.IndexModels.ViewModels;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using RedditClone.Data.Factories.SortFactories;
 using RedditClone.Data.SortStrategies.PostStrategies.Interfaces;
-using RedditClone.Data.SortStrategies.PostOrders;
 using RedditClone.Services.QuestServices.Interfaces;
+using RedditClone.Common.Enums.SortTypes;
+using RedditClone.Common.Enums.TimeFrameTypes;
+using RedditClone.Data.SortStrategies;
 
 namespace RedditClone.Services.UserServices
 {
@@ -78,15 +78,15 @@ namespace RedditClone.Services.UserServices
             return result;
         }
 
-        public async Task<IndexViewModel> GetOrderedPostsAsync(
+        public async Task<PostsViewModel> GetOrderedPostsAsync(
             ClaimsPrincipal user,
             IRequestCookieCollection requestCookies,
             IResponseCookies responseCookies)
         {
             var postSortType = this.cookieService.GetPostSortTypeFromCookieOrDefault(requestCookies);
-            var postShowTimeFrame = this.cookieService.GetPostShowTimeFrameFromCookieOrDefault(requestCookies);
+            var postTimeFrameType = this.cookieService.GetPostTimeFrameTypeFromCookieOrDefault(requestCookies);
 
-            var timeFrame = TimeFrameFactory.GetTimeFrame(postShowTimeFrame);
+            var timeFrame = TimeFrameFactory.GetTimeFrame(postTimeFrameType);
             var sortPostsStrategy = SortPostsStartegyFactory
                 .GetSortPostsStrategy(this.redditCloneUnitOfWork, timeFrame, postSortType);
 
@@ -98,7 +98,7 @@ namespace RedditClone.Services.UserServices
                 dbPosts = await this.redditCloneUnitOfWork.Posts.GetAllSortedByAsync(sortPostsStrategy);
             }
 
-            var model = this.MapIndexModel(dbPosts, postSortType, sortPostsStrategy, postShowTimeFrame);
+            var model = this.MapIndexModel(dbPosts, postSortType, sortPostsStrategy, postTimeFrameType);
             return model;
         }
 
@@ -198,14 +198,14 @@ namespace RedditClone.Services.UserServices
             return selectListItem;
         }
 
-        private IndexViewModel MapIndexModel(
+        private PostsViewModel MapIndexModel(
             IEnumerable<Post> posts,
-            SortType selectedSortType,
+            PostSortType selectedSortType,
             ISortPostsStrategy sortStrategy,
-            PostShowTimeFrame selectedTimeFrame)
+            TimeFrameType selectedTimeFrameType)
         {
             var postModels = this.mapper.Map<IEnumerable<PostConciseViewModel>>(posts);
-            var model = new IndexViewModel
+            var model = new PostsViewModel
             {
                 Posts = postModels,
                 PostSortType = selectedSortType
@@ -214,7 +214,7 @@ namespace RedditClone.Services.UserServices
             var isHaveTimeFrame = CheckIsSortStrategyHaveTimeFrame(sortStrategy);
             if (isHaveTimeFrame)
             {
-                model.PostShowTimeFrame = selectedTimeFrame;
+                model.PostTimeFrameType = selectedTimeFrameType;
             }
 
             return model;

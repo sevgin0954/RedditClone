@@ -12,5 +12,6 @@ namespace RedditClone.Data.Repositories.Interfaces
         Task<IEnumerable<Post>> GetBySubcribedUserSortedByAsync(string userId, ISortPostsStrategy sortPostsStrategy);
         Task<IEnumerable<Post>> GetAllSortedByAsync(ISortPostsStrategy sortPostsStrategy);
         Task<IEnumerable<Post>> GetBySubredditSortedBy(string subredditId, ISortPostsStrategy sortPostsStrategy);
+        Task<IEnumerable<Post>> GetByKeyWordsSortedByAsync(string[] keyWords, ISortPostsStrategy sortPostsStrategy);
     }
 }

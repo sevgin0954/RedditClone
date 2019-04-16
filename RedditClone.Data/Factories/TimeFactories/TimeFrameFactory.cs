@@ -1,4 +1,4 @@
-﻿using RedditClone.Common.Enums;
+﻿using RedditClone.Common.Enums.TimeFrameTypes;
 using System;
 using System.ComponentModel;
 
@@ -6,21 +6,21 @@ namespace RedditClone.Data.Factories.TimeFactories
 {
     public static class TimeFrameFactory
     {
-        public static TimeSpan GetTimeFrame(PostShowTimeFrame postShowTimeFrame)
+        public static TimeSpan GetTimeFrame(TimeFrameType timeFrameType)
         {
-            switch (postShowTimeFrame)
+            switch (timeFrameType)
             {
-                case PostShowTimeFrame.PastHour:
+                case TimeFrameType.PastHour:
                     return TimeSpan.FromHours(1);
-                case PostShowTimeFrame.PastDay:
+                case TimeFrameType.PastDay:
                     return TimeSpan.FromDays(1);
-                case PostShowTimeFrame.PastWeek:
+                case TimeFrameType.PastWeek:
                     return TimeSpan.FromDays(7);
-                case PostShowTimeFrame.PastMonth:
+                case TimeFrameType.PastMonth:
                     return TimeSpan.FromDays(31);
-                case PostShowTimeFrame.PastYear:
+                case TimeFrameType.PastYear:
                     return TimeSpan.FromDays(365);
-                case PostShowTimeFrame.AllTime:
+                case TimeFrameType.AllTime:
                     return TimeSpan.FromDays(365 * 100);
                 default:
                     throw new InvalidEnumArgumentException();

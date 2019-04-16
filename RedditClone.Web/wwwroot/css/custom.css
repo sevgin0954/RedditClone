@@ -4,9 +4,17 @@
 
 .searchbar-container {
     box-shadow: none;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+.searchbar-container .form-control {
+    border: none !important;
 }
 .searchbar-container:hover {
     box-shadow: 0 0 3px 2px #007bff !important;
+    box-shadow: none;
+}
+.searchbar-container .form-control:focus {
     box-shadow: none;
 }
 .searchbar-container:focus {
@@ -36,6 +44,17 @@
     box-shadow: 0 0 10px 1px black;
 }
 .post-container:hover {
+    box-shadow: 0 0 5px 2px #007bff;
+}
+
+.subreddit-container {
+    background-color: white;
+    margin: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 1px black;
+}
+.subreddit-container:hover {
     box-shadow: 0 0 5px 2px #007bff;
 }
 
@@ -164,6 +183,16 @@
     box-shadow: 0 0 3px 2px #007bff !important;
     background-color: white;
     color: #007bff;
+}
+
+.btn-white-no-outline {
+    box-shadow: none !important;
+    color: #007bff;
+    font-weight: 600;
+}
+.btn-white-no-outline:hover, .btn-white-no-outline:focus {
+    box-shadow: none !important;
+    background-color: white;
 }
 
 .btn-grey {

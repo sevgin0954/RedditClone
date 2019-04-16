@@ -1,4 +1,4 @@
-﻿using RedditClone.Common.Enums;
+﻿using RedditClone.Common.Enums.SortTypes;
 using RedditClone.Data.Interfaces;
 using RedditClone.Data.SortStrategies.CommentsStrategies;
 using RedditClone.Data.SortStrategies.CommentsStrategies.Interfaces;
@@ -9,17 +9,19 @@ namespace RedditClone.Data.Factories.SortFactories
     public static class SortCommentStrategyFactory
     {
         public static ISortCommentsStrategy GetSortPostsStrategy(
-            IRedditCloneUnitOfWork unitOfWork, SortType sortType)
+            IRedditCloneUnitOfWork unitOfWork, CommentSortType sortType)
         {
             switch (sortType)
             {
-                case SortType.New:
+                case CommentSortType.New:
                     return new SortCommentsByNew(unitOfWork);
-                case SortType.Top:
+                case CommentSortType.Old:
+                    return new SortCommentsByOld(unitOfWork);
+                case CommentSortType.Top:
                     return new SortCommentsByTop(unitOfWork);
-                case SortType.Controversial:
+                case CommentSortType.Controversial:
                     return new SortCommentsByControversial(unitOfWork);
-                case SortType.Best:
+                case CommentSortType.Best:
                     return new SortCommentsByBest(unitOfWork);
                 default:
                     throw new InvalidEnumArgumentException();

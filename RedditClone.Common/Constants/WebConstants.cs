@@ -8,9 +8,9 @@
         public const string IdentityAreaName = "Identity";
 
         public const string CookieKeyPostSortType = "PostSortType";
-        public const string CookieKeyPostShowTimeFrame = "PostShowTimeFrame";
+        public const string CookieKeyPostTimeFrameType = "PostTimeFrameType";
         public const string CookieDefaultValuePostSortType = "Best";
-        public const string CookieDefaultValuePostShowTimeFrame = "PastDay";
+        public const string CookieDefaultValuePostTimeFrameType = "PastDay";
 
         public const string CookieKeyCommentSortType = "CookieSortType";
         public const string CookieDefaultValueCommentSortType = "Best";
