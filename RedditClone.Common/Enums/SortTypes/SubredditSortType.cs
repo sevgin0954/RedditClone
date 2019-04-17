@@ -4,7 +4,6 @@
     {
         New, 
         Old,
-        Top, 
-        Posts
+        Top
     }
 }

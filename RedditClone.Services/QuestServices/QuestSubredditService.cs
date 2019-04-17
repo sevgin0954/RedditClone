@@ -23,7 +23,7 @@ namespace RedditClone.Services.QuestServices
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<SubredditConciseViewModel>> GetOrderedSubredditsByKeyWords(
+        public async Task<SubredditsViewModel> GetOrderedSubredditsByKeyWords(
             string[] keyWords,
             SubredditSortType sortType)
         {
@@ -33,9 +33,13 @@ namespace RedditClone.Services.QuestServices
             var filteredSubreddits = await this.redditCloneUnitOfWork.Subreddits
                 .GetByKeyWordsSortedByAsync(keyWords, sortStrategy);
 
-            var models = this.mapper.Map<IEnumerable<SubredditConciseViewModel>>(filteredSubreddits);
+            var model = new SubredditsViewModel()
+            {
+                SubrreditSortType = sortType,
+                Subreddits = this.mapper.Map<IEnumerable<SubredditConciseViewModel>>(filteredSubreddits)
+            };
 
-            return models;
+            return model;
         }
     }
 }

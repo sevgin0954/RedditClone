@@ -35,7 +35,7 @@ namespace RedditClone.Services.QuestServices
             {
                 Subreddits = subredditModels,
                 Posts = postModels,
-                KeyWords = keyWords
+                KeyWords = string.Join(" ", keyWords)
             };
 
             return searchModel;

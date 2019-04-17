@@ -3,6 +3,96 @@
     ViewData["Title"] = "Index";
 }
 
-<partial name="_SubredditsPartial" model="Model.Subreddits" />
+<h5>Communities</h5>
+<hr />
+<div class="container grey-outline-container d-flex">
+    <div class="btn-grey">
+        Sort
+    </div>
+    <div class="dropdown nav-item">
+        <button class="btn btn-white btn-secondary-nav dropdown-toggle" type="button" data-toggle="dropdown">
+            @{ var subredditsortTypeName = Model.Subreddits.SubrreditSortType.ToString(); }
+            @Html.Raw(SortTypeLinks.SortTypeIconLink[subredditsortTypeName])
+            @subredditsortTypeName
+        </button>
+        <div class="dropdown-menu dropdown-menu-small">
+            @foreach (var subredditSortType in (SubredditSortType[])Enum.GetValues(typeof(SubredditSortType)))
+            {
+                if (subredditSortType != Model.Subreddits.SubrreditSortType)
+                {
+                    subredditsortTypeName = subredditSortType.ToString();
+                    <form asp-controller="Search" asp-action="Index" method="get">
+                        <input name="keyWords" value="@Model.KeyWords" hidden />
+                        <input name="subredditSortName" value="@subredditsortTypeName" hidden />
+                        <button class="btn dropdown-item btn-dropdown-item btn-grey" type="submit">
+                            @Html.Raw(SortTypeLinks.SortTypeIconLink[subredditsortTypeName])
+                            @subredditsortTypeName
+                        </button>
+                    </form>
+                }
+            }
+        </div>
+    </div>
+</div>
+<partial name="_SubredditsPartial" model="Model.Subreddits.Subreddits" />
 
+<h5>Posts</h5>
+<hr />
+<div class="container grey-outline-container d-flex">
+    <div class="btn-grey">
+        Sort
+    </div>
+    <div class="dropdown nav-item">
+        <button class="btn btn-white btn-secondary-nav dropdown-toggle" type="button" data-toggle="dropdown">
+            @{ var postSortTypeName = Model.Posts.PostSortType.ToString(); }
+            @Html.Raw(SortTypeLinks.SortTypeIconLink[postSortTypeName])
+            @postSortTypeName
+        </button>
+        <div class="dropdown-menu dropdown-menu-small">
+            @foreach (var postSortType in (PostSortType[])Enum.GetValues(typeof(PostSortType)))
+            {
+                if (postSortType != Model.Posts.PostSortType)
+                {
+                    postSortTypeName = postSortType.ToString();
+                    <form asp-controller="Search" asp-action="Index" method="get">
+                        <input name="keyWords" value="@Model.KeyWords" hidden />
+                        <input name="postSortName" value="@postSortTypeName" hidden />
+                        <button class="btn dropdown-item btn-dropdown-item btn-grey" type="submit">
+                            @Html.Raw(SortTypeLinks.SortTypeIconLink[postSortTypeName])
+                            @postSortTypeName
+                        </button>
+                    </form>
+                }
+            }
+        </div>
+    </div>
+
+    @if (Model.Posts.PostTimeFrameType != null)
+    {
+        <div class="dropdown nav-item">
+            <button class="btn btn-white btn-secondary-nav dropdown-toggle" type="button" data-toggle="dropdown">
+                @{ var timeFrameName = Model.Posts.PostTimeFrameType.ToString(); }
+                @timeFrameName
+            </button>
+            <div class="dropdown-menu dropdown-menu-small">
+                @foreach (var postTimeFrame in (TimeFrameType[])Enum.GetValues(typeof(TimeFrameType)))
+                {
+                    if (postTimeFrame != Model.Posts.PostTimeFrameType)
+                    {
+                        timeFrameName = postTimeFrame.ToString();
+                        <form asp-controller="Search" asp-action="Index" method="get">
+                            <input name="keyWords" value="@Model.KeyWords" hidden />
+                            <input name="postSortName" value="@Model.Posts.PostSortType.ToString()" hidden />
+                            <input name="postTimeFrameName" value="@timeFrameName" hidden />
+                            <button class="btn dropdown-item btn-dropdown-item btn-grey" type="submit">
+                                @{ timeFrameName = postTimeFrame.ToString(); }
+                                @timeFrameName
+                            </button>
+                        </form>
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>
 <partial name="_PostsPartial" model="Model.Posts.Posts" />

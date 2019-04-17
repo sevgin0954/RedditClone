@@ -1,5 +1,4 @@
 ﻿using RedditClone.Data.Interfaces;
-using RedditClone.Data.SortStrategies.PostOrders;
 using RedditClone.Models;
 using System;
 using System.Linq;

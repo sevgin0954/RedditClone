@@ -17,11 +17,8 @@ namespace RedditClone.Data.SortStrategies.PostOrders
 
         public IQueryable<Post> GetSortedPosts()
         {
-            var startDate = DateTime.UtcNow.Subtract(TimeSpan.FromDays(1));
-
             var postsQueryable = this.unitOfWork.Posts
                 .GetAllAsQueryable()
-                .Where(p => p.PostDate >= startDate)
                 .OrderByDescending(p => p.UpVotesCount - p.DownVotesCount)
                 .ThenByDescending(p => p.PostDate);
 

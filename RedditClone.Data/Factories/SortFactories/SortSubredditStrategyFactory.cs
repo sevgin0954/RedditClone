@@ -18,8 +18,6 @@ namespace RedditClone.Data.Factories.SortFactories
                     return new SortSubredditByNew(unitOfWork);
                 case SubredditSortType.Old:
                     return new SortSubredditByOld(unitOfWork);
-                case SubredditSortType.Posts:
-                    return new SortSubredditByPosts(unitOfWork);
                 case SubredditSortType.Top:
                     return new SortSubredditByTop(unitOfWork);
                 default:

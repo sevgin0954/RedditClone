@@ -36,34 +36,20 @@
     outline: none;
 }
 
-.post-container {
+.grey-outline-container {
     background-color: white;
     margin: 20px;
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 0 10px 1px black;
-}
-.post-container:hover {
-    box-shadow: 0 0 5px 2px #007bff;
 }
 
-.subreddit-container {
-    background-color: white;
-    margin: 20px;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px 1px black;
-}
-.subreddit-container:hover {
-    box-shadow: 0 0 5px 2px #007bff;
+.no-margins {
+    margin: 0px;
 }
 
-.comments-container {
-    background-color: white;
-    margin: 20px;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px 1px black;
+.blue-outline-onhover-container:hover {
+    box-shadow: 0 0 5px 2px #007bff;
 }
 
 .form-outline-green {

@@ -83,11 +83,8 @@ namespace RedditClone.Services.QuestServices
 
             var filteredPosts = await this.redditCloneUnitOfWork.Posts
                 .GetByKeyWordsSortedByAsync(keyWords, sortStrategy);
-            
-            var sortPostsStrategy = SortPostsStartegyFactory
-                .GetSortPostsStrategy(this.redditCloneUnitOfWork, timeFrame, sortType);
 
-            var model = this.MapIndexModel(filteredPosts, sortType, sortPostsStrategy, timeFrameType);
+            var model = this.MapIndexModel(filteredPosts, sortType, sortStrategy, timeFrameType);
 
             return model;
         }
