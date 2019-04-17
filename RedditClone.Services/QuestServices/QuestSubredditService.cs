@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
-using RedditClone.Common.Enums;
 using RedditClone.Common.Enums.SortTypes;
-using RedditClone.Common.Enums.TimeFrameTypes;
 using RedditClone.Data.Factories.SortFactories;
-using RedditClone.Data.Factories.TimeFactories;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models.WebModels.SubredditModels.ViewModels;
 using RedditClone.Services.QuestServices.Interfaces;

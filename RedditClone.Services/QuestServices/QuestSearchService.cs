@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using RedditClone.Common.Enums.SortTypes;
+﻿using RedditClone.Common.Enums.SortTypes;
 using RedditClone.Common.Enums.TimeFrameTypes;
 using RedditClone.Models.WebModels.SearchModels.ViewModels;
 using RedditClone.Services.QuestServices.Interfaces;
