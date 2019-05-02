@@ -1,0 +1,35 @@
+﻿@model PostConciseViewModel
+
+<form method="post">
+    <div>
+        @if (Model.UserVoteValue > 0)
+        {
+            <a data-postId="@Model.Id" class="link-grey link-green-hover selected-up-vote upVote" href="#">
+                <i class="fas fa-arrow-up fa-lg"></i>
+            </a>
+        }
+        else
+        {
+            <a data-postId="@Model.Id" class="link-grey link-green-hover upVote" href="#">
+                <i class="fas fa-arrow-up fa-lg"></i>
+            </a>
+        }
+    </div>
+    <div class="vote-value" data-postId="@Model.Id">
+        @Model.VotesCount
+    </div>
+    <div>
+        @if (Model.UserVoteValue < 0)
+        {
+            <a data-postId="@Model.Id" class="link-grey link-red-hover selected-down-vote downVote" href="#">
+                <i class="fas fa-arrow-down fa-lg"></i>
+            </a>
+        }
+        else
+        {
+            <a data-postId="@Model.Id" class="link-grey link-red-hover downVote" href="#">
+                <i class="fas fa-arrow-down fa-lg"></i>
+            </a>
+        }
+    </div>
+</form>

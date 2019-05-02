@@ -21,6 +21,7 @@ namespace RedditClone.Data.Repositories
                 .Include(p => p.Author)
                 .Include(p => p.Subreddit)
                 .Include(p => p.Comments)
+                .Include(p => p.Votes)
                 .FirstOrDefaultAsync();
 
             return post;
@@ -34,6 +35,7 @@ namespace RedditClone.Data.Repositories
                 .Include(p => p.Subreddit)
                 .Include(p => p.Author)
                 .Include(p => p.Comments)
+                .Include(p => p.Votes)
                 .ToListAsync();
 
             return sortedPosts;
@@ -46,6 +48,7 @@ namespace RedditClone.Data.Repositories
                 .Include(p => p.Subreddit)
                 .Include(p => p.Author)
                 .Include(p => p.Comments)
+                .Include(p => p.Votes)
                 .ToListAsync();
 
             return sortedPosts;
@@ -59,6 +62,7 @@ namespace RedditClone.Data.Repositories
                 .Include(p => p.Subreddit)
                 .Include(p => p.Author)
                 .Include(p => p.Comments)
+                .Include(p => p.Votes)
                 .ToListAsync();
 
             return sortedPosts;
@@ -68,10 +72,11 @@ namespace RedditClone.Data.Repositories
         {
             var sortedPosts = sortPostsStrategy.GetSortedPosts();
             var posts = await sortedPosts
+                .Where(p => keyWords.Any(kw => p.Title.ToLower().Contains(kw.ToLower())))
                 .Include(p => p.Subreddit)
                 .Include(p => p.Author)
                 .Include(p => p.Comments)
-                .Where(p => keyWords.Any(kw => p.Title.ToLower().Contains(kw.ToLower())))
+                .Include(p => p.Votes)
                 .ToListAsync();
 
             return posts;

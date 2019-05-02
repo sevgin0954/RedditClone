@@ -29,6 +29,14 @@
     margin-right: 25px;
 }
 
+.selected-up-vote {
+    color: #B4CC14 !important;
+}
+
+.selected-down-vote {
+    color: #FF0000 !important;
+}
+
 .searchbar-element {
     border: none;
 }
@@ -93,11 +101,21 @@
     padding-top: 5px;
 }
 
+.link-green {
+    font-weight: 500;
+    color: #B4CC14 !important;
+}
+
 .link-green-hover {
     font-weight: 500;
 }
 .link-green-hover:hover {
     color: #B4CC14 !important;
+}
+
+.link-red {
+    font-weight: 500;
+    color: #FF0000 !important;
 }
 
 .link-red-hover {

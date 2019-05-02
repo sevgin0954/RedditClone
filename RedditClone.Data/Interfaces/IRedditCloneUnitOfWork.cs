@@ -9,6 +9,7 @@ namespace RedditClone.Data.Interfaces
         ICommentRepository Comments { get; }
         IUserRepository Users { get; }
         ISubredditRepository Subreddits { get; }
+        IVotePostRepository VotePostRepository { get; }
 
         int Complete();
         Task<int> CompleteAsync();

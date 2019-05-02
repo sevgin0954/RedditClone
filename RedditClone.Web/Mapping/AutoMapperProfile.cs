@@ -55,7 +55,9 @@ namespace RedditClone.Web.Mapping
 
             this.CreateMap<Post, PostConciseViewModel>()
                 .ForMember(dest => dest.CommentsCount, opt => opt.MapFrom(src => CountComments.Count(src.Comments)))
-                .ForMember(dest => dest.DescriptionConcise, opt => opt.MapFrom(src => string.Concat(src.Description.Take(ModelsConstants.DescriptionIndexPreviewLength))));
+                .ForMember(dest => dest.VotesCount, opt => opt.MapFrom(src => src.UpVotesCount - src.DownVotesCount))
+                .ForMember(dest => dest.DescriptionConcise, opt => opt.MapFrom(src => 
+                    string.Concat(src.Description.Take(ModelsConstants.DescriptionIndexPreviewLength))));
 
             //------------------------------------------------------------------------------------------------------------
 

@@ -3,19 +3,7 @@
 {
     <div class="container grey-outline-container blue-outline-onhover-container d-flex flex-row">
         <div class="flex-column">
-            <div>
-                <a class="link-grey link-green-hover" href="#">
-                    <i class="fas fa-arrow-up fa-lg"></i>
-                </a>
-            </div>
-            <div>
-                &nbsp;@postModel.VotesCount
-            </div>
-            <div>
-                <a class="link-grey link-red-hover" href="#">
-                    <i class="fas fa-arrow-down fa-lg"></i>
-                </a>
-            </div>
+            <partial name="_VotePostPartial" model="postModel" />
         </div>
         &nbsp;
         <div class="flex-column flex-grow-1 min-width-0">

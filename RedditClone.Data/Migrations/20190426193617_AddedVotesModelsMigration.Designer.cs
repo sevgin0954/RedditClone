@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RedditClone.Data;
 
 namespace RedditClone.Data.Migrations
 {
     [DbContext(typeof(RedditCloneDbContext))]
-    partial class RedditCloneDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190426193617_AddedVotesModelsMigration")]
+    partial class AddedVotesModelsMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -19,6 +19,10 @@ namespace RedditClone.Data
 
         public DbSet<UserSubreddit> UserSubreddits { get; set; }
 
+        public DbSet<VotePost> VotesPosts { get; set; }
+
+        public DbSet<VoteComment> VotesComments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<User>(user =>
@@ -137,6 +141,36 @@ namespace RedditClone.Data
                 userSubreddit.HasOne(us => us.Subreddit)
                     .WithMany(s => s.SubscribedUsers)
                     .HasForeignKey(us => us.SubredditId);
+            });
+
+            builder.Entity<VotePost>(votePost =>
+            {
+                votePost.HasKey(v => v.Id);
+
+                votePost.Property(v => v.Value)
+                    .HasMaxLength(1)
+                    .HasDefaultValue(0);
+
+                votePost.HasOne(v => v.Post);
+
+                votePost.HasOne(v => v.User)
+                    .WithMany(u => u.VotesOnPosts)
+                    .HasForeignKey(v => v.UserId);
+            });
+
+            builder.Entity<VoteComment>(voteComment =>
+            {
+                voteComment.HasKey(v => v.Id);
+
+                voteComment.Property(v => v.Value)
+                    .HasMaxLength(1)
+                    .HasDefaultValue(0);
+
+                voteComment.HasOne(v => v.Comment);
+
+                voteComment.HasOne(v => v.User)
+                    .WithMany(u => u.VotesOnComments)
+                    .HasForeignKey(v => v.UserId);
             });
 
             base.OnModelCreating(builder);

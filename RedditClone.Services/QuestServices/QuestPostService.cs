@@ -43,7 +43,7 @@ namespace RedditClone.Services.QuestServices
             var dbPosts = await this.redditCloneUnitOfWork.Posts
                 .GetAllSortedByAsync(sortPostsStrategy);
 
-            var model = this.MapIndexModel(dbPosts, postSortType, sortPostsStrategy, postTimeFrameType);
+            var model = this.MapPostsModel(dbPosts, postSortType, sortPostsStrategy, postTimeFrameType);
             return model;
         }
 
@@ -68,7 +68,7 @@ namespace RedditClone.Services.QuestServices
             var dbPosts = await this.redditCloneUnitOfWork.Posts
                 .GetBySubredditSortedBy(subredditId, sortPostsStrategy);
 
-            var model = this.MapIndexModel(dbPosts, postSortType, sortPostsStrategy, postTimeFrameType);
+            var model = this.MapPostsModel(dbPosts, postSortType, sortPostsStrategy, postTimeFrameType);
             return model;
         }
 
@@ -84,12 +84,12 @@ namespace RedditClone.Services.QuestServices
             var filteredPosts = await this.redditCloneUnitOfWork.Posts
                 .GetByKeyWordsSortedByAsync(keyWords, sortStrategy);
 
-            var model = this.MapIndexModel(filteredPosts, sortType, sortStrategy, timeFrameType);
+            var model = this.MapPostsModel(filteredPosts, sortType, sortStrategy, timeFrameType);
 
             return model;
         }
 
-        private PostsViewModel MapIndexModel(
+        private PostsViewModel MapPostsModel(
             IEnumerable<Post> posts,
             PostSortType selectedPostSortType,
             ISortPostsStrategy sortStrategy,

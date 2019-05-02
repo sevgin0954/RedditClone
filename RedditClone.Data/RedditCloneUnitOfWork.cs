@@ -16,6 +16,7 @@ namespace RedditClone.Data
             this.Comments = new CommentRepository(dbContext);
             this.Users = new UserRepository(dbContext);
             this.Subreddits = new SubredditRepository(dbContext);
+            this.VotePostRepository = new VotePostRepository(dbContext);
         }
 
         public IPostRepository Posts { get; private set; }
@@ -25,6 +26,8 @@ namespace RedditClone.Data
         public IUserRepository Users { get; private set; }
 
         public ISubredditRepository Subreddits { get; private set; }
+
+        public IVotePostRepository VotePostRepository { get; private set; }
 
         public int Complete()
         {

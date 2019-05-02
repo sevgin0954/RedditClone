@@ -13,9 +13,10 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
     {
         public IUserPostService GetService(IRedditCloneUnitOfWork unitOfWork, UserManager<User> userManager)
         {
-            var mapper = CommonTestMethods.GetMapper();
             var cookieSerive = new Mock<ICookieService>().Object;
-            var service = new UserPostService(unitOfWork, userManager, cookieSerive, mapper);
+            var mapper = CommonTestMethods.GetMapper();
+            var customMapper = new CustomMapper.PostMapper(mapper);
+            var service = new UserPostService(unitOfWork, userManager, cookieSerive, mapper, customMapper);
 
             return service;
         }

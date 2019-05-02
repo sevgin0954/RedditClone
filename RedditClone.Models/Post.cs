@@ -24,5 +24,7 @@ namespace RedditClone.Models
         public Subreddit Subreddit { get; set; }
 
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
+        public ICollection<VotePost> Votes { get; set; } = new List<VotePost>();
     }
 }

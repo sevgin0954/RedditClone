@@ -4,21 +4,15 @@ using Microsoft.AspNetCore.Identity;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Models.WebModels.PostModels.BindingModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using RedditClone.Services.UserServices.Interfaces;
-using System.Collections.Generic;
-using RedditClone.Common.Constants;
 using AutoMapper;
 using RedditClone.Models.WebModels.PostModels.ViewModels;
 using RedditClone.Data.Factories.TimeFactories;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using RedditClone.Data.Factories.SortFactories;
-using RedditClone.Data.SortStrategies.PostStrategies.Interfaces;
 using RedditClone.Services.QuestServices.Interfaces;
-using RedditClone.Common.Enums.SortTypes;
-using RedditClone.Common.Enums.TimeFrameTypes;
-using RedditClone.Data.SortStrategies;
+using RedditClone.CustomMapper.Interfaces;
 
 namespace RedditClone.Services.UserServices
 {
@@ -28,17 +22,20 @@ namespace RedditClone.Services.UserServices
         private readonly UserManager<User> userManager;
         private readonly ICookieService cookieService;
         private readonly IMapper mapper;
+        private readonly IPostMapper postMapper;
 
         public UserPostService(
             IRedditCloneUnitOfWork redditCloneUnitOfWork, 
             UserManager<User> userManager,
             ICookieService cookieService,
-            IMapper mapper)
+            IMapper mapper,
+            IPostMapper postMapper)
         {
             this.redditCloneUnitOfWork = redditCloneUnitOfWork;
             this.userManager = userManager;
             this.cookieService = cookieService;
             this.mapper = mapper;
+            this.postMapper = postMapper;
         }
 
         public async Task<PostCreationBindingModel> PrepareModelForCreatingAsync(ClaimsPrincipal user, string subredditId)
@@ -46,8 +43,18 @@ namespace RedditClone.Services.UserServices
             var dbUserId = this.userManager.GetUserId(user);
             var dbSubreddit = await this.redditCloneUnitOfWork.Subreddits.GetByIdAsync(subredditId);
 
+            // TODO: Refactor (?)
             var dbSubredditId = dbSubreddit?.Id;
-            var model = await this.MapCreationPostBindingModelAsync(dbUserId, dbSubredditId);
+
+            var createdSubreddits = await redditCloneUnitOfWork.Subreddits
+                .GetByAuthorAsync(dbUserId);
+            var subscribedSubreddits = await redditCloneUnitOfWork.Subreddits
+                .GetBySubcribedUserAsync(dbUserId);
+
+            var model = this.postMapper.MapPostCreationBindingModel(
+                createdSubreddits,
+                subscribedSubreddits,
+                dbSubredditId);
 
             return model;
         }
@@ -56,10 +63,10 @@ namespace RedditClone.Services.UserServices
         {
             var dbSubredditWithId = await this.redditCloneUnitOfWork.Subreddits
                 .GetByIdAsync(model.SelectedSubredditId);
-            var isSubredditWithIdExist = dbSubredditWithId != null;
 
             var result = false;
 
+            var isSubredditWithIdExist = dbSubredditWithId != null;
             if (isSubredditWithIdExist)
             {
                 var dbUserId = this.userManager.GetUserId(user);
@@ -98,138 +105,9 @@ namespace RedditClone.Services.UserServices
                 dbPosts = await this.redditCloneUnitOfWork.Posts.GetAllSortedByAsync(sortPostsStrategy);
             }
 
-            var model = this.MapIndexModel(dbPosts, postSortType, sortPostsStrategy, postTimeFrameType);
+            var model = this.postMapper
+                .MapPostsViewModel(dbPosts, dbUserId, postSortType, sortPostsStrategy, postTimeFrameType);
             return model;
-        }
-
-        private async Task<PostCreationBindingModel> MapCreationPostBindingModelAsync(string userId, string subredditId)
-        {
-            var model = new PostCreationBindingModel
-            {
-                SelectedSubredditId = subredditId
-            };
-
-            await this.MapPostModelSubredditsAsync(model, userId, subredditId);
-
-            return model;
-        }
-
-        private async Task MapPostModelSubredditsAsync(PostCreationBindingModel model, string userId, string subredditId)
-        {
-            var createdSubreddits = await redditCloneUnitOfWork.Subreddits
-                .GetByAuthorAsync(userId);
-            var subscribedSubreddits = await redditCloneUnitOfWork.Subreddits
-                .GetBySubcribedUserAsync(userId);
-
-            var createdSubredditGroupName = ModelsConstants.SelectListGroupNameCreatedSubreddits;
-            var createdSubredditsSelectListItems
-                = this.MapSelectListItemsBySubreddits(createdSubreddits, createdSubredditGroupName, subredditId);
-
-            var subscribedSubredditGroupName = ModelsConstants.SelectListGroupNameSubscribedSubreddits;
-            var subscribedSubredditsSelectListItem
-                = this.MapSelectListItemsBySubreddits(subscribedSubreddits, subscribedSubredditGroupName, subredditId);
-
-            model.Subreddits.AddRange(createdSubredditsSelectListItems);
-            model.Subreddits.AddRange(subscribedSubredditsSelectListItem);
-        }
-
-        private ICollection<SelectListItem> MapSelectListItemsBySubreddits(
-            IEnumerable<Subreddit> subreddits, 
-            string groupName,
-            string selectedSubredditId)
-        {
-            var models = new List<SelectListItem>();
-            var group = new SelectListGroup
-            {
-                Name = groupName
-            };
-
-            if (subreddits.Count() == 0)
-            {
-                var text = ModelsConstants.SelectListItemNameEmpty;
-                var initialCreatedItem = this.CreateEmptySelectListItem(groupName, text);
-                models.Add(initialCreatedItem);
-            }
-
-            foreach (var subreddit in subreddits)
-            {
-                var selectListItem = this.MapSelectListItemBySubreddit(subreddit, group, selectedSubredditId);
-                models.Add(selectListItem);
-            }
-
-            return models;
-        }
-
-        private SelectListItem MapSelectListItemBySubreddit(
-            Subreddit subreddit, 
-            SelectListGroup group, 
-            string selectedSubredditId)
-        {
-            bool isSelected = false;
-            if (subreddit.Id == selectedSubredditId)
-            {
-                isSelected = true;
-            }
-
-            var selectListItem = new SelectListItem()
-            {
-                Text = subreddit.Name,
-                Value = subreddit.Id,
-                Selected = isSelected,
-                Group = group
-            };
-
-            return selectListItem;
-        }
-
-        private SelectListItem CreateEmptySelectListItem(string groupName, string text)
-        {
-            var group = new SelectListGroup
-            {
-                Name = groupName
-            };
-            var selectListItem = new SelectListItem()
-            {
-                Disabled = true,
-                Group = group,
-                Text = text
-            };
-
-            return selectListItem;
-        }
-
-        private PostsViewModel MapIndexModel(
-            IEnumerable<Post> posts,
-            PostSortType selectedSortType,
-            ISortPostsStrategy sortStrategy,
-            TimeFrameType selectedTimeFrameType)
-        {
-            var postModels = this.mapper.Map<IEnumerable<PostConciseViewModel>>(posts);
-            var model = new PostsViewModel
-            {
-                Posts = postModels,
-                PostSortType = selectedSortType
-            };
-
-            var isHaveTimeFrame = CheckIsSortStrategyHaveTimeFrame(sortStrategy);
-            if (isHaveTimeFrame)
-            {
-                model.PostTimeFrameType = selectedTimeFrameType;
-            }
-
-            return model;
-        }
-
-        private bool CheckIsSortStrategyHaveTimeFrame(ISortPostsStrategy sortPostsStrategy)
-        {
-            var isHaveTimeFrame = false;
-
-            if (sortPostsStrategy is BaseTimeDependentPostSortingStrategy)
-            {
-                isHaveTimeFrame = true;
-            }
-
-            return isHaveTimeFrame;
         }
     }
 }

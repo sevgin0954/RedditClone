@@ -12,5 +12,9 @@ namespace RedditClone.Models
         public ICollection<Subreddit> CreatedSubreddits { get; set; } = new List<Subreddit>();
 
         public ICollection<UserSubreddit> SubscribedSubreddits { get; set; } = new List<UserSubreddit>();
+
+        public ICollection<VotePost> VotesOnPosts { get; set; } = new List<VotePost>();
+
+        public ICollection<VoteComment> VotesOnComments { get; set; } = new List<VoteComment>();
     }
 }

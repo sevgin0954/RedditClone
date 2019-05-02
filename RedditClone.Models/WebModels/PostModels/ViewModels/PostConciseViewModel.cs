@@ -17,6 +17,8 @@ namespace RedditClone.Models.WebModels.PostModels.ViewModels
 
         public int VotesCount { get; set; }
 
+        public int UserVoteValue { get; set; }
+
         public string SubredditId { get; set; }
         public string SubredditName { get; set; }
 
