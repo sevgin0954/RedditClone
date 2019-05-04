@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Moq;
+using RedditClone.CustomMapper;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Services.QuestServices.Interfaces;
@@ -14,9 +15,9 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
         public IUserPostService GetService(IRedditCloneUnitOfWork unitOfWork, UserManager<User> userManager)
         {
             var cookieSerive = new Mock<ICookieService>().Object;
-            var mapper = CommonTestMethods.GetMapper();
-            var customMapper = new CustomMapper.PostMapper(mapper);
-            var service = new UserPostService(unitOfWork, userManager, cookieSerive, mapper, customMapper);
+            var autoMapper = CommonTestMethods.GetAutoMapper();
+            var postMapper = new PostMapper(autoMapper);
+            var service = new UserPostService(unitOfWork, userManager, cookieSerive, postMapper);
 
             return service;
         }

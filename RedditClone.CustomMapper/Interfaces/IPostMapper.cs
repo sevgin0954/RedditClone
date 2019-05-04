@@ -10,9 +10,15 @@ namespace RedditClone.CustomMapper.Interfaces
 {
     public interface IPostMapper
     {
-        PostsViewModel MapPostsViewModel(
+        PostsViewModel MapPostsViewModelForSignInUser(
             IEnumerable<Post> posts,
             string userId,
+            PostSortType selectedSortType,
+            ISortPostsStrategy sortStrategy,
+            TimeFrameType selectedTimeFrameType);
+
+        PostsViewModel MapPostsViewModelForQuest(
+            IEnumerable<Post> posts,
             PostSortType selectedSortType,
             ISortPostsStrategy sortStrategy,
             TimeFrameType selectedTimeFrameType);
@@ -21,5 +27,9 @@ namespace RedditClone.CustomMapper.Interfaces
             IEnumerable<Subreddit> createdSubreddits,
             IEnumerable<Subreddit> subscribedSubreddits,
             string selectedSubredditId);
+
+        PostViewModel MapPostViewModel(Post post, CommentSortType sortType, IEnumerable<Comment> comments);
+
+        Post MapPost(PostCreationBindingModel model, string authorId);
     }
 }

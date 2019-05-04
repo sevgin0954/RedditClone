@@ -1,4 +1,5 @@
 ﻿using Moq;
+using RedditClone.CustomMapper;
 using RedditClone.Data.Interfaces;
 using RedditClone.Services.QuestServices;
 using RedditClone.Services.QuestServices.Interfaces;
@@ -10,9 +11,10 @@ namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
     {
         public IQuestPostService GetService(IRedditCloneUnitOfWork unitOfWork)
         {
-            var mapper = CommonTestMethods.GetMapper();
             var cookieSerive = new Mock<ICookieService>().Object;
-            var service = new QuestPostService(unitOfWork, mapper, cookieSerive);
+            var autoMapper = CommonTestMethods.GetAutoMapper();
+            var postMapper = new PostMapper(autoMapper);
+            var service = new QuestPostService(unitOfWork, cookieSerive, postMapper);
 
             return service;
         }

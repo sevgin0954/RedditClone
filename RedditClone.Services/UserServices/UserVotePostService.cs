@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using RedditClone.Common.Validation;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Services.UserServices.Interfaces;
@@ -47,7 +48,7 @@ namespace RedditClone.Services.UserServices
             dbPost.DownVotesCount++;
 
             var rowsAffected = await this.redditCloneUnitOfWork.CompleteAsync();
-            return this.IsUnitOfWorkCompletedSuccessfully(rowsAffected);
+            return UnitOfWorkValidator.IsUnitOfWorkCompletedSuccessfully(rowsAffected);
         }
 
         public async Task<bool> AddUpVoteToPostAsync(string postId, ClaimsPrincipal user)
@@ -79,7 +80,7 @@ namespace RedditClone.Services.UserServices
             dbPost.UpVotesCount++;
 
             var rowsAffected = await this.redditCloneUnitOfWork.CompleteAsync();
-            return this.IsUnitOfWorkCompletedSuccessfully(rowsAffected);
+            return UnitOfWorkValidator.IsUnitOfWorkCompletedSuccessfully(rowsAffected);
         }
 
         private VotePost CreatePost(string userId, string postId)
@@ -112,7 +113,7 @@ namespace RedditClone.Services.UserServices
             dbPost.DownVotesCount--;
             this.redditCloneUnitOfWork.VotePostRepository.Remove(dbVotePost);
             var rowsAffected = await this.redditCloneUnitOfWork.CompleteAsync();
-            return this.IsUnitOfWorkCompletedSuccessfully(rowsAffected);
+            return UnitOfWorkValidator.IsUnitOfWorkCompletedSuccessfully(rowsAffected);
         }
 
         public async Task<bool> RemoveUpVoteToPostAsync(string postId, ClaimsPrincipal user)
@@ -134,7 +135,7 @@ namespace RedditClone.Services.UserServices
             dbPost.UpVotesCount--;
             this.redditCloneUnitOfWork.VotePostRepository.Remove(dbVotePost);
             var rowsAffected = await this.redditCloneUnitOfWork.CompleteAsync();
-            return this.IsUnitOfWorkCompletedSuccessfully(rowsAffected);
+            return UnitOfWorkValidator.IsUnitOfWorkCompletedSuccessfully(rowsAffected);
         }
 
         private bool IsUpVoteValid(VotePost votePost)
@@ -150,18 +151,6 @@ namespace RedditClone.Services.UserServices
             else
             {
                 return true;
-            }
-        }
-
-        private bool IsUnitOfWorkCompletedSuccessfully(int rowsAffected)
-        {
-            if (rowsAffected > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
             }
         }
 

@@ -45,56 +45,21 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserSubredditServiceTests
             Assert.False(result);
         }
 
-        [Theory]
-        [InlineData("Subreddit name")]
-        public async Task WithModelWithName_ShouldCreateNewSubredditWithCorrectName(string subredditName)
-        {
-            var unitOfWork = this.GetRedditCloneUnitOfWork();
-            var model = new SubredditCreationBindingModel()
-            {
-                Name = subredditName
-            };
-
-            await this.CallCreateSubredditAsync(unitOfWork, model);
-            var dbSubreddits = await unitOfWork.Subreddits.FindAsync(s => s.Name == subredditName);
-            var dbFirstSubreddit = dbSubreddits.First();
-
-            Assert.Equal(subredditName, dbFirstSubreddit.Name);
-        }
-
-        [Theory]
-        [InlineData("Description")]
-        public async Task WithModelWithDescription_ShouldCreateNewSubredditWithCorrectDescription(string description)
-        {
-            var unitOfWork = this.GetRedditCloneUnitOfWork();
-            var model = new SubredditCreationBindingModel()
-            {
-                Description = description
-            };
-
-            await this.CallCreateSubredditAsync(unitOfWork, model);
-            var dbSubreddits = await unitOfWork.Subreddits.FindAsync(s => s.Description == description);
-            var dbFirstSubreddit = dbSubreddits.First();
-
-            Assert.Equal(description, dbFirstSubreddit.Description);
-        }
-
         [Fact]
-        public async Task WithModelWithUserWithId_ShouldCreateNewSubredditWithCorrectAuthorId()
+        public async Task WithModelAndUserWithId_ShouldCreateNewSubredditWithCorrectAuthorId()
         {
             var unitOfWork = this.GetRedditCloneUnitOfWork();
             var dbUser = new User();
             unitOfWork.Users.Add(dbUser);
             unitOfWork.Complete();
             var model = new SubredditCreationBindingModel();
-
-            var dbUserId = dbUser.Id;
-            await this.CallCreateSubredditAsyncWithUser(unitOfWork, model, dbUserId);
-            var dbSubreddits = await unitOfWork.Subreddits.FindAsync(s => s.AuthorId == dbUserId);
+            
+            await this.CallCreateSubredditAsyncWithUser(unitOfWork, model, dbUser.Id);
+            var dbSubreddits = await unitOfWork.Subreddits.FindAsync(s => s.AuthorId == dbUser.Id);
             var dbFirstSubreddit = dbSubreddits.First();
             var modelAuthorId = dbFirstSubreddit.AuthorId;
 
-            Assert.Equal(dbUserId, modelAuthorId);
+            Assert.Equal(dbUser.Id, modelAuthorId);
         }
 
         private async Task<bool> CallCreateSubredditAsync(

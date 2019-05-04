@@ -4,9 +4,11 @@ using RedditClone.Common.Constants;
 using RedditClone.Common.Enums.SortTypes;
 using RedditClone.Common.Enums.TimeFrameTypes;
 using RedditClone.CustomMapper.Interfaces;
+using RedditClone.Data.Helpers;
 using RedditClone.Data.SortStrategies;
 using RedditClone.Data.SortStrategies.PostStrategies.Interfaces;
 using RedditClone.Models;
+using RedditClone.Models.WebModels.CommentModels.ViewModels;
 using RedditClone.Models.WebModels.PostModels.BindingModels;
 using RedditClone.Models.WebModels.PostModels.ViewModels;
 using System.Collections.Generic;
@@ -23,7 +25,7 @@ namespace RedditClone.CustomMapper
             this.mapper = mapper;
         }
 
-        public PostsViewModel MapPostsViewModel(
+        public PostsViewModel MapPostsViewModelForSignInUser(
             IEnumerable<Post> posts,
             string userId,
             PostSortType selectedSortType,
@@ -46,14 +48,39 @@ namespace RedditClone.CustomMapper
             return model;
         }
 
-        private IEnumerable<PostConciseViewModel> MapPostConciseViewModels(IEnumerable<Post> posts, string userId)
+        public PostsViewModel MapPostsViewModelForQuest(
+            IEnumerable<Post> posts,
+            PostSortType selectedSortType,
+            ISortPostsStrategy sortStrategy,
+            TimeFrameType selectedTimeFrameType)
+        {
+            var postModels = this.MapPostConciseViewModels(posts);
+            var model = new PostsViewModel
+            {
+                Posts = postModels,
+                PostSortType = selectedSortType
+            };
+
+            var isHaveTimeFrame = CheckIsSortStrategyHaveTimeFrame(sortStrategy);
+            if (isHaveTimeFrame)
+            {
+                model.PostTimeFrameType = selectedTimeFrameType;
+            }
+
+            return model;
+        }
+
+        private IEnumerable<PostConciseViewModel> MapPostConciseViewModels(IEnumerable<Post> posts, string userId = null)
         {
             var models = new List<PostConciseViewModel>();
             
             foreach (var post in posts)
             {
                 var model = this.mapper.Map<PostConciseViewModel>(post);
-                model.UserVoteValue = this.GetUserVoteValueOrDefault(post.Votes, userId);
+                if (userId != null)
+                {
+                    model.UserVoteValue = this.GetUserVoteValueOrDefault(post.Votes, userId);
+                }
                 models.Add(model);
             }
 
@@ -171,6 +198,25 @@ namespace RedditClone.CustomMapper
             };
 
             return selectListItem;
+        }
+
+        public PostViewModel MapPostViewModel(Post post, CommentSortType sortType, IEnumerable<Comment> comments)
+        {
+            int commentCount = CountComments.Count(comments);
+            var model = this.mapper.Map<PostViewModel>(post);
+            model.SelectedCommentSortType = sortType;
+            model.CommentsCount = commentCount;
+            model.Comments = this.mapper.Map<IEnumerable<CommentViewModel>>(comments);
+
+            return model;
+        }
+
+        public Post MapPost(PostCreationBindingModel model, string authorId)
+        {
+            var dbPost = this.mapper.Map<Post>(model);
+            dbPost.AuthorId = authorId;
+
+            return dbPost;
         }
     }
 }

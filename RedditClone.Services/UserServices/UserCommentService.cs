@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using RedditClone.Common.Validation;
+using RedditClone.CustomMapper.Interfaces;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Models.WebModels.CommentModels.BindingModels;
 using RedditClone.Services.UserServices.Interfaces;
-using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -13,11 +14,16 @@ namespace RedditClone.Services.UserServices
     {
         private readonly IRedditCloneUnitOfWork unitOfWork;
         private readonly UserManager<User> userManager;
+        private readonly ICommentMapper commentMapper;
 
-        public UserCommentService(IRedditCloneUnitOfWork unitOfWork, UserManager<User> userManager)
+        public UserCommentService(
+            IRedditCloneUnitOfWork unitOfWork, 
+            UserManager<User> userManager,
+            ICommentMapper commentMapper)
         {
             this.unitOfWork = unitOfWork;
             this.userManager = userManager;
+            this.commentMapper = commentMapper;
         }
 
         public async Task<bool> AddCommentToPostAsync(ClaimsPrincipal user, CommentBindingModel model)
@@ -29,18 +35,11 @@ namespace RedditClone.Services.UserServices
             }
 
             var dbUserId = this.userManager.GetUserId(user);
-            var dbComment = this.MapComment(dbPost.Id, model.Description, dbUserId);
+            var dbComment = this.commentMapper.MapComment(dbPost.Id, model.Description, dbUserId);
 
             this.unitOfWork.Comments.Add(dbComment);
             var rowsAffected = await unitOfWork.CompleteAsync();
-            if (rowsAffected > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return UnitOfWorkValidator.IsUnitOfWorkCompletedSuccessfully(rowsAffected);
         }
 
         public async Task<bool> AddResponseToCommentAsync(ClaimsPrincipal user, CommentBindingModel model)
@@ -52,31 +51,11 @@ namespace RedditClone.Services.UserServices
             }
 
             var dbUserId = this.userManager.GetUserId(user);
-            var dbReply = this.MapComment(dbComment.PostId, model.Description, dbUserId);
+            var dbReply = this.commentMapper.MapComment(dbComment.PostId, model.Description, dbUserId);
 
             dbComment.Replies.Add(dbReply);
             var rowsAffected = await unitOfWork.CompleteAsync();
-            if (rowsAffected > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        private Comment MapComment(string postId, string description, string dbUserId)
-        {
-            var comment = new Comment()
-            {
-                PostId = postId,
-                AuthorId = dbUserId,
-                Description = description,
-                PostDate = DateTime.UtcNow
-            };
-
-            return comment;
+            return UnitOfWorkValidator.IsUnitOfWorkCompletedSuccessfully(rowsAffected);
         }
     }
 }

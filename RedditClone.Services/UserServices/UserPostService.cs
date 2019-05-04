@@ -5,7 +5,6 @@ using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Models.WebModels.PostModels.BindingModels;
 using RedditClone.Services.UserServices.Interfaces;
-using AutoMapper;
 using RedditClone.Models.WebModels.PostModels.ViewModels;
 using RedditClone.Data.Factories.TimeFactories;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +12,7 @@ using System.Linq;
 using RedditClone.Data.Factories.SortFactories;
 using RedditClone.Services.QuestServices.Interfaces;
 using RedditClone.CustomMapper.Interfaces;
+using RedditClone.Common.Validation;
 
 namespace RedditClone.Services.UserServices
 {
@@ -21,20 +21,17 @@ namespace RedditClone.Services.UserServices
         private readonly IRedditCloneUnitOfWork redditCloneUnitOfWork;
         private readonly UserManager<User> userManager;
         private readonly ICookieService cookieService;
-        private readonly IMapper mapper;
         private readonly IPostMapper postMapper;
 
         public UserPostService(
             IRedditCloneUnitOfWork redditCloneUnitOfWork, 
             UserManager<User> userManager,
             ICookieService cookieService,
-            IMapper mapper,
             IPostMapper postMapper)
         {
             this.redditCloneUnitOfWork = redditCloneUnitOfWork;
             this.userManager = userManager;
             this.cookieService = cookieService;
-            this.mapper = mapper;
             this.postMapper = postMapper;
         }
 
@@ -42,8 +39,7 @@ namespace RedditClone.Services.UserServices
         {
             var dbUserId = this.userManager.GetUserId(user);
             var dbSubreddit = await this.redditCloneUnitOfWork.Subreddits.GetByIdAsync(subredditId);
-
-            // TODO: Refactor (?)
+            
             var dbSubredditId = dbSubreddit?.Id;
 
             var createdSubreddits = await redditCloneUnitOfWork.Subreddits
@@ -61,28 +57,19 @@ namespace RedditClone.Services.UserServices
 
         public async Task<bool> CreatePostAsync(ClaimsPrincipal user, PostCreationBindingModel model)
         {
-            var dbSubredditWithId = await this.redditCloneUnitOfWork.Subreddits
+            var dbSubreddit = await this.redditCloneUnitOfWork.Subreddits
                 .GetByIdAsync(model.SelectedSubredditId);
-
-            var result = false;
-
-            var isSubredditWithIdExist = dbSubredditWithId != null;
-            if (isSubredditWithIdExist)
+            if (dbSubreddit == null)
             {
-                var dbUserId = this.userManager.GetUserId(user);
-                var dbPost = this.mapper.Map<Post>(model);
-                dbPost.AuthorId = dbUserId;
-
-                redditCloneUnitOfWork.Posts.Add(dbPost);
-                var rowsAffected = await redditCloneUnitOfWork.CompleteAsync();
-
-                if (rowsAffected > 0)
-                {
-                    result = true;
-                }
+                return false;
             }
 
-            return result;
+            var dbUserId = this.userManager.GetUserId(user);
+            var dbPost = this.postMapper.MapPost(model, dbUserId);
+
+            redditCloneUnitOfWork.Posts.Add(dbPost);
+            var rowsAffected = await redditCloneUnitOfWork.CompleteAsync();
+            return UnitOfWorkValidator.IsUnitOfWorkCompletedSuccessfully(rowsAffected);
         }
 
         public async Task<PostsViewModel> GetOrderedPostsAsync(
@@ -106,7 +93,7 @@ namespace RedditClone.Services.UserServices
             }
 
             var model = this.postMapper
-                .MapPostsViewModel(dbPosts, dbUserId, postSortType, sortPostsStrategy, postTimeFrameType);
+                .MapPostsViewModelForSignInUser(dbPosts, dbUserId, postSortType, sortPostsStrategy, postTimeFrameType);
             return model;
         }
     }

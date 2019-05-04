@@ -1,18 +1,12 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using RedditClone.Common.Enums.SortTypes;
 using RedditClone.Common.Enums.TimeFrameTypes;
+using RedditClone.CustomMapper.Interfaces;
 using RedditClone.Data.Factories.SortFactories;
 using RedditClone.Data.Factories.TimeFactories;
-using RedditClone.Data.Helpers;
 using RedditClone.Data.Interfaces;
-using RedditClone.Data.SortStrategies;
-using RedditClone.Data.SortStrategies.PostStrategies.Interfaces;
-using RedditClone.Models;
-using RedditClone.Models.WebModels.CommentModels.ViewModels;
 using RedditClone.Models.WebModels.PostModels.ViewModels;
 using RedditClone.Services.QuestServices.Interfaces;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RedditClone.Services.QuestServices
@@ -20,18 +14,20 @@ namespace RedditClone.Services.QuestServices
     public class QuestPostService : IQuestPostService
     {
         private readonly IRedditCloneUnitOfWork redditCloneUnitOfWork;
-        private readonly IMapper mapper;
         private readonly ICookieService cookieService;
+        private readonly IPostMapper postMapper;
 
-        public QuestPostService(IRedditCloneUnitOfWork redditCloneUnitOfWork, IMapper mapper, ICookieService cookieService)
+        public QuestPostService(
+            IRedditCloneUnitOfWork redditCloneUnitOfWork,
+            ICookieService cookieService,
+            IPostMapper postMapper)
         {
             this.redditCloneUnitOfWork = redditCloneUnitOfWork;
-            this.mapper = mapper;
             this.cookieService = cookieService;
+            this.postMapper = postMapper;
         }
 
-        public async Task<PostsViewModel> GetOrderedPostsAsync(
-            IRequestCookieCollection requestCookies)
+        public async Task<PostsViewModel> GetOrderedPostsAsync(IRequestCookieCollection requestCookies)
         {
             var postSortType = this.cookieService.GetPostSortTypeFromCookieOrDefault(requestCookies);
             var postTimeFrameType = this.cookieService.GetPostTimeFrameTypeFromCookieOrDefault(requestCookies);
@@ -43,7 +39,8 @@ namespace RedditClone.Services.QuestServices
             var dbPosts = await this.redditCloneUnitOfWork.Posts
                 .GetAllSortedByAsync(sortPostsStrategy);
 
-            var model = this.MapPostsModel(dbPosts, postSortType, sortPostsStrategy, postTimeFrameType);
+            var model = 
+                this.postMapper.MapPostsViewModelForQuest(dbPosts, postSortType, sortPostsStrategy, postTimeFrameType);
             return model;
         }
 
@@ -68,7 +65,8 @@ namespace RedditClone.Services.QuestServices
             var dbPosts = await this.redditCloneUnitOfWork.Posts
                 .GetBySubredditSortedBy(subredditId, sortPostsStrategy);
 
-            var model = this.MapPostsModel(dbPosts, postSortType, sortPostsStrategy, postTimeFrameType);
+            var model = this.postMapper.MapPostsViewModelForQuest(
+                dbPosts, postSortType, sortPostsStrategy, postTimeFrameType);
             return model;
         }
 
@@ -84,43 +82,9 @@ namespace RedditClone.Services.QuestServices
             var filteredPosts = await this.redditCloneUnitOfWork.Posts
                 .GetByKeyWordsSortedByAsync(keyWords, sortStrategy);
 
-            var model = this.MapPostsModel(filteredPosts, sortType, sortStrategy, timeFrameType);
+            var model = this.postMapper.MapPostsViewModelForQuest(filteredPosts, sortType, sortStrategy, timeFrameType);
 
             return model;
-        }
-
-        private PostsViewModel MapPostsModel(
-            IEnumerable<Post> posts,
-            PostSortType selectedPostSortType,
-            ISortPostsStrategy sortStrategy,
-            TimeFrameType selectedTimeFrameType)
-        {
-            var postModels = this.mapper.Map<IEnumerable<PostConciseViewModel>>(posts);
-            var model = new PostsViewModel
-            {
-                Posts = postModels,
-                PostSortType = selectedPostSortType
-            };
-
-            var isHaveTimeFrame = CheckIsSortStrategyHaveTimeFrame(sortStrategy);
-            if (isHaveTimeFrame)
-            {
-                model.PostTimeFrameType = selectedTimeFrameType;
-            }
-
-            return model;
-        }
-
-        private bool CheckIsSortStrategyHaveTimeFrame(ISortPostsStrategy sortPostsStrategy)
-        {
-            var isHaveTimeFrame = false;
-
-            if (sortPostsStrategy is BaseTimeDependentPostSortingStrategy)
-            {
-                isHaveTimeFrame = true;
-            }
-
-            return isHaveTimeFrame;
         }
 
         public async Task<PostViewModel> GetPostWithOrderedCommentsAsync(
@@ -139,19 +103,7 @@ namespace RedditClone.Services.QuestServices
             var sortedComments = await this.redditCloneUnitOfWork.Comments
                 .GetByPostSortedByAsync(postId, sortTypeStrategy);
 
-            var model = this.MapPostModel(dbPost, commentSortType, sortedComments);
-
-            return model;
-        }
-
-        private PostViewModel MapPostModel(Post post, CommentSortType sortType, IEnumerable<Comment> comments)
-        {
-            int commentCount = CountComments.Count(comments);
-
-            var model = this.mapper.Map<PostViewModel>(post);
-            model.SelectedCommentSortType = sortType;
-            model.CommentsCount = commentCount;
-            model.Comments = this.mapper.Map<IEnumerable<CommentViewModel>>(comments);
+            var model = this.postMapper.MapPostViewModel(dbPost, commentSortType, sortedComments);
 
             return model;
         }

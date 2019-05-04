@@ -13,7 +13,7 @@ namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
     public class GetOrderedPostsAsyncTests : BaseQuestPostServiceTest
     {
         [Fact]
-        public async Task WithoutPosts_ShouldReturnModelWithZeroPosts()
+        public async Task WithoutPosts_ShouldReturnModelWithEmptyPostsCollection()
         {
             var unitOfWork = this.GetRedditCloneUnitOfWork();
 
@@ -56,17 +56,6 @@ namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
             unitOfWork.Complete();
 
             var model = await this.CallGetOrderedPostsAsync(unitOfWork);
-            return model;
-        }
-
-        private async Task<PostsViewModel> CallGetOrderedPostsAsyncWithCookies(
-            IRequestCookieCollection requestCokieCollection,
-            IResponseCookies responseCookies)
-        {
-            var unitOfWork = this.GetRedditCloneUnitOfWork();
-            var service = this.GetService(unitOfWork);
-            var model = await service.GetOrderedPostsAsync(requestCokieCollection);
-
             return model;
         }
 

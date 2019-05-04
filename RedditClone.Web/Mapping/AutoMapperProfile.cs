@@ -16,7 +16,7 @@ namespace RedditClone.Web.Mapping
     {
         public AutoMapperProfile()
         {
-            this.CreateMap<Post, UserIndexViewModel>()
+            this.CreateMap<Post, UserActionViewModel>()
                 .ForMember(dest => dest.PostId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.ActionInvokerId, opt => opt.MapFrom(src => src.AuthorId))
                 .ForMember(dest => dest.ActionInvokerUsername, opt => opt.MapFrom(src => src.Author.UserName))
@@ -26,10 +26,9 @@ namespace RedditClone.Web.Mapping
                 .ForMember(dest => dest.PostCreatorUsername, opt => opt.MapFrom(src => src.Author.UserName))
                 .ForMember(dest => dest.DescriptionConcise,
                     opt => opt.MapFrom(src => string.Concat(src.Description.Take(ModelsConstants.DescriptionAccountPreviewLength))))
-                .ForMember(dest => dest.VotesCount, opt => opt.MapFrom(src => src.UpVotesCount - src.DownVotesCount))
                 .ForMember(dest => dest.ActionName, opt => opt.MapFrom(src => ModelsConstants.ActionNamePost));
 
-            this.CreateMap<Comment, UserIndexViewModel>()
+            this.CreateMap<Comment, UserActionViewModel>()
                 .ForMember(dest => dest.ActionInvokerId, opt => opt.MapFrom(src => src.AuthorId))
                 .ForMember(dest => dest.ActionInvokerUsername, opt => opt.MapFrom(src => src.Author.UserName))
                 .ForMember(dest => dest.PostTitle, opt => opt.MapFrom(src => string.Concat(src.Post.Title.Take(ModelsConstants.TitlePostPreviewLength))))
@@ -39,7 +38,6 @@ namespace RedditClone.Web.Mapping
                 .ForMember(dest => dest.PostCreatorUsername, opt => opt.MapFrom(src => src.Post.Author.UserName))
                 .ForMember(dest => dest.DescriptionConcise,
                     opt => opt.MapFrom(src => string.Concat(src.Description.Take(ModelsConstants.DescriptionAccountPreviewLength))))
-                .ForMember(dest => dest.VotesCount, opt => opt.MapFrom(src => src.UpVotesCount - src.DownVotesCount))
                 .ForMember(dest => dest.ActionName, opt => opt.MapFrom(src => ModelsConstants.ActionNameComment));
 
             //------------------------------------------------------------------------------------------------------------

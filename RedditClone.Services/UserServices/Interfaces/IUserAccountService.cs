@@ -6,6 +6,6 @@ namespace RedditClone.Services.UserServices.Interfaces
 {
     public interface IUserAccountService
     {
-        Task<IEnumerable<UserIndexViewModel>> PrepareIndexModelAsync(string userId);
+        Task<IEnumerable<UserActionViewModel>> GetOverviewModelsOrderedByDateDescAsync(string userId);
     }
 }

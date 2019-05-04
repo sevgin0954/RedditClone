@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using Xunit;
 using System.Linq;
 using RedditClone.Data.Interfaces;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using RedditClone.Common.Constants;
 using RedditClone.Services.Tests.Common;
 
 namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
@@ -15,17 +13,17 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
     public class PrepareModelForCreatingAsyncTests : BaseUserPostServiceTest
     {
         [Fact]
-        public async Task WithUserWithNullSubredditId_ShouldReturnModel()
+        public async Task WithUserWithNullSubredditId_ShouldReturnModelWithNullSelectedSubredditId()
         {
             var dbUser = new User();
 
             var model = await this.CallPrepareModelForCreatingAsyncWithNullSubredditId(dbUser);
 
-            Assert.NotNull(model);
+            Assert.Null(model.SelectedSubredditId);
         }
 
         [Fact]
-        public async Task WithUserWithCreatedSubredditWithSubredditId_ShouldReturnModelWithCorrectSelectedSubredditId()
+        public async Task WithUserAndSubredditId_ShouldReturnModelWithCorrectSelectedSubredditId()
         {
             var dbUser = new User();
             var dbSubreddit = new Subreddit();
@@ -36,19 +34,6 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             var dbSubredditId = dbSubreddit.Id;
 
             Assert.Equal(dbSubredditId, modelSelectedSubredditId);
-        }
-
-        [Fact]
-        public async Task WithUserWithSubscribedSubredditWithSubredditId_ShouldReturnModelWithCorrectSelectedSubredditId()
-        {
-            var dbUser = new User();
-            var dbSubreddit = new Subreddit();
-            this.SubscribeUserToSubreddit(dbUser, dbSubreddit);
-
-            var model = await this.CallPrepareModelForCreatingAsyncWithSubredditId(dbUser, dbSubreddit);
-            var modelSelectedSubredditId = model.SelectedSubredditId;
-
-            Assert.Equal(dbSubreddit.Id, modelSelectedSubredditId);
         }
 
         [Fact]
@@ -64,7 +49,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
         }
 
         [Fact]
-        public async Task WithUserWithCreatedSubreddit_ShouldReturnModelWithCorrectSubredditsCount()
+        public async Task WithUserWithCreatedSubreddit_ShouldReturnModelWithTwoSubredditsCount()
         {
             var dbUser = new User();
             var dbSubreddit = new Subreddit();
@@ -78,7 +63,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
         }
 
         [Fact]
-        public async Task WithUserWithSubscribedSubreddit_ShouldReturnModelWithCorrectSubredditsCount()
+        public async Task WithUserWithSubscribedSubreddit_ShouldReturnModelWithTwoSubredditsCount()
         {
             var dbUser = new User();
             var dbSubreddit = new Subreddit();
@@ -107,97 +92,6 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             Assert.Equal(2, selectListItemsCount);
         }
 
-        [Fact]
-        public async Task WithUserWithCreatedSubredditWithSubredditId_ShoudReturnModelWithCorrectSubredditValue()
-        {
-            var dbUser = new User();
-            var dbSubreddit = new Subreddit();
-            dbUser.CreatedSubreddits.Add(dbSubreddit);
-            
-            var model = await this.CallPrepareModelForCreatingAsyncWithSubredditId(dbUser, dbSubreddit);
-            var firstSubreddit = this.GetFirstNonEmptySubredditFromModel(model);
-
-            Assert.Equal(dbSubreddit.Id, firstSubreddit.Value);
-        }
-
-        [Fact]
-        public async Task WithUserWithSubscribedSubredditWithSubredditId_ShoudReturnModelWithCorrectSubredditValue()
-        {
-            var dbUser = new User();
-            var dbSubreddit = new Subreddit();
-            this.SubscribeUserToSubreddit(dbUser, dbSubreddit);
-            
-            var model = await this.CallPrepareModelForCreatingAsyncWithSubredditId(dbUser, dbSubreddit);
-            var firstSubreddit = this.GetFirstNonEmptySubredditFromModel(model);
-
-            Assert.Equal(dbSubreddit.Id, firstSubreddit.Value);
-        }
-
-        [Fact]
-        public async Task WithUserWithCreatedSubredditWithSubredditId_ShoudReturnModelWithTrueSubredditSelectedFlag()
-        {
-            var dbUser = new User();
-            var dbSubreddit = new Subreddit();
-            dbUser.CreatedSubreddits.Add(dbSubreddit);
-            
-            var model = await this.CallPrepareModelForCreatingAsyncWithSubredditId(dbUser, dbSubreddit);
-            var firstSubreddit = this.GetFirstNonEmptySubredditFromModel(model);
-
-            Assert.True(firstSubreddit.Selected);
-        }
-
-        [Fact]
-        public async Task WithUserWithSubscribedSubredditWithSubredditId_ShoudReturnModelWithTrueSubredditSelectedFlag()
-        {
-            var dbUser = new User();
-            var dbSubreddit = new Subreddit();
-            this.SubscribeUserToSubreddit(dbUser, dbSubreddit);
-
-            var model = await this.CallPrepareModelForCreatingAsyncWithSubredditId(dbUser, dbSubreddit);
-            var firstSubreddit = this.GetFirstNonEmptySubredditFromModel(model);
-
-            Assert.True(firstSubreddit.Selected);
-        }
-
-        [Fact]
-        public async Task WithUserWithCreatedSubredditWithoutSubredditId_ShoudReturnModelWithFalseSubredditSelectedFlag()
-        {
-            var dbUser = new User();
-            var dbSubreddit = new Subreddit();
-            dbUser.CreatedSubreddits.Add(dbSubreddit);
-
-            var model = await this.CallPrepareModelForCreatingAsyncWithNullSubredditId(dbUser);
-            var firstSubreddit = this.GetFirstNonEmptySubredditFromModel(model);
-
-            Assert.False(firstSubreddit.Selected);
-        }
-
-        [Fact]
-        public async Task WithUserWithSuscribedSubredditWithoutSubredditId_ShoudReturnModelWithFalseSubredditSelectedFlag()
-        {
-            var dbUser = new User();
-            var dbSubreddit = new Subreddit();
-            this.SubscribeUserToSubreddit(dbUser, dbSubreddit);
-
-            var model = await this.CallPrepareModelForCreatingAsyncWithNullSubredditId(dbUser);
-            var firstSubreddit = this.GetFirstNonEmptySubredditFromModel(model);
-
-            Assert.False(firstSubreddit.Selected);
-        }
-
-        [Fact]
-        public async Task WithUserWithoutSubreddits_ShouldReturnModelWithCorrectGroupsNames()
-        {
-            var dbUser = new User();
-
-            var model = await this.CallPrepareModelForCreatingAsyncWithNullSubredditId(dbUser);
-            var selectLists = model.Subreddits;
-            var groups = selectLists.Select(sl => sl.Group);
-
-            Assert.Contains(groups, g => g.Name == ModelsConstants.SelectListGroupNameCreatedSubreddits);
-            Assert.Contains(groups, g => g.Name == ModelsConstants.SelectListGroupNameSubscribedSubreddits);
-        }
-
         private void SubscribeUserToSubreddit(User user, Subreddit subreddit)
         {
             var dbUserSubreddit = new UserSubreddit()
@@ -206,16 +100,6 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
                 Subreddit = subreddit
             };
             user.SubscribedSubreddits.Add(dbUserSubreddit);
-        }
-
-        private SelectListItem GetFirstNonEmptySubredditFromModel(PostCreationBindingModel model)
-        {
-            var modelSubreddits = model.Subreddits;
-            var firstSubreddit = modelSubreddits
-                .Where(s => s.Text != ModelsConstants.SelectListItemNameEmpty)
-                .First();
-
-            return firstSubreddit;
         }
 
         private async Task<PostCreationBindingModel> CallPrepareModelForCreatingAsyncWithNullSubredditId(

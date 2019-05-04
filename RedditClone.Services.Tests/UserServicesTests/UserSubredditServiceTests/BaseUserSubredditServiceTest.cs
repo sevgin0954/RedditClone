@@ -11,7 +11,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserSubredditServiceTests
     {
         public IUserSubredditService GetService(IRedditCloneUnitOfWork unitOfWork, UserManager<User> userManager)
         {
-            var mapper = CommonTestMethods.GetMapper();
+            var mapper = CommonTestMethods.GetAutoMapper();
             var service = new UserSubredditService(unitOfWork, mapper, userManager);
 
             return service;

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using RedditClone.Common.Validation;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Models.WebModels.SubredditModels.BindingModels;
@@ -26,34 +27,21 @@ namespace RedditClone.Services.UserServices
             this.userManager = userManager;
         }
 
-        public SubredditCreationBindingModel PrepareModelForCreating()
-        {
-            var model = new SubredditCreationBindingModel();
-
-            return model;
-        }
-
         public async Task<bool> CreateSubredditAsync(SubredditCreationBindingModel model, ClaimsPrincipal user)
         {
             var subredditsWithName = await this.redditCloneUnitOfWork.Subreddits.FindAsync(s => s.Name == model.Name);
-            var isSubredditWithNameExist = subredditsWithName.Count() > 0;
-
-            var result = false;
-
-            if (isSubredditWithNameExist == false)
+            if (subredditsWithName.Count() > 0)
             {
-                var dbSubreddit = this.mapper.Map<Subreddit>(model);
-                dbSubreddit.AuthorId = this.userManager.GetUserId(user); ;
-                this.redditCloneUnitOfWork.Subreddits.Add(dbSubreddit);
-                int rowsAffected = await this.redditCloneUnitOfWork.CompleteAsync();
-
-                if (rowsAffected > 0)
-                {
-                    result = true;
-                }
+                return false;
             }
 
-            return result;
+            var dbSubreddit = this.mapper.Map<Subreddit>(model);
+            var dbUserId = this.userManager.GetUserId(user);
+            dbSubreddit.AuthorId = dbUserId;
+
+            this.redditCloneUnitOfWork.Subreddits.Add(dbSubreddit);
+            int rowsAffected = await this.redditCloneUnitOfWork.CompleteAsync();
+            return UnitOfWorkValidator.IsUnitOfWorkCompletedSuccessfully(rowsAffected);
         }
     }
 }

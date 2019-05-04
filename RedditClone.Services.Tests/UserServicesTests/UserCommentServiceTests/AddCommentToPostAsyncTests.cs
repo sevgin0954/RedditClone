@@ -4,7 +4,6 @@ using RedditClone.Models;
 using RedditClone.Models.WebModels.CommentModels.BindingModels;
 using RedditClone.Services.Tests.Common;
 using System;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
@@ -17,10 +16,10 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserCommentServiceTests
         public async Task WithModelWithIncorrectPostId_ShouldReturnFalse()
         {
             var unitOfWork = this.GetRedditCloneUnitOfWork();
-            var randomPostId = Guid.NewGuid().ToString();
+            var incorrectPostId = Guid.NewGuid().ToString();
             var model = new CommentBindingModel()
             {
-                SourceId = randomPostId
+                SourceId = incorrectPostId
             };
 
             var result = await this.CallAddCommentToPostAsync(unitOfWork, model);
@@ -34,11 +33,10 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserCommentServiceTests
             var unitOfWork = this.GetRedditCloneUnitOfWork();
             var dbPost = new Post();
             var dbUser = new User();
-            unitOfWork.Posts.Add(dbPost);
-            unitOfWork.Users.Add(dbUser);
-            unitOfWork.Complete();
+            this.AddEntitiesToUnitOfWork(unitOfWork, dbPost, dbUser);
 
-            var model = this.CreateCorrectCommentModel(dbPost.Id);
+            var description = Guid.NewGuid().ToString();
+            var model = this.CreateCommentModel(dbPost.Id, description);
 
             var result = await this.CallAddCommentToPostAsync(unitOfWork, model);
 
@@ -51,27 +49,33 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserCommentServiceTests
             var unitOfWork = this.GetRedditCloneUnitOfWork();
             var dbPost = new Post();
             var dbUser = new User();
-            unitOfWork.Posts.Add(dbPost);
-            unitOfWork.Users.Add(dbUser);
-            unitOfWork.Complete();
+            this.AddEntitiesToUnitOfWork(unitOfWork, dbPost, dbUser);
 
-            var model = this.CreateCorrectCommentModel(dbPost.Id);
+            var description = Guid.NewGuid().ToString();
+            var model = this.CreateCommentModel(dbPost.Id, description);
 
             await this.CallAddCommentToPostAsync(unitOfWork, model);
-            var dbPostFirstComments = dbPost.Comments.First();
+            var dbPostCommentsCount = dbPost.Comments.Count;
 
-            Assert.Equal(model.SourceId, dbPostFirstComments.PostId);
+            Assert.Equal(1, dbPostCommentsCount);
         }
 
-        private CommentBindingModel CreateCorrectCommentModel(string postId)
+        private CommentBindingModel CreateCommentModel(string postId, string description)
         {
             var model = new CommentBindingModel()
             {
                 SourceId = postId,
-                Description = Guid.NewGuid().ToString()
+                Description = description
             };
 
             return model;
+        }
+
+        private void AddEntitiesToUnitOfWork(IRedditCloneUnitOfWork unitOfWork, Post post, User user)
+        {
+            unitOfWork.Posts.Add(post);
+            unitOfWork.Users.Add(user);
+            unitOfWork.Complete();
         }
 
         private async Task<bool> CallAddCommentToPostAsync(IRedditCloneUnitOfWork unitOfWork, CommentBindingModel model)

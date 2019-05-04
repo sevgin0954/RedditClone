@@ -8,7 +8,7 @@ namespace RedditClone.Services.Tests.QuestServicesTests.QuestSearchServiceTests
     public class GetSearchResultAsyncTests : BaseQuestSearchServiceTest
     {
         [Fact]
-        public async Task WithKeyWords_ShouldReturnModelWithCombinedInStringKeywords()
+        public async Task WithKeyWords_ShouldReturnModelWithCombinedInOneStringKeywords()
         {
             var service = this.GetService();
 

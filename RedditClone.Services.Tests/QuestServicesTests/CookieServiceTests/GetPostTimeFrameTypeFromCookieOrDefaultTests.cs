@@ -2,6 +2,7 @@
 using Moq;
 using RedditClone.Common.Constants;
 using RedditClone.Common.Enums.TimeFrameTypes;
+using RedditClone.Services.Tests.Common;
 using System;
 using Xunit;
 
@@ -26,11 +27,12 @@ namespace RedditClone.Services.Tests.QuestServicesTests.CookieServiceTests
         {
             var service = this.GetService();
 
+            var timeFrameKey = WebConstants.CookieKeyPostTimeFrameType;
+            var timeFrameIncorrectValue = Guid.NewGuid().ToString();
+
             var mockedRequestCookies = new Mock<IRequestCookieCollection>();
-            var postPostShowTimeKey = WebConstants.CookieKeyPostTimeFrameType;
-            var timeFrameTypeIncorrectValue = Guid.NewGuid().ToString();
-            mockedRequestCookies.SetupGet(rc => rc[postPostShowTimeKey])
-                .Returns(timeFrameTypeIncorrectValue);
+            CommonTestMethods
+                .SutupMockedRequestCookieCollection(mockedRequestCookies, timeFrameKey, timeFrameIncorrectValue);
 
             var timeFrameType = service.GetPostTimeFrameTypeFromCookieOrDefault(mockedRequestCookies.Object);
             var defaultTimeFrameType = WebConstants.CookieDefaultValuePostTimeFrameType;
@@ -43,11 +45,12 @@ namespace RedditClone.Services.Tests.QuestServicesTests.CookieServiceTests
         {
             var service = this.GetService();
 
-            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
-            var postPostShowTimeKey = WebConstants.CookieKeyPostTimeFrameType;
+            var timeFrameKey = WebConstants.CookieKeyPostTimeFrameType;
             var expectedTimeFrameType = TimeFrameType.PastMonth;
-            mockedRequestCookies.SetupGet(rc => rc[postPostShowTimeKey])
-                .Returns(expectedTimeFrameType.ToString());
+
+            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
+            CommonTestMethods
+                .SutupMockedRequestCookieCollection(mockedRequestCookies, timeFrameKey, expectedTimeFrameType.ToString());
 
             var timeFrameType = service.GetPostTimeFrameTypeFromCookieOrDefault(mockedRequestCookies.Object);
 

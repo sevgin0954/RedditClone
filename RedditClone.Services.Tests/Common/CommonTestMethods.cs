@@ -11,7 +11,7 @@ namespace RedditClone.Services.Tests.Common
 {
     public abstract class CommonTestMethods
     {
-        public static IMapper GetMapper()
+        public static IMapper GetAutoMapper()
         {
             var config = new MapperConfiguration(cfg =>
             {
@@ -49,6 +49,15 @@ namespace RedditClone.Services.Tests.Common
             var mockedSignInManager = new Mock<SignInManager<User>>(userManager, contextAccessor, claimsFactory, null, null, null);
 
             return mockedSignInManager;
+        }
+
+        public static void SutupMockedRequestCookieCollection(
+            Mock<IRequestCookieCollection> mock, 
+            string key, 
+            string value)
+        {
+            mock.SetupGet(rc => rc[key])
+                .Returns(value.ToString());
         }
     }
 }

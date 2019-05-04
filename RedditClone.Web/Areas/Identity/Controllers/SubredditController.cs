@@ -18,7 +18,7 @@ namespace RedditClone.Web.Areas.Identity.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            var model = this.userSubredditService.PrepareModelForCreating();
+            var model = new SubredditCreationBindingModel();
 
             return View(model);
         }

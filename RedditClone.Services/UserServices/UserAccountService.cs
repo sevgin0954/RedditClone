@@ -19,7 +19,7 @@ namespace RedditClone.Services.UserServices
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<UserIndexViewModel>> PrepareIndexModelAsync(string userId)
+        public async Task<IEnumerable<UserActionViewModel>> GetOverviewModelsOrderedByDateDescAsync(string userId)
         {
             var dbUser = await this.redditCloneUnitOfWork.Users.GetWithPostsWithSubredditAndCommentsAsync(userId);
             if (dbUser == null)
@@ -30,9 +30,9 @@ namespace RedditClone.Services.UserServices
             var dbAllPostsFromUser = dbUser.Posts;
             var dbAllCommentsFromUser = dbUser.Comments;
 
-            var models = new List<UserIndexViewModel>();
-            models.AddRange(this.mapper.Map<IEnumerable<UserIndexViewModel>>(dbAllPostsFromUser));
-            models.AddRange(this.mapper.Map<IEnumerable<UserIndexViewModel>>(dbAllCommentsFromUser));
+            var models = new List<UserActionViewModel>();
+            models.AddRange(this.mapper.Map<IEnumerable<UserActionViewModel>>(dbAllPostsFromUser));
+            models.AddRange(this.mapper.Map<IEnumerable<UserActionViewModel>>(dbAllCommentsFromUser));
             
             return models.OrderByDescending(m => m.PostDate);
         }

@@ -17,7 +17,7 @@ namespace RedditClone.Web.Areas.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string userId)
         {
-            var models = await this.userAccountService.PrepareIndexModelAsync(userId);
+            var models = await this.userAccountService.GetOverviewModelsOrderedByDateDescAsync(userId);
 
             if (models == null)
             {

@@ -10,10 +10,38 @@ using Xunit;
 
 namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
 {
-    public class CreatePostAsync : BaseUserPostServiceTest
+    public class CreatePostAsyncTests : BaseUserPostServiceTest
     {
         [Fact]
-        public async Task WithModelWithSelectedSubredditId_ShouldAddNewPostToDatabase()
+        public async Task WithModelWithIncorrectSelectedSubredditId_ShouldReturnFalse()
+        {
+            var unitOfWork = this.GetRedditCloneUnitOfWork();
+            var dbUser = new User();
+            this.AddUserToDatabase(unitOfWork, dbUser);
+
+            var model = new PostCreationBindingModel();
+            var result = await this.CallCreatePostAsync(unitOfWork, model, dbUser.Id);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task WithModelWithoutSelectedSubredditId_ShouldNotAddNewPost()
+        {
+            var unitOfWork = this.GetRedditCloneUnitOfWork();
+            var dbUser = new User();
+            this.AddUserToDatabase(unitOfWork, dbUser);
+
+            var model = new PostCreationBindingModel();
+            var result = await this.CallCreatePostAsync(unitOfWork, model, dbUser.Id);
+
+            var dbPosts = unitOfWork.Posts.GetAll();
+
+            Assert.Empty(dbPosts);
+        }
+
+        [Fact]
+        public async Task WithModelWithSelectedSubredditId_ShouldReturnTrue()
         {
             var unitOfWork = this.GetRedditCloneUnitOfWork();
             var dbUser = new User();
@@ -45,81 +73,9 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             };
             var result = await this.CallCreatePostAsync(unitOfWork, model, dbUser.Id);
 
-            var dbPost = await this.GetPostWithAuthorIdAsync(unitOfWork, dbUser.Id);
+            var dbPost = await this.GetPostWithByAuthorIdAsync(unitOfWork, dbUser.Id);
 
             Assert.Equal(dbPost.AuthorId, dbUser.Id);
-        }
-
-        [Theory]
-        [InlineData("Post title")]
-        public async Task WithModelWithTitleAndSelectedSubredditId_ShouldAddNewPostWithCorrectTitle(string titleName)
-        {
-            var unitOfWork = this.GetRedditCloneUnitOfWork();
-            var dbUser = new User();
-            var dbSubreddit = new Subreddit();
-            this.AddUserToDatabase(unitOfWork, dbUser);
-            this.AddSubredditToDatabase(unitOfWork, dbSubreddit);
-
-            var model = new PostCreationBindingModel()
-            {
-                SelectedSubredditId = dbSubreddit.Id,
-                Title = titleName
-            };
-            var result = await this.CallCreatePostAsync(unitOfWork, model, dbUser.Id);
-
-            var dbPost = await this.GetPostWithAuthorIdAsync(unitOfWork, dbUser.Id);
-
-            Assert.Equal(titleName, dbPost.Title);
-        }
-
-        [Theory]
-        [InlineData("Description")]
-        public async Task WithModelWithDescriptionAndSelectedSubredditId_ShouldAddNewPostWithCorrectDescription(string description)
-        {
-            var unitOfWork = this.GetRedditCloneUnitOfWork();
-            var dbUser = new User();
-            var dbSubreddit = new Subreddit();
-            this.AddUserToDatabase(unitOfWork, dbUser);
-            this.AddSubredditToDatabase(unitOfWork, dbSubreddit);
-
-            var model = new PostCreationBindingModel()
-            {
-                SelectedSubredditId = dbSubreddit.Id,
-                Description = description
-            };
-            var result = await this.CallCreatePostAsync(unitOfWork, model, dbUser.Id);
-
-            var dbPost = await this.GetPostWithAuthorIdAsync(unitOfWork, dbUser.Id);
-
-            Assert.Equal(description, dbPost.Description);
-        }
-
-        [Fact]
-        public async Task WithModelWithoutSelectedSubredditId_ShouldReturnFalse()
-        {
-            var unitOfWork = this.GetRedditCloneUnitOfWork();
-            var dbUser = new User();
-            this.AddUserToDatabase(unitOfWork, dbUser);
-
-            var model = new PostCreationBindingModel();
-            var result = await this.CallCreatePostAsync(unitOfWork, model, dbUser.Id);
-
-            Assert.False(result);
-        }
-
-        [Fact]
-        public async Task WithModelWithoutSelectedSubredditId_ShouldNotAddNewPost()
-        {
-            var unitOfWork = this.GetRedditCloneUnitOfWork();
-            var dbUser = new User();
-            this.AddUserToDatabase(unitOfWork, dbUser);
-
-            var model = new PostCreationBindingModel();
-            var result = await this.CallCreatePostAsync(unitOfWork, model, dbUser.Id);
-
-            var dbPosts = unitOfWork.Posts.GetAll();
-
-            Assert.Empty(dbPosts);
         }
 
         private void AddUserToDatabase(IRedditCloneUnitOfWork unitOfWork, User user)
@@ -134,7 +90,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             unitOfWork.Complete();
         }
 
-        private async Task<Post> GetPostWithAuthorIdAsync(IRedditCloneUnitOfWork unitOfWork, string authorId)
+        private async Task<Post> GetPostWithByAuthorIdAsync(IRedditCloneUnitOfWork unitOfWork, string authorId)
         {
             var dbPosts = await unitOfWork.Posts.FindAsync(p => p.AuthorId == authorId);
             return dbPosts.First();

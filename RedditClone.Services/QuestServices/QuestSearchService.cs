@@ -26,7 +26,7 @@ namespace RedditClone.Services.QuestServices
             TimeFrameType postTimeFrameType)
         {
             var subredditModels = await this.questSubredditService
-                .GetOrderedSubredditsByKeyWords(keyWords, subredditSortType);
+                .GetOrderedSubredditsFilterByKeyWordsAsync(keyWords, subredditSortType);
             var postModels = await this.questPostService
                 .GetOrderedPostsByKeyWordsAsync(keyWords, postSortType, postTimeFrameType);
 

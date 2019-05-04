@@ -2,6 +2,7 @@
 using Moq;
 using RedditClone.Common.Constants;
 using RedditClone.Common.Enums.SortTypes;
+using RedditClone.Services.Tests.Common;
 using System;
 using Xunit;
 
@@ -13,8 +14,8 @@ namespace RedditClone.Services.Tests.QuestServicesTests.CookieServiceTests
         public void WithoutPostSortTypeCookie_ShouldReturnDefault()
         {
             var service = this.GetService();
-            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
 
+            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
             var sortType = service.GetPostSortTypeFromCookieOrDefault(mockedRequestCookies.Object);
             var defaultSortType = WebConstants.CookieDefaultValuePostSortType;
 
@@ -26,9 +27,10 @@ namespace RedditClone.Services.Tests.QuestServicesTests.CookieServiceTests
         {
             var service = this.GetService();
 
-            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
             var postSortTypeKey = WebConstants.CookieKeyPostSortType;
             var sortTypeIncorrectValue = Guid.NewGuid().ToString();
+
+            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
             mockedRequestCookies.SetupGet(rc => rc[postSortTypeKey])
                 .Returns(sortTypeIncorrectValue);
 
@@ -43,11 +45,12 @@ namespace RedditClone.Services.Tests.QuestServicesTests.CookieServiceTests
         {
             var service = this.GetService();
 
-            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
-            var postSortTypeKey = WebConstants.CookieKeyPostSortType;
+            var sortTypeKey = WebConstants.CookieKeyPostSortType;
             var correctSortType = PostSortType.Controversial;
-            mockedRequestCookies.SetupGet(rc => rc[postSortTypeKey])
-                .Returns(correctSortType.ToString());
+
+            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
+            CommonTestMethods.SutupMockedRequestCookieCollection(
+                mockedRequestCookies, sortTypeKey, correctSortType.ToString());
 
             var sortType = service.GetPostSortTypeFromCookieOrDefault(mockedRequestCookies.Object);
 

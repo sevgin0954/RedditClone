@@ -37,7 +37,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserCommentServiceTests
             unitOfWork.Comments.Add(dbComment);
             unitOfWork.Complete();
 
-            var model = this.CreateCorrectCommentModel(dbComment.Id);
+            var model = this.CreateCommentModel(dbComment.Id);
 
             var result = await this.CallAddResponseToCommentAsync(unitOfWork, model);
 
@@ -52,14 +52,15 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserCommentServiceTests
             unitOfWork.Comments.Add(dbComment);
             unitOfWork.Complete();
 
-            var model = this.CreateCorrectCommentModel(dbComment.Id);
+            var model = this.CreateCommentModel(dbComment.Id);
 
             await this.CallAddResponseToCommentAsync(unitOfWork, model);
+            var dbCommentReplies = dbComment.Replies;
 
-            Assert.Equal(1, dbComment.Replies.Count);
+            Assert.Equal(1, dbCommentReplies.Count);
         }
 
-        private CommentBindingModel CreateCorrectCommentModel(string commentId)
+        private CommentBindingModel CreateCommentModel(string commentId)
         {
             var model = new CommentBindingModel()
             {

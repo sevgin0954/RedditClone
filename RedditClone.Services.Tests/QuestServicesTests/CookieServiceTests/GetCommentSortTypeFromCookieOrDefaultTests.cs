@@ -2,6 +2,7 @@
 using Moq;
 using RedditClone.Common.Constants;
 using RedditClone.Common.Enums.SortTypes;
+using RedditClone.Services.Tests.Common;
 using System;
 using Xunit;
 
@@ -13,8 +14,8 @@ namespace RedditClone.Services.Tests.QuestServicesTests.CookieServiceTests
         public void WithoutCommentSortTypeCookie_ShouldReturnDefault()
         {
             var service = this.GetService();
-            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
 
+            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
             var sortType = service.GetCommentSortTypeFromCookieOrDefault(mockedRequestCookies.Object);
             var defaultSortType = WebConstants.CookieDefaultValueCommentSortType;
 
@@ -26,11 +27,12 @@ namespace RedditClone.Services.Tests.QuestServicesTests.CookieServiceTests
         {
             var service = this.GetService();
 
-            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
             var sortTypeKey = WebConstants.CookieKeyCommentSortType;
             var sortTypeIncorrectValue = Guid.NewGuid().ToString();
-            mockedRequestCookies.SetupGet(rc => rc[sortTypeKey])
-                .Returns(sortTypeIncorrectValue);
+
+            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
+            CommonTestMethods
+                .SutupMockedRequestCookieCollection(mockedRequestCookies, sortTypeKey, sortTypeIncorrectValue);
 
             var sortType = service.GetCommentSortTypeFromCookieOrDefault(mockedRequestCookies.Object);
             var defaultSortType = WebConstants.CookieDefaultValueCommentSortType;
@@ -43,11 +45,12 @@ namespace RedditClone.Services.Tests.QuestServicesTests.CookieServiceTests
         {
             var service = this.GetService();
 
-            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
             var sortTypeKey = WebConstants.CookieKeyCommentSortType;
             var correctSortType = CommentSortType.Controversial;
-            mockedRequestCookies.SetupGet(rc => rc[sortTypeKey])
-                .Returns(correctSortType.ToString());
+
+            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
+            CommonTestMethods
+                .SutupMockedRequestCookieCollection(mockedRequestCookies, sortTypeKey, correctSortType.ToString());
 
             var sortType = service.GetCommentSortTypeFromCookieOrDefault(mockedRequestCookies.Object);
 

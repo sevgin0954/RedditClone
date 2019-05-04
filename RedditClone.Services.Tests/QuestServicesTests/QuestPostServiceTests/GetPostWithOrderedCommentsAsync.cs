@@ -68,21 +68,5 @@ namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
 
             return model;
         }
-
-        private async Task<PostViewModel> CallGetPostWithOrderedCommentsAsyncWithCookies(
-            Post post,
-            IRequestCookieCollection requestCookies, 
-            IResponseCookies responseCookies)
-        {
-            var unitOfWork = this.GetRedditCloneUnitOfWork();
-            unitOfWork.Posts.Add(post);
-            unitOfWork.Complete();
-
-            var service = this.GetService(unitOfWork);
-            
-            var model = await service.GetPostWithOrderedCommentsAsync(post.Id, requestCookies);
-
-            return model;
-        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using RedditClone.CustomMapper;
 using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Services.UserServices;
@@ -10,7 +11,8 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserCommentServiceTests
     {
         public IUserCommentService GetService(IRedditCloneUnitOfWork unitOfWork, UserManager<User> userManager)
         {
-            var service = new UserCommentService(unitOfWork, userManager);
+            var commentMapper = new CommentMapper();
+            var service = new UserCommentService(unitOfWork, userManager, commentMapper);
 
             return service;
         }

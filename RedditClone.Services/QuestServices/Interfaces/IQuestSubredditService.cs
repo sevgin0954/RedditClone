@@ -6,6 +6,6 @@ namespace RedditClone.Services.QuestServices.Interfaces
 {
     public interface IQuestSubredditService
     {
-        Task<SubredditsViewModel> GetOrderedSubredditsByKeyWords(string[] keyWords, SubredditSortType sortType);
+        Task<SubredditsViewModel> GetOrderedSubredditsFilterByKeyWordsAsync(string[] keyWords, SubredditSortType sortType);
     }
 }

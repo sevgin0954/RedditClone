@@ -19,6 +19,8 @@ namespace RedditClone.Models.WebModels.PostModels.ViewModels
         public DateTime PostDate { get; set; }
 
         public int VotesCount { get; set; }
+        
+        public int UserVoteValue { get; set; }
 
         public int CommentsCount { get; set; }
 

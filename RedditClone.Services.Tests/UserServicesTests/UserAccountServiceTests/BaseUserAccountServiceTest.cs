@@ -9,7 +9,7 @@ namespace RedditClone.Services.Tests.UserAccountServiceTests.UserPostServiceTest
     {
         public IUserAccountService GetService(IRedditCloneUnitOfWork unitOfWork)
         {
-            var mapper = CommonTestMethods.GetMapper();
+            var mapper = CommonTestMethods.GetAutoMapper();
             var service = new UserAccountService(unitOfWork, mapper);
 
             return service;

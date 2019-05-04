@@ -1,4 +1,4 @@
-﻿@model IEnumerable<UserIndexViewModel>
+﻿@model IEnumerable<UserActionViewModel>
 @{
     ViewData["Title"] = "Posts";
 }
@@ -24,21 +24,6 @@ else
     @foreach (var postModel in Model)
     {
         <div class="grey-outline-container blue-outline-onhover-container d-flex">
-            <div class="votes-container flex-column">
-                    <div class="flex-row">
-                        <a class="link-grey link-green-hover" href="#">
-                            <i class="fas fa-arrow-up fa-lg"></i>
-                        </a>
-                    </div>
-                    <div class="flex-row">
-                        &nbsp;@postModel.VotesCount
-                    </div>
-                    <div class="flex-row">
-                        <a class="link-grey link-red-hover" href="#">
-                            <i class="fas fa-arrow-down fa-lg"></i>
-                        </a>
-                    </div>
-            </div>
             &nbsp;
             <div class="flex-column flex-grow-1">
                 <div class="flex-row">

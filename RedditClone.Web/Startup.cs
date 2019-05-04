@@ -120,28 +120,18 @@ namespace RedditClone.Web
         private void RegisterServiceLayer(IServiceCollection services)
         {
             services.AddScoped<IRedditCloneUnitOfWork, RedditCloneUnitOfWork>();
-
             services.AddScoped<IPostRepository, PostRepository>();
-
             services.AddScoped<IUserAccountService, UserAccountService>();
-
             services.AddScoped<IUserPostService, UserPostService>();
-
             services.AddScoped<IUserSubredditService, UserSubredditService>();
-
             services.AddScoped<IQuestPostService, QuestPostService>();
-
             services.AddScoped<IUserCommentService, UserCommentService>();
-
             services.AddScoped<ICookieService, CookieService>();
-
             services.AddScoped<IQuestSubredditService, QuestSubredditService>();
-
             services.AddScoped<IQuestSearchService, QuestSearchService>();
-
             services.AddScoped<IUserVotePostService, UserVotePostService>();
-
             services.AddScoped<IPostMapper, PostMapper>();
+            services.AddScoped<ICommentMapper, CommentMapper>();
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace RedditClone.Models.WebModels.UserModels.ViewModels
 {
-    public class UserIndexViewModel
+    public class UserActionViewModel
     {
         public string PostId { get; set; }
 
@@ -20,8 +20,6 @@ namespace RedditClone.Models.WebModels.UserModels.ViewModels
         public string PostCreatorUsername { get; set; }
 
         public string DescriptionConcise { get; set; }
-
-        public int VotesCount { get; set; }
 
         public DateTime PostDate { get; set; }
     }

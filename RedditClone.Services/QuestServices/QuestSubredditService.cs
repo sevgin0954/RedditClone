@@ -20,7 +20,7 @@ namespace RedditClone.Services.QuestServices
             this.mapper = mapper;
         }
 
-        public async Task<SubredditsViewModel> GetOrderedSubredditsByKeyWords(
+        public async Task<SubredditsViewModel> GetOrderedSubredditsFilterByKeyWordsAsync(
             string[] keyWords,
             SubredditSortType sortType)
         {

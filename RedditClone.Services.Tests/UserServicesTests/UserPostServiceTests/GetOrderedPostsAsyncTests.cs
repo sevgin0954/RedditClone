@@ -15,7 +15,7 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
     public class GetOrderedPostsAsyncTests : BaseUserPostServiceTest
     {
         [Fact]
-        public async Task WithUserWithSubscribedSubreddits_ShouldReturnModelWithOnlySubsribedSubredditsPosts()
+        public async Task WithUserAndSubreddits_ShouldReturnModelWithPostOnlyFromSubsribedSubreddits()
         {
             var dbUser = new User();
             var dbPost1 = this.CreatePostWithCurrentTime();
@@ -47,8 +47,6 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
             var model = await this.CallGetOrderedPostsAsyncWithUserAndPosts(dbUser, dbPost1, dbPost2);
 
             var modelPosts = model.Posts;
-            var modelPost1 = modelPosts.ElementAt(0);
-            var modelPost2 = modelPosts.ElementAt(1);
 
             Assert.Equal(2, modelPosts.Count());
             Assert.Contains(modelPosts, p => p.Id == dbPost1.Id);
@@ -72,55 +70,6 @@ namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
                 Subreddit = subreddit
             };
             user.SubscribedSubreddits.Add(dbUserSubreddit);
-        }
-
-        private async Task<PostsViewModel> CallGetOrderedPostsAsyncWithCookies(
-            IRequestCookieCollection requestCokieCollection, 
-            IResponseCookies responseCookies)
-        {
-            var unitOfWork = this.GetRedditCloneUnitOfWork();
-            var userManager = CommonTestMethods.GetMockedUserManager().Object;
-
-            var service = this.GetService(unitOfWork, userManager);
-
-            var claimsPrincipal = new Mock<ClaimsPrincipal>().Object;
-            var model = await service.GetOrderedPostsAsync(
-                claimsPrincipal,
-                requestCokieCollection,
-                responseCookies);
-
-            return model;
-        }
-
-        private async Task<PostsViewModel> CallGetOrderedPostsAsyncWithPosts(params Post[] posts)
-        {
-            var unitOfWork = this.GetRedditCloneUnitOfWork();
-            unitOfWork.Posts.AddRange(posts);
-            unitOfWork.Complete();
-
-            var userManager = CommonTestMethods.GetMockedUserManager().Object;
-            var service = this.GetService(unitOfWork, userManager);
-
-            var claimsPricipal = new Mock<ClaimsPrincipal>().Object;
-            var requestCookieCollection = new Mock<IRequestCookieCollection>().Object;
-            var responseCookies = new Mock<IResponseCookies>().Object;
-            var model = await service.GetOrderedPostsAsync(
-                claimsPricipal,
-                requestCookieCollection,
-                responseCookies);
-
-            return model;
-        }
-
-        private async Task<PostsViewModel> CallGetOrderedPostsAsyncWithUser(User user)
-        {
-            var unitOfWork = this.GetRedditCloneUnitOfWork();
-            unitOfWork.Users.Add(user);
-            unitOfWork.Complete();
-
-            var model = await this.CallGetOrderedPostsAsyncWithUser(unitOfWork, user);
-
-            return model;
         }
 
         private async Task<PostsViewModel> CallGetOrderedPostsAsyncWithUserAndPosts(User user, params Post[] posts)
