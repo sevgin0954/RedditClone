@@ -16,5 +16,10 @@ namespace RedditClone.Services.UserServices.Interfaces
             ClaimsPrincipal user,
             IRequestCookieCollection requestCookies,
             IResponseCookies responseCookies);
+
+        Task<PostViewModel> GetPostWithOrderedCommentsAsync(
+            ClaimsPrincipal user,
+            string postId,
+            IRequestCookieCollection requestCookies);
     }
 }

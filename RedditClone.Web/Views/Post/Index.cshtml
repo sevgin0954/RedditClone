@@ -1,4 +1,7 @@
 ﻿@using RedditClone.Common.Enums.SortTypes
+@using Microsoft.AspNetCore.Identity
+@using RedditClone.Models
+@inject SignInManager<User> SignInManager
 @model PostViewModel
 @{
     ViewData["Title"] = "Index";
@@ -8,7 +11,7 @@
     <div class="flex-column">
         <partial name="_VotePostPartial" />
     </div>
-    &nbsp;  
+    &nbsp;
     <div class="flex-column flex-grow-1">
         <div class="flex-row d-flex">
             <a class="link-grey" asp-controller="Post" asp-action="Index" asp-route-subredditId="@Model.SubredditId">
@@ -87,7 +90,10 @@
     </div>
 </div>
 
-<script src="~/js/votePost.js"></script>
+@if (SignInManager.IsSignedIn(this.User))
+{
+    <script src="~/js/votePost.js"></script>
+}
 
 <script>
 //-----------------------------------------------------------------

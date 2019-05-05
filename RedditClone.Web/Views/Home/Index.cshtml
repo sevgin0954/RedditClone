@@ -1,4 +1,7 @@
-﻿@model PostsViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@using RedditClone.Models
+@inject SignInManager<User> SignInManager
+@model PostsViewModel
 @{
     ViewData["Title"] = "Home Page";
     Layout = "_LayoutIndex";
@@ -6,4 +9,7 @@
 
 <partial name="_PostsPartial" model="Model.Posts" />
 
-<script src="~/js/votePost.js"></script>
+@if (SignInManager.IsSignedIn(this.User))
+{
+    <script src="~/js/votePost.js"></script>
+}

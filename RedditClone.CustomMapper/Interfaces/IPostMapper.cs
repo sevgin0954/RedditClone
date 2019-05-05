@@ -28,8 +28,14 @@ namespace RedditClone.CustomMapper.Interfaces
             IEnumerable<Subreddit> subscribedSubreddits,
             string selectedSubredditId);
 
-        PostViewModel MapPostViewModel(Post post, CommentSortType sortType, IEnumerable<Comment> comments);
+        PostViewModel MapPostViewModelForQuest(Post post, CommentSortType sortType, IEnumerable<Comment> comments);
 
         Post MapPost(PostCreationBindingModel model, string authorId);
+
+        PostViewModel MapPostViewModelForSignInUser(
+            string userId,
+            Post post,
+            CommentSortType sortType,
+            IEnumerable<Comment> comments);
     }
 }

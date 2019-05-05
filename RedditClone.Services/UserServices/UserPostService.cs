@@ -96,5 +96,28 @@ namespace RedditClone.Services.UserServices
                 .MapPostsViewModelForSignInUser(dbPosts, dbUserId, postSortType, sortPostsStrategy, postTimeFrameType);
             return model;
         }
+
+        public async Task<PostViewModel> GetPostWithOrderedCommentsAsync(
+            ClaimsPrincipal user, 
+            string postId,
+            IRequestCookieCollection requestCookies)
+        {
+            var dbPost = await redditCloneUnitOfWork.Posts.GetByIdWithIncludedAllProperties(postId);
+            if (dbPost == null)
+            {
+                return null;
+            }
+
+            var commentSortType = this.cookieService.GetCommentSortTypeFromCookieOrDefault(requestCookies);
+
+            var sortTypeStrategy = SortCommentStrategyFactory.GetSortPostsStrategy(redditCloneUnitOfWork, commentSortType);
+            var sortedComments = await this.redditCloneUnitOfWork.Comments
+                .GetByPostSortedByAsync(postId, sortTypeStrategy);
+
+            var dbUserId = this.userManager.GetUserId(user);
+            var model = this.postMapper.MapPostViewModelForSignInUser(dbUserId, dbPost, commentSortType, sortedComments);
+
+            return model;
+        }
     }
 }

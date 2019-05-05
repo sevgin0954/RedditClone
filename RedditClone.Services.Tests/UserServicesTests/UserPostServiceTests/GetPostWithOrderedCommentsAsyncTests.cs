@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Moq;
+using RedditClone.Data.Interfaces;
 using RedditClone.Models;
 using RedditClone.Models.WebModels.PostModels.ViewModels;
+using RedditClone.Services.Tests.Common;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
+namespace RedditClone.Services.Tests.UserServicesTests.UserPostServiceTests
 {
-    public class GetPostWithOrderedCommentsAsync : BaseQuestPostServiceTest
+    public class GetPostWithOrderedCommentsAsyncTests : BaseUserPostServiceTest
     {
         [Fact]
-        public async Task WithoutIncorrectPostId_ShouldReturnNull()
+        public async Task WithIncorrectPostId_ShouldReturnNull()
         {
             var incorrectPostId = Guid.NewGuid().ToString();
 
@@ -26,7 +29,7 @@ namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
         {
             var dbPost = new Post();
 
-            var model = await this.CallGetPostWithOrderedCommentsAsyncWithPost(dbPost);
+            var model = await this.CallGetPostWithOrderedCommentsAsync(dbPost);
 
             Assert.Empty(model.Comments);
         }
@@ -40,7 +43,7 @@ namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
             dbComment.Replies.Add(dbCommentReplie);
             dbPost.Comments.Add(dbComment);
 
-            var model = await this.CallGetPostWithOrderedCommentsAsyncWithPost(dbPost);
+            var model = await this.CallGetPostWithOrderedCommentsAsync(dbPost);
             var modelFirstComment = model.Comments.First();
             var firstCommentReply = modelFirstComment.Replies.First();
 
@@ -51,24 +54,32 @@ namespace RedditClone.Services.Tests.QuestServicesTests.QuestPostServiceTests
         private async Task<PostViewModel> CallGetPostWithOrderedCommentsAsync(string postId)
         {
             var unitOfWork = this.GetRedditCloneUnitOfWork();
-            var service = this.GetService(unitOfWork);
 
-            var requestCookies = new Mock<IRequestCookieCollection>().Object;
-            var model = await service.GetPostWithOrderedCommentsAsync(postId, requestCookies);
+            var model = await this.CallGetPostWithOrderedCommentsAsync(unitOfWork, postId);
 
             return model;
         }
 
-        private async Task<PostViewModel> CallGetPostWithOrderedCommentsAsyncWithPost(Post post)
+        private async Task<PostViewModel> CallGetPostWithOrderedCommentsAsync(Post post)
         {
             var unitOfWork = this.GetRedditCloneUnitOfWork();
             unitOfWork.Posts.Add(post);
             unitOfWork.Complete();
 
-            var service = this.GetService(unitOfWork);
+            var model = await this.CallGetPostWithOrderedCommentsAsync(unitOfWork, post.Id);
 
-            var requestCookies = new Mock<IRequestCookieCollection>().Object;
-            var model = await service.GetPostWithOrderedCommentsAsync(post.Id, requestCookies);
+            return model;
+        }
+
+        private async Task<PostViewModel> CallGetPostWithOrderedCommentsAsync(
+            IRedditCloneUnitOfWork unitOfWork, string postId)
+        {
+            var mockedUserManager = CommonTestMethods.GetMockedUserManager();
+            var service = this.GetService(unitOfWork, mockedUserManager.Object);
+
+            var claimsPrincipal = new Mock<ClaimsPrincipal>().Object;
+            var mockedRequestCookies = new Mock<IRequestCookieCollection>();
+            var model = await service.GetPostWithOrderedCommentsAsync(claimsPrincipal, postId, mockedRequestCookies.Object);
 
             return model;
         }

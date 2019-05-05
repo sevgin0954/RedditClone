@@ -103,7 +103,7 @@ namespace RedditClone.Services.QuestServices
             var sortedComments = await this.redditCloneUnitOfWork.Comments
                 .GetByPostSortedByAsync(postId, sortTypeStrategy);
 
-            var model = this.postMapper.MapPostViewModel(dbPost, commentSortType, sortedComments);
+            var model = this.postMapper.MapPostViewModelForQuest(dbPost, commentSortType, sortedComments);
 
             return model;
         }

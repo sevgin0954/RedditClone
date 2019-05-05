@@ -87,19 +87,6 @@ namespace RedditClone.CustomMapper
             return models;
         }
 
-        private int GetUserVoteValueOrDefault(IEnumerable<VotePost> votes, string userId)
-        {
-            var userVote = votes.Where(v => v.UserId == userId).FirstOrDefault();
-            if (userVote != null)
-            {
-                return userVote.Value;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
         private bool CheckIsSortStrategyHaveTimeFrame(ISortPostsStrategy sortPostsStrategy)
         {
             var isHaveTimeFrame = false;
@@ -200,7 +187,32 @@ namespace RedditClone.CustomMapper
             return selectListItem;
         }
 
-        public PostViewModel MapPostViewModel(Post post, CommentSortType sortType, IEnumerable<Comment> comments)
+        public PostViewModel MapPostViewModelForSignInUser(
+            string userId,
+            Post post, 
+            CommentSortType sortType, 
+            IEnumerable<Comment> comments)
+        {
+            var model = this.MapPostViewModelForQuest(post, sortType, comments);
+            model.UserVoteValue = this.GetUserVoteValueOrDefault(post.Votes, userId);
+
+            return model;
+        }
+
+        private int GetUserVoteValueOrDefault(IEnumerable<VotePost> votes, string userId)
+        {
+            var userVote = votes.Where(v => v.UserId == userId).FirstOrDefault();
+            if (userVote != null)
+            {
+                return userVote.Value;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public PostViewModel MapPostViewModelForQuest(Post post, CommentSortType sortType, IEnumerable<Comment> comments)
         {
             int commentCount = CountComments.Count(comments);
             var model = this.mapper.Map<PostViewModel>(post);

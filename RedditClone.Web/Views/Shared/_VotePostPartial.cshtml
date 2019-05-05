@@ -1,14 +1,26 @@
-﻿<form method="post">
+﻿@using Microsoft.AspNetCore.Identity
+@using RedditClone.Models
+@inject SignInManager<User> SignInManager
+
+@{ 
+    var voteButtonsHref = "#";
+    if (SignInManager.IsSignedIn(this.User) == false)
+    {
+        voteButtonsHref = "/Identity/Account/Login";
+    }
+}
+
+<form method="post">
     <div>
         @if (Model.UserVoteValue > 0)
         {
-            <a data-postId="@Model.Id" class="link-grey link-green-hover selected-up-vote upVote" href="#">
+            <a data-postId="@Model.Id" class="link-grey link-green-hover selected-up-vote upVote" href="@voteButtonsHref">
                 <i class="fas fa-arrow-up fa-lg"></i>
             </a>
         }
         else
         {
-            <a data-postId="@Model.Id" class="link-grey link-green-hover upVote" href="#">
+            <a data-postId="@Model.Id" class="link-grey link-green-hover upVote" href="@voteButtonsHref">
                 <i class="fas fa-arrow-up fa-lg"></i>
             </a>
         }
@@ -19,13 +31,13 @@
     <div>
         @if (Model.UserVoteValue < 0)
         {
-            <a data-postId="@Model.Id" class="link-grey link-red-hover selected-down-vote downVote" href="#">
+            <a data-postId="@Model.Id" class="link-grey link-red-hover selected-down-vote downVote" href="@voteButtonsHref">
                 <i class="fas fa-arrow-down fa-lg"></i>
             </a>
         }
         else
         {
-            <a data-postId="@Model.Id" class="link-grey link-red-hover downVote" href="#">
+            <a data-postId="@Model.Id" class="link-grey link-red-hover downVote" href="@voteButtonsHref">
                 <i class="fas fa-arrow-down fa-lg"></i>
             </a>
         }
